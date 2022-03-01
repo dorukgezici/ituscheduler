@@ -6,16 +6,14 @@ import (
 )
 
 type Major struct {
-	gorm.Model
-	Code        string `gorm:"unique"`
+	Code        string `gorm:"primarykey"`
 	RefreshedAt time.Time
 }
 
 type Course struct {
-	gorm.Model
-	MajorID          int
-	Major            Major
-	CRN              string `gorm:"unique"`
+	MajorCode        string
+	Major            Major  `gorm:"foreignKey:MajorCode"`
+	CRN              string `gorm:"primarykey"`
 	Code             string
 	Catalogue        string
 	Title            string
@@ -27,14 +25,19 @@ type Course struct {
 	MajorRestriction string
 	Prerequisites    string
 	ClassRestriction string
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+	DeletedAt        gorm.DeletedAt `gorm:"index"`
 }
 
 type Lecture struct {
-	gorm.Model
-	CourseID int
-	Course   Course
-	Building string
-	Day      string
-	Time     string
-	Room     string
+	CourseCRN string `gorm:"primarykey"`
+	Course    Course `gorm:"foreignKey:CourseCRN"`
+	Building  string
+	Day       string `gorm:"primarykey"`
+	Time      string `gorm:"primarykey"`
+	Room      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
