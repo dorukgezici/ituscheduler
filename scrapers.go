@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gocolly/colly"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"strconv"
 	"time"
@@ -17,7 +16,7 @@ func initializeCollector() *colly.Collector {
 	return c
 }
 
-func scrapeMajors(db *gorm.DB) {
+func scrapeMajors() {
 	c := initializeCollector()
 
 	err := db.AutoMigrate(&Major{})
@@ -51,7 +50,7 @@ type ScraperResult struct {
 	Lectures []Lecture
 }
 
-func scrapeCoursesOfMajors(db *gorm.DB, majors []Major) {
+func scrapeCoursesOfMajors(majors []Major) {
 	err := db.AutoMigrate(&Course{}, &Lecture{})
 	if err != nil {
 		panic(err)
@@ -85,9 +84,9 @@ func scrapeCoursesOfMajors(db *gorm.DB, majors []Major) {
 
 func scrapeCoursesOfMajor(major Major, channel chan ScraperResult) {
 	var (
+		c        = initializeCollector()
 		courses  []Course
 		lectures []Lecture
-		c        = initializeCollector()
 	)
 
 	c.OnHTML("table.table.table-bordered.table-striped.table-hover.table-responsive", func(e *colly.HTMLElement) {
@@ -154,13 +153,13 @@ func scrapeCoursesOfMajor(major Major, channel chan ScraperResult) {
 				})
 			}
 		})
-
-		// send scraper result to channel
-		channel <- ScraperResult{Major: major, Courses: courses, Lectures: lectures}
 	})
 
 	err := c.Post(SisUrl, map[string]string{"seviye": "LS", "derskodu": major.Code})
 	if err != nil {
 		panic(err)
+	} else {
+		// send scraper result to channel
+		channel <- ScraperResult{Major: major, Courses: courses, Lectures: lectures}
 	}
 }

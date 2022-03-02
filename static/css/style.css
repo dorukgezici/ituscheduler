@@ -1,0 +1,51 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1 0 auto;
+}
+
+nav, .navbar {
+    border-radius: 0;
+}
+
+.footer {
+    margin: auto 0 0;
+    text-align: center;
+}
+
+.footer > .container {
+    background-color: #2c3e50;
+}
+
+.copyleft {
+    display: inline-block;
+    transform: rotate(180deg);
+}
+
+.no-hover:hover, .no-hover:focus {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+.center {
+    text-align: center;
+}
+
+.pagination > li > a {
+    background-color: #2c3e50;
+}
+
+.pagination > .active > a, .pagination > li > a:hover {
+    background-color: #567ea0;
+}

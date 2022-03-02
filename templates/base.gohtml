@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(), event: 'gtm.js'
+            });
+            const f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l !== 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-KRHNSWR');
+    </script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>{{block "title" .}}ITUscheduler{{end}}</title>
+    <meta property="og:title" content="ITU Scheduler">
+    <meta property="og:description"
+          content="With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily without the need of another resource.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ituscheduler.com/">
+    <meta property="og:image" content="https://ituscheduler.com/static/icons/android-chrome-512x512.png">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:width" content="512">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png">
+    <link rel="manifest" href="/static/icons/manifest.json">
+    <link rel="mask-icon" href="/static/icons/safari-pinned-tab.svg" color="#063d4d">
+    <link rel="shortcut icon" href="/static/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="ITUscheduler">
+    <meta name="application-name" content="ITUscheduler">
+    <meta name="msapplication-config" content="/static/icons/browser-config.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-social.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    {{block "head" .}}{{end}}
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KRHNSWR"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+                <img src="/static/icons/bee-transparent-white.png" alt="Logo"
+                     style="display: inline-block; position: absolute; top: 8px; height: 44px">
+                <span style="padding-left: 50px"><strong>ITUscheduler</strong></span>
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="content">{{block "body" .}}{{end}}</div>
+<footer class="navbar navbar-default footer">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li><a href="https://github.com/ITUscheduler/ITUscheduler" target="_blank">
+                    <span class="copyleft">&copy;</span> Copyleft 2018 | ITUscheduler</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://doruk.gezici.me" target="_blank">Doruk Gezici</a></li>
+            <!--
+            Kendinize iyi bakın..
+            <li><a href="https://github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
+            -->
+        </ul>
+    </div>
+</footer>
+<script src="/static/js/tether.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/main.js"></script>
+{{block "script" .}}{{end}}
+</body>
+</html>
