@@ -48,12 +48,14 @@ func loadPostFixtures(filename string, posts *[]Post) {
 }
 
 func renderTemplate(filename string, wr http.ResponseWriter, data interface{}) {
-	err := template.Must(template.New(filename).Funcs(template.FuncMap{
+	fm := template.FuncMap{
 		"html": func(value interface{}) template.HTML {
 			return template.HTML(fmt.Sprint(value))
 		},
-	}).ParseFiles("templates/base.gohtml", "templates/"+filename)).Execute(wr, data)
-	if err != nil {
+	}
+	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/"+filename, "templates/base.gohtml"))
+
+	if err := tpl.Execute(wr, data); err != nil {
 		log.Printf("failed to render template: %s, error: %v", filename, err)
 		panic(err)
 	}
