@@ -6,6 +6,7 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/joho/godotenv v1.4.0
 	github.com/julienschmidt/httprouter v1.3.0
+	github.com/vcraescu/go-paginator/v2 v2.0.0
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/gorm v1.23.1
 )
@@ -31,10 +32,11 @@ require (
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/lib/pq v1.10.4 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect

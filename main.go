@@ -30,6 +30,8 @@ func main() {
 	// migrate db
 	if err = db.AutoMigrate(&Major{}, &Course{}, &Lecture{}); err != nil {
 		panic(err)
+	} else {
+		log.Println("Successfully auto-migrated the database.")
 	}
 
 	// scrape ITU SIS and save to db if data wasn't refreshed within the last hour
@@ -49,6 +51,7 @@ func main() {
 	}
 
 	// load fixtures
+	log.Println("Loading fixtures...")
 	loadPostFixtures("fixtures/posts.json", &posts)
 	for i, post := range posts {
 		log.Printf("POST#%d: Author: %s Date: %s", i, post.Author, post.Date)
@@ -57,8 +60,8 @@ func main() {
 	// register handlers
 	router := httprouter.New()
 	router.PanicHandler = panicHandler
-	router.GET("/", getInfo)
-	router.GET("/privacy-policy/", getPrivacyPolicy)
+	router.GET("/info", getInfo)
+	router.GET("/privacy-policy", getPrivacyPolicy)
 	// static files
 	router.GET("/favicon.ico", getFavicon)
 	router.GET("/ads.txt", getAds)

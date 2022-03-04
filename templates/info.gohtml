@@ -24,15 +24,17 @@
                         <h3>Latest Refresh</h3>
                     </div>
                     <div class="panel-body">
-                        {{range .refreshes}}
-                            <p>{{.code}}: {{.refreshed}}</p>{{if not .forloop.last}}
-                                <hr>{{end}}
+                        {{range .Majors}}
+                            <p>{{.Code}}: {{.RefreshedAt | date}}</p>
+                            <hr>
                         {{end}}
                         <nav aria-label="Latest Refresh Pagination">
-                            <ul id="paginator" class="pagination pagination-sm">
-                                <li class="page-item active">
-                                    <a class="page-link" href="/blog?refresh_page=#paginator"></a>
-                                </li>
+                            <ul id="p" class="pagination pagination-sm">
+                                {{range .Paginator.Pages}}
+                                    <li class="page-item{{if eq $.Paginator.Current .}} active{{end}}">
+                                        <a class="page-link" href="/info?page={{.}}#p">{{.}}</a>
+                                    </li>
+                                {{end}}
                             </ul>
                         </nav>
                     </div>
@@ -70,19 +72,16 @@
                     {{range .Posts}}
                         <div class="media">
                             <div class="media-body">
-                                <h5 class="media-heading">by <strong>{{.Author}}</strong>, {{.Date}}
-                                    ago</h5>
-                                <p>{{html .Content}}</p>
-                                {{/*                                {{if not .forloop.last}}*/}}
+                                <h5 class="media-heading">by <strong>{{.Author}}</strong>, {{.Date}}</h5>
+                                <p>{{.Content | safe}}</p>
                                 <hr>
-                                {{/*                                {{end}}*/}}
                             </div>
                         </div>
                     {{end}}
                 </div>
             </div>
             <div class="col-md-4 col-xs-12">
-                <a class="twitter-timeline" data-height="2400"
+                <a class="twitter-timeline" data-height="2150"
                    href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a>
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const SisUrl string = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"
+const sisUrl string = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"
 
 func initializeCollector() *colly.Collector {
 	c := colly.NewCollector()
@@ -35,7 +35,7 @@ func scrapeMajors() {
 		}).Create(&majors)
 	})
 
-	err := c.Visit(SisUrl)
+	err := c.Visit(sisUrl)
 	if err != nil {
 		panic(err)
 	}
@@ -147,7 +147,7 @@ func scrapeCoursesOfMajor(major Major, channel chan ScraperResult) {
 		})
 	})
 
-	err := c.Post(SisUrl, map[string]string{"seviye": "LS", "derskodu": major.Code})
+	err := c.Post(sisUrl, map[string]string{"seviye": "LS", "derskodu": major.Code})
 	if err != nil {
 		panic(err)
 	} else {

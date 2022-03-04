@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 func splitElement(el *colly.HTMLElement, selector string) []string {
@@ -49,11 +50,14 @@ func loadPostFixtures(filename string, posts *[]Post) {
 
 func renderTemplate(filename string, wr http.ResponseWriter, data interface{}) {
 	fm := template.FuncMap{
-		"html": func(value interface{}) template.HTML {
+		"safe": func(value interface{}) template.HTML {
 			return template.HTML(fmt.Sprint(value))
 		},
+		"date": func(date time.Time) template.HTML {
+			return template.HTML(date.Format("Jan 2, 2006, 3:04 PM"))
+		},
 	}
-	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/"+filename, "templates/base.gohtml"))
+	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
 
 	if err := tpl.Execute(wr, data); err != nil {
 		log.Printf("failed to render template: %s, error: %v", filename, err)
