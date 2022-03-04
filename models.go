@@ -2,6 +2,7 @@ package main
 
 import (
 	"gorm.io/gorm"
+	"html/template"
 	"time"
 )
 
@@ -40,4 +41,10 @@ type Lecture struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
+
+type Post struct {
+	Author  string        `json:"author"`
+	Date    string        `json:"date"`
+	Content template.HTML `json:"content"`
 }

@@ -1,6 +1,6 @@
 {{template "base.gohtml" .}}
 
-{{define "title"}}ITUscheduler - {{end}}
+{{define "title"}}Title | ITU Scheduler{{end}}
 
 {{define "head"}}
 {{end}}

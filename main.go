@@ -3,17 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/joho/godotenv"
+	"github.com/julienschmidt/httprouter"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
-
-var db *gorm.DB
-var tpl *template.Template
 
 func main() {
 	// load env variables
@@ -31,38 +27,44 @@ func main() {
 		log.Println("Successfully connected to the database at: " + host)
 	}
 
-	// get majors which were refreshed within the last hour from db
+	// migrate db
+	if err = db.AutoMigrate(&Major{}, &Course{}, &Lecture{}); err != nil {
+		panic(err)
+	}
+
+	// scrape ITU SIS and save to db if data wasn't refreshed within the last hour
 	var majors []Major
 	db.Where("refreshed_at > ?", time.Now().Add(-time.Hour)).Find(&majors)
 
 	if len(majors) == 0 {
-		// scrape majors from ITU SIS
 		scrapeMajors()
 
-		// scrape courses and lectures of all majors
+		// scrape courses and lectures of all majors using concurrency
 		db.Find(&majors)
 		scrapeCoursesOfMajors(majors)
 
-		log.Println(strconv.Itoa(len(majors)) + " majors were scraped and saved to db.")
+		log.Printf("%d majors were scraped and saved to db.", len(majors))
 	} else {
 		log.Println("Majors were refreshed within the last hour, skipped scraping.")
 	}
 
-	// parse templates
-	tpl, err = template.ParseGlob("templates/*.gohtml")
-	if err != nil {
-		log.Fatalln(err)
+	// load fixtures
+	loadPostFixtures("fixtures/posts.json", &posts)
+	for i, post := range posts {
+		log.Printf("POST#%d: Author: %s Date: %s", i, post.Author, post.Date)
 	}
 
 	// register handlers
-	http.HandleFunc("/", index)
-	http.HandleFunc("/privacy-policy/", privacyPolicy)
+	router := httprouter.New()
+	router.PanicHandler = panicHandler
+	router.GET("/", getInfo)
+	router.GET("/privacy-policy/", getPrivacyPolicy)
 	// static files
-	http.HandleFunc("/favicon.ico", favicon)
-	http.HandleFunc("/ads.txt", adsTxt)
-	http.Handle("/static/", http.FileServer(http.Dir(".")))
+	router.GET("/favicon.ico", getFavicon)
+	router.GET("/ads.txt", getAds)
+	router.ServeFiles("/static/*filepath", http.Dir("static"))
 
-	// run server on `port`
-	log.Println("Server is running on: http://localhost:" + port)
-	log.Fatalln(http.ListenAndServe(":"+port, nil))
+	// run server on 8080
+	log.Println("Server is running on: http://localhost:8080")
+	log.Fatalln(http.ListenAndServe(":8080", router))
 }

@@ -1,28 +1,37 @@
 package main
 
 import (
+	"github.com/julienschmidt/httprouter"
+	"log"
 	"net/http"
 )
 
-func index(res http.ResponseWriter, req *http.Request) {
-	err := tpl.ExecuteTemplate(res, "index.gohtml", nil)
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-	}
+// templates
+func getIndex(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	renderTemplate("index.gohtml", w, nil)
 }
 
-func privacyPolicy(res http.ResponseWriter, req *http.Request) {
-	err := tpl.ExecuteTemplate(res, "privacy-policy.gohtml", nil)
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-	}
+func getInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	renderTemplate("info.gohtml", w, map[string]interface{}{
+		"Posts": posts,
+	})
 }
 
-// files
-func favicon(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "static/icons/favicon.ico")
+func getPrivacyPolicy(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	renderTemplate("privacy-policy.gohtml", w, nil)
 }
 
-func adsTxt(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "static/ads.txt")
+// static files
+func getFavicon(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	http.ServeFile(w, r, "static/icons/favicon.ico")
+}
+
+func getAds(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	http.ServeFile(w, r, "static/ads.txt")
+}
+
+// middlewares
+func panicHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
+	log.Println("PANIC:", r.Method, r.URL.Path, err)
+	w.WriteHeader(http.StatusInternalServerError)
 }

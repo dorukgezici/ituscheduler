@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const SisUrl string = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"
+
 func initializeCollector() *colly.Collector {
 	c := colly.NewCollector()
 	c.OnRequest(func(r *colly.Request) {
@@ -18,11 +20,6 @@ func initializeCollector() *colly.Collector {
 
 func scrapeMajors() {
 	c := initializeCollector()
-
-	err := db.AutoMigrate(&Major{})
-	if err != nil {
-		panic(err)
-	}
 
 	c.OnHTML("select[name=derskodu]", func(e *colly.HTMLElement) {
 		var (
@@ -38,7 +35,7 @@ func scrapeMajors() {
 		}).Create(&majors)
 	})
 
-	err = c.Visit(SisUrl)
+	err := c.Visit(SisUrl)
 	if err != nil {
 		panic(err)
 	}
@@ -51,11 +48,6 @@ type ScraperResult struct {
 }
 
 func scrapeCoursesOfMajors(majors []Major) {
-	err := db.AutoMigrate(&Course{}, &Lecture{})
-	if err != nil {
-		panic(err)
-	}
-
 	majorsLength := len(majors)
 	channel := make(chan ScraperResult, majorsLength)
 
