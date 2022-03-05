@@ -20,6 +20,7 @@ type Course struct {
 	Title            string
 	TeachingMethod   string
 	Instructor       string
+	Lectures         []Lecture
 	Capacity         int
 	Enrolled         int
 	Reservation      string

@@ -60,6 +60,8 @@ func main() {
 	// register handlers
 	router := httprouter.New()
 	router.PanicHandler = panicHandler
+	router.GET("/", getIndex)
+	router.GET("/courses/:major", getCourses)
 	router.GET("/info", getInfo)
 	router.GET("/privacy-policy", getPrivacyPolicy)
 	// static files

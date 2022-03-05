@@ -67,6 +67,39 @@
                 <span style="padding-left: 50px"><strong>ITUscheduler</strong></span>
             </a>
         </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home </a></li>
+                <li class="active"><a href="/courses/BLG">Courses </a></li>
+                <li class="active"><a href="/info">Info </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Rehberler <span
+                                class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="https://web.itu.edu.tr/durgunor/ders.htm" target="_blank">Ders Seçim Rehberi</a>
+                        </li>
+                        <li><a href="https://web.itu.edu.tr/durgunor/itusch.htm" target="_blank">ITUscheduler Nasıl
+                                Kullanılır?</a></li>
+                        <li><a href="https://web.itu.edu.tr/durgunor/crn.html" target="_blank">Fill CRN Test</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/admin/refresh-majors">Refresh Major Codes</a></li>
+                        <li><a href="/admin/refresh-courses">Refresh Courses</a></li>
+                    </ul>
+                </li>
+                <li><a href="/admin">Admin<span style="margin-left: 15px;"></span></a></li>
+                <li class="active"><a href="/logout">Logout </a></li>
+                <li class="active"><a href="/register">Register </a></li>
+                <li class="active"><a href="/login">Login </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 <div class="content">{{block "body" .}}{{end}}</div>
@@ -82,6 +115,7 @@
             Kendinize iyi bakın..
             <li><a href="https://github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
             -->
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
         </ul>
     </div>
 </footer>
