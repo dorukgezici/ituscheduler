@@ -4,6 +4,7 @@ import (
 	"github.com/gocolly/colly"
 	"gorm.io/gorm/clause"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -16,6 +17,24 @@ func initializeCollector() *colly.Collector {
 	})
 
 	return c
+}
+
+func splitElement(el *colly.HTMLElement, selector string) []string {
+	html, err := el.DOM.Find(selector).Html()
+	if err != nil {
+		panic(err)
+	}
+
+	// split by <br/>, then trim spaces
+	var items []string
+	for _, item := range strings.Split(html, "<br/>") {
+		item = strings.TrimSpace(item)
+		if item != "" {
+			items = append(items, item)
+		}
+	}
+
+	return items
 }
 
 func scrapeMajors() {
