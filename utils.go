@@ -36,6 +36,9 @@ func renderTemplate(filename string, wr http.ResponseWriter, data map[string]int
 		"date": func(date time.Time) template.HTML {
 			return template.HTML(date.Format("Jan 2, 2006, 3:04 PM"))
 		},
+		"slugify": func(value interface{}) template.HTML {
+			return template.HTML(fmt.Sprint(value))
+		},
 	}
 	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
 

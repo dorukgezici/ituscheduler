@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
-	"github.com/julienschmidt/httprouter"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -58,16 +59,22 @@ func main() {
 	}
 
 	// register handlers
-	router := httprouter.New()
-	router.PanicHandler = panicHandler
-	router.GET("/", getIndex)
-	router.GET("/courses/:major", getCourses)
-	router.GET("/info", getInfo)
-	router.GET("/privacy-policy", getPrivacyPolicy)
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+	router.Use(middleware.Heartbeat("/health"))
+	// templates
+	router.Get("/", getIndex)
+	router.Get("/courses/{major}", getCourses)
+	router.Get("/info", getInfo)
+	router.Get("/login", getLogin)
+	router.Get("/register", getRegister)
+	router.Get("/privacy-policy", getPrivacyPolicy)
+	// APIs
+	//router.GET("/api/majors", getMajors)
 	// static files
-	router.GET("/favicon.ico", getFavicon)
-	router.GET("/ads.txt", getAds)
-	router.ServeFiles("/static/*filepath", http.Dir("static"))
+	router.Get("/favicon.ico", getFavicon)
+	router.Get("/ads.txt", getAds)
+	router.Handle("/static/*", http.FileServer(http.Dir(".")))
 
 	// run server on 8080
 	log.Println("Server is running on: http://localhost:8080")

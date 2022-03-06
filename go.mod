@@ -3,9 +3,9 @@ module github.com/dorukgezici/ituscheduler-go
 go 1.17
 
 require (
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/gocolly/colly v1.2.0
 	github.com/joho/godotenv v1.4.0
-	github.com/julienschmidt/httprouter v1.3.0
 	github.com/vcraescu/go-paginator/v2 v2.0.0
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/gorm v1.23.1

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/julienschmidt/httprouter"
+	"github.com/go-chi/chi/v5"
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
@@ -11,11 +11,11 @@ import (
 )
 
 // templates
-func getIndex(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func getIndex(w http.ResponseWriter, r *http.Request) {
 	renderTemplate("index.gohtml", w, nil)
 }
 
-func getCourses(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func getCourses(w http.ResponseWriter, r *http.Request) {
 	type CourseCode struct {
 		Code string
 	}
@@ -24,7 +24,7 @@ func getCourses(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		NameEn string
 	}
 	var (
-		majorCode   = ps.ByName("major")
+		majorCode   = chi.URLParam(r, "major")
 		courseCode  = CourseCode{r.URL.Query().Get("code")}
 		dayKey      = r.URL.Query().Get("day")
 		majors      []Major
@@ -67,7 +67,7 @@ func getCourses(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	})
 }
 
-func getInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func getInfo(w http.ResponseWriter, r *http.Request) {
 	p := paginator.New(adapter.NewGORMAdapter(db.Model(&Major{}).Order("code")), 25)
 	if page, err := strconv.Atoi(r.URL.Query().Get("page")); err == nil {
 		p.SetPage(page)
@@ -85,16 +85,24 @@ func getInfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	})
 }
 
-func getPrivacyPolicy(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func getLogin(w http.ResponseWriter, r *http.Request) {
+	renderTemplate("login.gohtml", w, nil)
+}
+
+func getRegister(w http.ResponseWriter, r *http.Request) {
+	renderTemplate("register.gohtml", w, nil)
+}
+
+func getPrivacyPolicy(w http.ResponseWriter, r *http.Request) {
 	renderTemplate("privacy-policy.gohtml", w, nil)
 }
 
 // static files
-func getFavicon(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func getFavicon(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/icons/favicon.ico")
 }
 
-func getAds(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func getAds(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/ads.txt")
 }
 

@@ -6,7 +6,523 @@
 {{end}}
 
 {{define "body"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title" style="display: inline-block">My Courses</h2>
+                        <small><a href="javascript:removeMyCourses();" style="padding-left: 10px">Remove All</a></small>
+                    </div>
+                    <div class="panel-body">
+                        <form action="" method="POST" id="courses_form">
+                            <div class="row">
+                                <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
+                                    <button class="btn btn-primary" name="save">New Schedule</button>
+                                </div>
+                                <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
+                                    <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
+                                </div>
+                                <div class="col-md-8 col-sm-12 col-xs-12">
+                                    <small>1) Add all relevant courses from the <a href="/courses/BLG">Courses
+                                            page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or
+                                        SHIFT
+                                        (or drag with the mouse) to select courses.</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="alert alert-danger" style="margin-top: 20px;"></div>
+                                <hr>
+
+                                <div class="alert alert-danger" id="not-">
+                                    Message | <a href="javascript:readNotification('');">Okay</a>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-md-12" style="margin-top: 20px;">
+                                <label class="control-label" for="selected-courses">Courses of the selected
+                                    schedule [Schedule: {{.selected_schedule}}]</label>
+                                <ul class="list-group" id="selected-courses">
+                                    {{range .my_courses}}
+                                        <li class="list-group-item">
+                                            {{.}}
+                                            <a href="javascript:removeCourse({{.CRN}})">Remove</a>
+                                            {{if eq .active false}}
+                                                <br>
+                                                <b style="color: red;">COURSE IS REMOVED FROM SIS</b>
+                                            {{end}}
+                                        </li>
+                                    {{end}}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1 center">
+                                <h2>Welcome to ITU Scheduler!</h2>
+                                <hr>
+                                <h4 style="line-height: 1.3em;">ITUscheduler is an <a
+                                            href="//github.com/dorukgezici/ITUscheduler"
+                                            target="_blank">open-source</a>
+                                    web application that allows Istanbul Technical University students to browse
+                                    up-to-date & detailed information about courses and create schedules with ease.
+                                    It has features like course queries according to days, notifying the user if a
+                                    course is removed from SIS, exporting the schedule and so on. We also have some
+                                    features planned like automatic schedule generation, displaying data from
+                                    previous years, prerequisite checking, etc..</h4>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3 center">
+                                <h4>Please <a href="/register">Register</a> or <a href="/login">Login</a>
+                                    to start creating your schedules.</h4><br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 col-md-offset-1 col-xs-6">
+                                <a href="#"
+                                   class="btn btn-block btn-social btn-facebook"><span
+                                            class="fa fa-facebook"></span> Sign in with Facebook</a>
+                            </div>
+                            <div class="col-md-5 col-xs-6">
+                                <a href="#"
+                                   class="btn btn-block btn-social btn-twitter"><span class="fa fa-twitter"></span>
+                                    Sign in with Twitter</a><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-12 center">
+                                <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com"
+                                                                            target="_blank">Doruk Gezici</a> & <a
+                                            href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
+                                <em>We do not gurantee or can be responsible for the accuracy of information found
+                                    here. If in doubt, please check <a href="http://www.sis.itu.edu.tr"
+                                                                       target="_blank">SIS</a>.</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">My Schedules</h2>
+                    </div>
+                    <div class="panel-body">
+                        {{if .user.is_authenticated}}
+                            <div class="row">
+                                <div style="margin-bottom: 10px;" class="col-md-3 col-sm-12 col-xs-12">
+                                    <form>
+                                        <select id="schedule" class="form-control" name="schedule"
+                                                onchange="redirect(this.form.schedule)" title="schedule">
+                                            {{range .schedules}}
+                                                <option {{if eq . .selected_schedule}}selected{{end}}
+                                                        value="{{ .id }}">Schedule: {{.}}</option>
+                                            {{end}}
+                                        </select>
+                                    </form>
+                                </div>
+                                <div class="col-md-9 col-sm-12 col-xs-12">
+                                    <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
+                                        <button class="btn btn-block btn-primary"
+                                                onclick="deleteSchedule($('#schedule').find('option:selected').val())">
+                                            Delete Schedule
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {{end}}
+                        <div style="margin-top: 10px;" class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Hours</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{range .Hours}}
+                                    <tr id="{{.time | slugify}}">
+                                        <th>{{.time}}</th>
+                                        <td id="{{.time | slugify}}-{{ 1 }}"></td>
+                                        <td id="{{.time | slugify}}-{{ 2 }}"></td>
+                                        <td id="{{.time | slugify}}-{{ 3 }}"></td>
+                                        <td id="{{.time | slugify}}-{{ 4 }}"></td>
+                                        <td id="{{.time | slugify}}-{{ 5 }}"></td>
+                                    </tr>
+                                {{end}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {{if .user.is_authenticated}}
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-xs-4 col-xs-offset-8">
+                                    <a href="share{{.user.username}}" class="btn btn-block btn-primary">Share!</a>
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
 {{end}}
 
 {{define "script"}}
+    <script>
+        $(document).ready(function () {
+            if ("{{.selected_schedule}}") {
+                writeLectures();
+            }
+            var select = document.getElementById('id_courses');
+            select.size = select.length;
+
+            $("#addToSchedule").click(function (e) {
+                e.preventDefault();
+                var _data = $("#courses_form").serializeArray();
+                var _url = "add_to_schedule";
+                var empty = false;
+
+                if (_data[2]) {
+                    empty = true
+                }
+
+                if (empty) {
+                    $.ajax({
+                        url: _url,
+                        type: "POST",
+                        data: _data,
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function (data) {
+                            alert("First you must create a new schedule.");
+
+                        }
+                    });
+                } else {
+                    alert('You must choose at least one course.');
+                }
+            });
+        });
+
+        function idGenerator(start, finish, Ids) {
+            var ids = Ids;
+            if ((start - 1) === finish) {
+                return ids
+            } else {
+                var id = "#" + start + "-" + (start + 99);
+                ids.push(id);
+                return idGenerator(start + 100, finish, ids);
+            }
+        }
+
+        function writeLectures() {
+            {{$selected_id := "0"}}
+            $.ajax({
+                url: "/schedule",
+                success: function (result) {
+                    console.log("Lectures writing.");
+                    for (var course in result.courses) {
+                        for (var lecture in result.courses[course].lectures) {
+                            var c_lecture = result.courses[course].lectures[lecture];
+                            var c_course = result.courses[course];
+
+                            if (c_lecture.time_start.toString().substring(2) === "00") {
+                                c_lecture.time_start = (c_lecture.time_start - 70);
+                                c_lecture.time_finish = (c_lecture.time_finish + 70);
+                            }
+
+                            var ids = [];
+                            var blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
+
+                            if (blocks === 1) {
+                                var id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
+                                ids.push(id);
+                            } else {
+                                //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
+                                ids = idGenerator(c_lecture.time_start, c_lecture.time_finish, []);
+                            }
+
+                            for (var Id in ids) {
+                                var id = ids[Id];
+                                if (c_lecture.day === "Pazartesi") {
+                                    id += "-" + "1"
+                                } else if (c_lecture.day === "Salı") {
+                                    id += "-" + "2"
+                                } else if (c_lecture.day === "Çarşamba") {
+                                    id += "-" + "3"
+                                } else if (c_lecture.day === "Perşembe") {
+                                    id += "-" + "4"
+                                } else if (c_lecture.day === "Cuma") {
+                                    id += "-" + "5"
+                                }
+
+                                if (c_course.overlaps) {
+                                    $(id).css({'background-color': '#d9534f', 'color': 'white'});
+                                }
+
+                                $(id).html(c_course.title);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function removeMyCourses() {
+            $.post(
+                "remove_my_courses",
+                {
+                    "csrfmiddlewaretoken": getCookie('csrftoken')
+                },
+                function (response) {
+                    var isSuccessful = response["successful"];
+                    if (!isSuccessful) {
+                        alert("Error: " + response["error"]);
+                    } else {
+                        location.reload();
+                    }
+                },
+                "json"
+            )
+        }
+
+        function removeCourse(Crn) {
+            $.ajax({
+                url: "course_remove",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    "crn": Crn,
+                    "csrfmiddlewaretoken": getCookie('csrftoken'),
+                    "schedule_id": "{{.selected_schedule.id}}"
+                },
+                success: function (result) {
+                    location.reload();
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+
+        function redirect(selected) {
+            var scheduleId = selected.options[selected.selectedIndex].value;
+            if (scheduleId) {
+                $.post(
+                    "select_schedule",
+                    {
+                        "schedule_id": parseInt(scheduleId),
+                        "csrfmiddlewaretoken": getCookie('csrftoken')
+                    },
+                    function (response) {
+                        var isSuccessful = response["successful"];
+                        if (!isSuccessful) {
+                            alert("Error: " + response["error"]);
+                        } else {
+                            location.href = "/schedule/" + scheduleId;
+                        }
+                    },
+                    "json"
+                )
+            }
+        }
+
+        function selectSchedule(scheduleId) {
+            if (scheduleId == null) {
+                alert("Create and select a schedule first.");
+            } else {
+                $.post(
+                    "select_schedule",
+                    {
+                        "schedule_id": parseInt(scheduleId),
+                        "csrfmiddlewaretoken": getCookie('csrftoken')
+                    },
+                    function (response) {
+                        var isSuccessful = response["successful"];
+                        if (!isSuccessful) {
+                            alert("Error: " + response["error"]);
+                        } else {
+                            alert("Your selected schedule: Schedule #" + response["scheduleId"]);
+
+                        }
+                    },
+                    "json"
+                )
+            }
+        }
+
+        function deleteSchedule(scheduleId) {
+            if (scheduleId == null) {
+                alert("Create and select a schedule first.");
+            } else {
+                $.post(
+                    "delete_schedule",
+                    {
+                        "schedule_id": parseInt(scheduleId),
+                        "csrfmiddlewaretoken": getCookie('csrftoken')
+                    },
+                    function (response) {
+                        var isSuccessful = response["successful"];
+                        if (!isSuccessful) {
+                            alert("Error: " + response["error"]);
+                        } else {
+                            location.href = "/";
+                        }
+                    },
+                    "json"
+                )
+            }
+        }
+
+        function readNotification(id) {
+            $.ajax({
+                url: "rest_api_scheduler:read_notification",
+                type: 'POST',
+                data: {
+                    "id": id,
+                    "csrfmiddlewaretoken": getCookie('csrftoken')
+                },
+                success: function (result) {
+                    $('#not-' + id).fadeOut();
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            })
+        }
+
+        var latest_ids = [];
+        var count = 0;
+
+        function deleteHtml(id) {
+            console.log("stop displaying ", id);
+            $(id).css({"background-color": "white", "color": "black"});
+            $(id).empty();
+            $(id).html("<a></a>");
+        }
+
+        var selected_courses = [];
+
+        function getCourseDetail(crn, remove) {
+            $.ajax({
+                url: "course_api:list_detail",
+                type: 'POST',
+                data: {
+                    'crn': crn,
+                    "csrfmiddlewaretoken": getCookie('csrftoken')
+                },
+                success: function (result) {
+                    console.log(result['id']);
+                    var general_ids = [];
+
+                    $.each(result['lectures'], function (index, value) {
+
+                        displayCourses(result, value, remove);
+
+                    });
+
+                    latest_ids = general_ids;
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+
+        function displayCourses(result, value, remove) {
+            var ids = [];
+            var time_start = value['time_start'];
+            var time_finish = value['time_finish'];
+            console.log(result);
+            console.log(value);
+
+            if (time_start.toString().substring(2) === "00") {
+                time_start = (time_start - 70);
+                time_finish = (time_finish + 70);
+            }
+
+            var blocks = ((time_finish - time_start) % 99) + 1;
+
+            if (blocks === 1) {
+                var id = "#" + time_start + "-" + time_finish;
+                ids.push(id);
+            } else {
+                //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
+                ids = idGenerator(time_start, time_finish, []);
+
+
+                for (var Id in ids) {
+                    var id = ids[Id];
+                    if (value['day'] === "Pazartesi") {
+                        id += "-" + "1"
+                    } else if (value['day'] === "Salı") {
+                        id += "-" + "2"
+                    } else if (value['day'] === "Çarşamba") {
+                        id += "-" + "3"
+                    } else if (value['day'] === "Perşembe") {
+                        id += "-" + "4"
+                    } else if (value['day'] === "Cuma") {
+                        id += "-" + "5"
+                    }
+
+                    if (remove) {
+                        deleteHtml(id);
+                        writeLectures();
+                    } else {
+                        $(id).css({'background-color': '#fcf8e3', 'color': '#8a6d3b'});
+
+                        if (result['overlaps'] || ($(id).html().length > 0 & $(id).html() !== result['title'])) {
+                            $(id).css({'background-color': '#d9534f', 'color': 'white'});
+                            $(id).hover(function () {
+                                if ($(this).html() !== "<a></a>") {
+                                    $(this).html(result['title'] + "<br>This course overlaps with another course<br>Or its full.");
+                                }
+                            }, function () {
+                                if ($(this).html() !== "<a></a>") {
+                                    $(this).html(result['title']);
+                                }
+                            });
+                        }
+
+                        $(id).html(result['title']);
+                    }
+                }
+            }
+        }
+
+        $("#id_courses").change(function () {
+            $("#schedule select option").each(function () {
+                if ($(this).is(':selected')) {
+                    var crn = $(this).val();
+                    selected_courses.push(crn);
+                    if (crn.length === 5) {
+                        console.log(crn, "asd");
+                        getCourseDetail(crn, false);
+                    }
+                } else {
+                    console.log(selected_courses, $(this).val(), $(this).val() in selected_courses);
+                    if (selected_courses.includes($(this).val())) {
+                        selected_courses.splice(selected_courses.indexOf($(this).val()), 1);
+                        console.log("naber zeka ", $(this).val());
+                        getCourseDetail($(this).val(), true) // stop displaying the course!
+                    }
+                }
+            });
+            return "";
+        }).trigger("change");
+    </script>
 {{end}}
