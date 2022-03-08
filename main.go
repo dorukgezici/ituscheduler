@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/dorukgezici/ituscheduler-go/auth"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
@@ -20,16 +21,16 @@ func main() {
 	}
 
 	// connect to db
-	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%d sslmode=disable", host, dbname, user, password, 5432)
+	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%d sslmode=disable", dbHost, dbName, dbUser, dbPassword, 5432)
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{CreateBatchSize: 100})
 	if err != nil {
 		panic(err)
 	} else {
-		log.Println("Successfully connected to the database at: " + host)
+		log.Println("Successfully connected to the database at: " + dbHost)
 	}
 
 	// migrate db
-	if err = db.AutoMigrate(&Major{}, &Course{}, &Lecture{}); err != nil {
+	if err = db.AutoMigrate(&Major{}, &Course{}, &Lecture{}, &Post{}, &User{}, &Session{}); err != nil {
 		panic(err)
 	} else {
 		log.Println("Successfully auto-migrated the database.")
@@ -53,21 +54,22 @@ func main() {
 
 	// load fixtures
 	log.Println("Loading fixtures...")
-	loadPostFixtures("fixtures/posts.json", &posts)
-	for i, post := range posts {
-		log.Printf("POST#%d: Author: %s Date: %s", i, post.Author, post.Date)
-	}
+	loadUserFixtures("fixtures/users.json")
+	loadPostFixtures("fixtures/posts.json")
 
 	// register handlers
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 	router.Use(middleware.Heartbeat("/health"))
+	router.Use(middleware.Recoverer)
 	// templates
-	router.Get("/", getIndex)
+	router.Get("/", auth.BasicAuth(getIndex))
 	router.Get("/courses/{major}", getCourses)
 	router.Get("/info", getInfo)
 	router.Get("/login", getLogin)
+	router.Post("/login", postLogin)
 	router.Get("/register", getRegister)
+	router.Post("/register", postRegister)
 	router.Get("/privacy-policy", getPrivacyPolicy)
 	// APIs
 	//router.GET("/api/majors", getMajors)

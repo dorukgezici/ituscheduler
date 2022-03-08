@@ -68,6 +68,9 @@ func getCourses(w http.ResponseWriter, r *http.Request) {
 }
 
 func getInfo(w http.ResponseWriter, r *http.Request) {
+	var posts []Post
+	db.Find(&posts)
+
 	p := paginator.New(adapter.NewGORMAdapter(db.Model(&Major{}).Order("code")), 25)
 	if page, err := strconv.Atoi(r.URL.Query().Get("page")); err == nil {
 		p.SetPage(page)
@@ -89,7 +92,15 @@ func getLogin(w http.ResponseWriter, r *http.Request) {
 	renderTemplate("login.gohtml", w, nil)
 }
 
+func postLogin(w http.ResponseWriter, r *http.Request) {
+	renderTemplate("login.gohtml", w, nil)
+}
+
 func getRegister(w http.ResponseWriter, r *http.Request) {
+	renderTemplate("register.gohtml", w, nil)
+}
+
+func postRegister(w http.ResponseWriter, r *http.Request) {
 	renderTemplate("register.gohtml", w, nil)
 }
 

@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/imdario/mergo"
+	"gorm.io/gorm/clause"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -11,7 +13,7 @@ import (
 	"time"
 )
 
-func loadPostFixtures(filename string, posts *[]Post) {
+func loadUserFixtures(filename string) {
 	jsonFile, err := os.Open(filename)
 	if err != nil {
 		log.Printf("failed to open json file: %s, error: %v", filename, err)
@@ -22,9 +24,38 @@ func loadPostFixtures(filename string, posts *[]Post) {
 		log.Printf("failed to read json file, error: %v", err)
 	}
 
-	if err = json.Unmarshal(jsonData, posts); err != nil {
+	var users []User
+	if err = json.Unmarshal(jsonData, &users); err != nil {
 		log.Printf("failed to unmarshal json file, error: %v\n", err)
 		log.Printf("failed to close jsonFile, error: %s", jsonFile.Close().Error())
+	}
+
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&users)
+	for i, user := range users {
+		log.Printf("USER#%d: ID: %d Username: %s", i, user.ID, user.Username)
+	}
+}
+
+func loadPostFixtures(filename string) {
+	jsonFile, err := os.Open(filename)
+	if err != nil {
+		log.Printf("failed to open json file: %s, error: %v", filename, err)
+	}
+
+	jsonData, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		log.Printf("failed to read json file, error: %v", err)
+	}
+
+	var posts []Post
+	if err = json.Unmarshal(jsonData, &posts); err != nil {
+		log.Printf("failed to unmarshal json file, error: %v\n", err)
+		log.Printf("failed to close jsonFile, error: %s", jsonFile.Close().Error())
+	}
+
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&posts)
+	for i, post := range posts {
+		log.Printf("POST#%d: Author: %s Date: %s", i, post.Author, post.Date)
 	}
 }
 
@@ -41,6 +72,13 @@ func renderTemplate(filename string, wr http.ResponseWriter, data map[string]int
 		},
 	}
 	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
+
+	initialData := map[string]interface{}{
+		"Time": time.Now(),
+	}
+	if err := mergo.Merge(&data, initialData); err != nil {
+		panic(err)
+	}
 
 	if err := tpl.Execute(wr, data); err != nil {
 		log.Printf("failed to render template: %s, error: %v", filename, err)

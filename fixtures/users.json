@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "email": "doruk@gezici.me",
+    "username": "username",
+    "password": "password",
+    "firstName": "Doruk",
+    "lastName": "Gezici",
+    "isAdmin": true
+  }
+]

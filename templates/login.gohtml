@@ -6,6 +6,43 @@
 {{end}}
 
 {{define "body"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 card-bg">
+                <form action="" method="POST">
+                    <input type="hidden" name="next" value="{{ .next }}">
+                    <div class="form-group">
+                        <label class="control-label" for="id_username">Username</label>
+                        <div class="">
+                            <input type="text" name="username" autofocus="" autocapitalize="none"
+                                   autocomplete="username" maxlength="150" class=" form-control" required=""
+                                   id="id_username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_password">Password</label>
+                        <div class="">
+                            <input type="password" name="password" autocomplete="current-password" class="form-control"
+                                   required="" id="id_password">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Login</button>
+                    <a href="/reset-password" class="btn btn-primary">Forgot Password?</a>
+                </form>
+                <div style="margin: 20px 0;" class="row">
+                    <div class="col-md-6">
+                        <a href="social:beginfacebook"
+                           class="btn btn-block btn-social btn-facebook"><span class="fa fa-facebook"></span> Sign in
+                            with Facebook</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="social:begintwitter" class="btn btn-block btn-social btn-twitter"><span
+                                    class="fa fa-twitter"></span> Sign in with Twitter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {{end}}
 
 {{define "script"}}

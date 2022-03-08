@@ -6,6 +6,67 @@
 {{end}}
 
 {{define "body"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 card-bg">
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <label class="control-label" for="id_username">Username {{.CurrentYear}}</label>
+                        <div class="">
+                            <input type="text" name="username" maxlength="150" autocapitalize="none"
+                                   autocomplete="username" autofocus="" class=" form-control" required=""
+                                   id="id_username">
+                            <p class="help-block">
+                                Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_email">Your ITU email address</label>
+                        <div class="">
+                            <input type="email" name="email" class=" form-control" required="" id="id_email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_password1">Password</label>
+                        <div class="">
+                            <input type="password" name="password1" autocomplete="new-password" class=" form-control"
+                                   required="" id="id_password1">
+                            <p class="help-block">
+                            </p>
+                            <ul>
+                                <li>Your password must contain at least 4 characters.</li>
+                                <li>Your password can’t be entirely numeric.</li>
+                            </ul>
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_password2">Password confirmation</label>
+                        <div class="">
+                            <input type="password" name="password2" autocomplete="new-password" class=" form-control"
+                                   required="" id="id_password2">
+                            <p class="help-block">
+                                Enter the same password as before, for verification.
+                            </p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Register!</button>
+                </form>
+                <div style="margin: 20px 0;" class="row">
+                    <div class="col-md-6">
+                        <a href="social:beginfacebook"
+                           class="btn btn-block btn-social btn-facebook"><span class="fa fa-facebook"></span> Sign in
+                            with Facebook</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="social:begintwitter" class="btn btn-block btn-social btn-twitter"><span
+                                    class="fa fa-twitter"></span> Sign in with Twitter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {{end}}
 
 {{define "script"}}

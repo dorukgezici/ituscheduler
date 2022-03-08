@@ -3,12 +3,14 @@ module github.com/dorukgezici/ituscheduler-go
 go 1.17
 
 require (
+	github.com/dorukgezici/ituscheduler-go/auth v0.0.0-00010101000000-000000000000
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/gocolly/colly v1.2.0
+	github.com/imdario/mergo v0.3.12
 	github.com/joho/godotenv v1.4.0
 	github.com/vcraescu/go-paginator/v2 v2.0.0
 	gorm.io/driver/postgres v1.3.1
-	gorm.io/gorm v1.23.1
+	gorm.io/gorm v1.23.2
 )
 
 require (
@@ -41,3 +43,5 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
+
+replace github.com/dorukgezici/ituscheduler-go/auth => ./auth
