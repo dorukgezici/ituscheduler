@@ -1,18 +1,20 @@
 package main
 
 import (
+	"github.com/dorukgezici/ituscheduler-go/auth"
 	"github.com/go-chi/chi/v5"
+	"github.com/gofrs/uuid"
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
-	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // templates
 func getIndex(w http.ResponseWriter, r *http.Request) {
-	renderTemplate("index.gohtml", w, nil)
+	render("index.gohtml", w, r, nil)
 }
 
 func getCourses(w http.ResponseWriter, r *http.Request) {
@@ -42,9 +44,8 @@ func getCourses(w http.ResponseWriter, r *http.Request) {
 	)
 
 	db.Order("code").Find(&majors)
-	db.Where("code = ?", majorCode).First(&major)
-
-	db.Model(&Course{}).Distinct("code").Order("code").Where("major_code = ?", majorCode).Find(&courseCodes)
+	db.First(&major, "code = ?", majorCode)
+	db.Model(&Course{}).Distinct("code").Order("code").Find(&courseCodes, "major_code = ?", majorCode)
 
 	// query courses and lectures
 	q := db.Model(&Course{}).Preload("Lectures").Order("code").Where("major_code = ?", majorCode)
@@ -56,7 +57,7 @@ func getCourses(w http.ResponseWriter, r *http.Request) {
 	}
 	q.Find(&courses)
 
-	renderTemplate("courses.gohtml", w, map[string]interface{}{
+	render("courses.gohtml", w, r, map[string]interface{}{
 		"Majors":      majors,
 		"Major":       major,
 		"CourseCodes": courseCodes,
@@ -68,7 +69,15 @@ func getCourses(w http.ResponseWriter, r *http.Request) {
 }
 
 func getInfo(w http.ResponseWriter, r *http.Request) {
-	var posts []Post
+	var (
+		userCount     int64
+		scheduleCount int64
+		courseCount   int64
+		posts         []Post
+	)
+	db.Model(&auth.User{}).Count(&userCount)
+	db.Model(Schedule{}).Count(&scheduleCount)
+	db.Model(Course{}).Count(&courseCount)
 	db.Find(&posts)
 
 	p := paginator.New(adapter.NewGORMAdapter(db.Model(&Major{}).Order("code")), 25)
@@ -81,31 +90,77 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	renderTemplate("info.gohtml", w, map[string]interface{}{
-		"Posts":     posts,
-		"Majors":    majors,
-		"Paginator": view.New(p),
+	render("info.gohtml", w, r, map[string]interface{}{
+		"UserCount":     userCount,
+		"ScheduleCount": scheduleCount,
+		"CourseCount":   courseCount,
+		"Posts":         posts,
+		"Majors":        majors,
+		"Paginator":     view.New(p),
 	})
 }
 
 func getLogin(w http.ResponseWriter, r *http.Request) {
-	renderTemplate("login.gohtml", w, nil)
+	render("login.gohtml", w, r, nil)
 }
 
 func postLogin(w http.ResponseWriter, r *http.Request) {
-	renderTemplate("login.gohtml", w, nil)
+	if err := r.ParseForm(); err != nil {
+		panic(err)
+	}
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	var user auth.User
+	db.First(&user, "username = ? AND password = ?", username, password)
+	if user.ID == 0 {
+		render("login.gohtml", w, r, map[string]interface{}{
+			"Error": "I could not recognize you, please check your username and password.",
+		})
+		return
+	}
+
+	session := auth.Session{
+		Token: uuid.Must(uuid.NewV4()).String(),
+		User:  user,
+	}
+	db.Create(&session)
+
+	cookie := http.Cookie{
+		Name:     "session",
+		Value:    session.Token,
+		Expires:  time.Now().Add(time.Hour * 24 * 30),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	}
+	http.SetCookie(w, &cookie)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func getRegister(w http.ResponseWriter, r *http.Request) {
-	renderTemplate("register.gohtml", w, nil)
+	render("register.gohtml", w, r, nil)
 }
 
 func postRegister(w http.ResponseWriter, r *http.Request) {
-	renderTemplate("register.gohtml", w, nil)
+	render("register.gohtml", w, r, nil)
+}
+
+func getLogout(w http.ResponseWriter, r *http.Request) {
+	if cookie, err := r.Cookie("session"); err == nil {
+		// delete cookie
+		cookie.MaxAge = -1
+		http.SetCookie(w, cookie)
+
+		// delete session from db
+		db.Delete(&auth.Session{}, "token = ?", cookie.Value)
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func getPrivacyPolicy(w http.ResponseWriter, r *http.Request) {
-	renderTemplate("privacy-policy.gohtml", w, nil)
+	render("privacy-policy.gohtml", w, r, nil)
 }
 
 // static files
@@ -115,10 +170,4 @@ func getFavicon(w http.ResponseWriter, r *http.Request) {
 
 func getAds(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/ads.txt")
-}
-
-// middlewares
-func panicHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
-	log.Println("PANIC:", r.Method, r.URL.Path, err)
-	w.WriteHeader(http.StatusInternalServerError)
 }

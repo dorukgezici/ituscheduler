@@ -6,6 +6,7 @@ require (
 	github.com/dorukgezici/ituscheduler-go/auth v0.0.0-00010101000000-000000000000
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/gocolly/colly v1.2.0
+	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/imdario/mergo v0.3.12
 	github.com/joho/godotenv v1.4.0
 	github.com/vcraescu/go-paginator/v2 v2.0.0

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/dorukgezici/ituscheduler-go/auth"
 	"github.com/imdario/mergo"
 	"gorm.io/gorm/clause"
 	"html/template"
@@ -10,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -24,7 +26,7 @@ func loadUserFixtures(filename string) {
 		log.Printf("failed to read json file, error: %v", err)
 	}
 
-	var users []User
+	var users []auth.User
 	if err = json.Unmarshal(jsonData, &users); err != nil {
 		log.Printf("failed to unmarshal json file, error: %v\n", err)
 		log.Printf("failed to close jsonFile, error: %s", jsonFile.Close().Error())
@@ -59,7 +61,7 @@ func loadPostFixtures(filename string) {
 	}
 }
 
-func renderTemplate(filename string, wr http.ResponseWriter, data map[string]interface{}) {
+func render(filename string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {
 	fm := template.FuncMap{
 		"safe": func(value interface{}) template.HTML {
 			return template.HTML(fmt.Sprint(value))
@@ -70,17 +72,27 @@ func renderTemplate(filename string, wr http.ResponseWriter, data map[string]int
 		"slugify": func(value interface{}) template.HTML {
 			return template.HTML(fmt.Sprint(value))
 		},
+		"pathContains": func(value interface{}) bool {
+			return strings.Contains(r.URL.Path, fmt.Sprint(value))
+		},
 	}
 	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
 
+	var user auth.User
+	if cookie, err := r.Cookie("session"); err == nil {
+		db.Joins("JOIN sessions ON sessions.user_id = users.id").Find(&user, "sessions.token = ?", cookie.Value)
+	}
+
 	initialData := map[string]interface{}{
 		"Time": time.Now(),
+		"Path": r.URL.Path,
+		"User": user,
 	}
 	if err := mergo.Merge(&data, initialData); err != nil {
 		panic(err)
 	}
 
-	if err := tpl.Execute(wr, data); err != nil {
+	if err := tpl.Execute(w, data); err != nil {
 		log.Printf("failed to render template: %s, error: %v", filename, err)
 		panic(err)
 	}

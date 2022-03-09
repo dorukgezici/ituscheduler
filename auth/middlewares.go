@@ -3,7 +3,6 @@ package auth
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"log"
 	"net/http"
 )
 
@@ -29,8 +28,6 @@ func BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 			// Importantly, we should to do the work to evaluate both the
 			// username and password before checking the return values to
 			// avoid leaking information.
-			log.Println("usernameHash:", usernameHash[:])
-			log.Println("passwordHash:", passwordHash[:])
 			usernameMatch := subtle.ConstantTimeCompare(usernameHash[:], expectedUsernameHash[:]) == 1
 			passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1
 

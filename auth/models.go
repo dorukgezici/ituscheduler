@@ -13,6 +13,7 @@ type User struct {
 	FirstName string
 	LastName  string
 	IsAdmin   bool
+	Sessions  []Session
 }
 
 type Session struct {

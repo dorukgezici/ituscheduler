@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <!-- Google Tag Manager -->
-    <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(), event: 'gtm.js'
-            });
-            const f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l !== 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-KRHNSWR');
-    </script>
+    {{/*    <script>*/}}
+    {{/*        (function (w, d, s, l, i) {*/}}
+    {{/*            w[l] = w[l] || [];*/}}
+    {{/*            w[l].push({*/}}
+    {{/*                'gtm.start': new Date().getTime(), event: 'gtm.js'*/}}
+    {{/*            });*/}}
+    {{/*            const f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l !== 'dataLayer' ? '&l=' + l : '';*/}}
+    {{/*            j.async = true;*/}}
+    {{/*            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;*/}}
+    {{/*            f.parentNode.insertBefore(j, f);*/}}
+    {{/*        })(window, document, 'script', 'dataLayer', 'GTM-KRHNSWR');*/}}
+    {{/*    </script>*/}}
     <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -46,10 +46,10 @@
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KRHNSWR"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
+{{/*<noscript>*/}}
+{{/*    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KRHNSWR"*/}}
+{{/*            height="0" width="0" style="display:none;visibility:hidden"></iframe>*/}}
+{{/*</noscript>*/}}
 <!-- End Google Tag Manager (noscript) -->
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -69,9 +69,9 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home </a></li>
-                <li class="active"><a href="/courses/BLG">Courses </a></li>
-                <li class="active"><a href="/info">Info </a></li>
+                <li{{if eq .Path "/"}} class="active"{{end}}><a href="/">Home </a></li>
+                <li{{if pathContains "/courses/"}} class="active"{{end}}><a href="/courses/BLG">Courses </a></li>
+                <li{{if pathContains "/info"}} class="active"{{end}}><a href="/info">Info </a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -85,19 +85,29 @@
                         <li><a href="https://web.itu.edu.tr/durgunor/crn.html" target="_blank">Fill CRN Test</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="/admin/refresh-majors">Refresh Major Codes</a></li>
-                        <li><a href="/admin/refresh-courses">Refresh Courses</a></li>
-                    </ul>
-                </li>
-                <li><a href="/admin">Admin<span style="margin-left: 15px;"></span></a></li>
-                <li class="active"><a href="/logout">Logout </a></li>
-                <li class="active"><a href="/register">Register </a></li>
-                <li class="active"><a href="/login">Login </a>
-                </li>
+                {{if .User.IsAdmin}}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/admin/refresh-majors">Refresh Major Codes</a></li>
+                            <li><a href="/admin/refresh-courses">Refresh Courses</a></li>
+                        </ul>
+                    </li>
+                {{end}}
+                {{if .User.ID}}
+                    <li>
+                        {{if .User.IsAdmin}}
+                            <a href="/admin">{{.User.Username}} </a>
+                        {{else}}
+                            {{.User.Username}}
+                        {{end}}
+                    </li>
+                    <li><a href="/logout">Logout </a></li>
+                {{else}}
+                    <li{{if pathContains "/register"}} class="active"{{end}}><a href="/register">Register </a></li>
+                    <li{{if pathContains "/login"}} class="active"{{end}}><a href="/login">Login </a></li>
+                {{end}}
             </ul>
         </div>
     </div>
@@ -110,11 +120,6 @@
                     <span class="copyleft">&copy;</span> Copyleft 2018 | ITUscheduler</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="https://doruk.gezici.me" target="_blank">Doruk Gezici</a></li>
-            <!--
-            Kendinize iyi bakın..
-            <li><a href="https://github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
-            -->
             <li><a href="/privacy-policy">Privacy Policy</a></li>
         </ul>
     </div>

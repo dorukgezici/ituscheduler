@@ -30,7 +30,7 @@ func main() {
 	}
 
 	// migrate db
-	if err = db.AutoMigrate(&Major{}, &Course{}, &Lecture{}, &Post{}, &User{}, &Session{}); err != nil {
+	if err = db.AutoMigrate(&Major{}, &Course{}, &Lecture{}, &Schedule{}, &Post{}, &auth.User{}, &auth.Session{}); err != nil {
 		panic(err)
 	} else {
 		log.Println("Successfully auto-migrated the database.")
@@ -38,7 +38,7 @@ func main() {
 
 	// scrape ITU SIS and save to db if data wasn't refreshed within the last hour
 	var majors []Major
-	db.Where("refreshed_at > ?", time.Now().Add(-time.Hour)).Find(&majors)
+	db.Find(&majors, "refreshed_at > ?", time.Now().Add(-time.Hour))
 
 	if len(majors) == 0 {
 		scrapeMajors()
@@ -63,13 +63,14 @@ func main() {
 	router.Use(middleware.Heartbeat("/health"))
 	router.Use(middleware.Recoverer)
 	// templates
-	router.Get("/", auth.BasicAuth(getIndex))
+	router.Get("/", getIndex)
 	router.Get("/courses/{major}", getCourses)
 	router.Get("/info", getInfo)
 	router.Get("/login", getLogin)
 	router.Post("/login", postLogin)
 	router.Get("/register", getRegister)
 	router.Post("/register", postRegister)
+	router.Get("/logout", getLogout)
 	router.Get("/privacy-policy", getPrivacyPolicy)
 	// APIs
 	//router.GET("/api/majors", getMajors)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/dorukgezici/ituscheduler-go/auth"
 	"gorm.io/gorm"
 	"html/template"
 	"time"
@@ -44,26 +45,15 @@ type Lecture struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-type User struct {
+type Schedule struct {
 	gorm.Model
-	Email     string `gorm:"unique"`
-	Username  string
-	Password  string
-	FirstName string
-	LastName  string
-	IsAdmin   bool
-}
-
-type Session struct {
-	Token     string `gorm:"primarykey"`
-	UserID    uint
-	User      User
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	UserID  uint
+	User    auth.User
+	Courses []Course `gorm:"many2many:schedule_courses;"`
 }
 
 type Post struct {
+	gorm.Model
 	Author  string        `json:"author"`
 	Date    string        `json:"date"`
 	Content template.HTML `json:"content"`

@@ -26,6 +26,12 @@
                                    required="" id="id_password">
                         </div>
                     </div>
+                    {{if .Error}}
+                        <div class="alert alert-danger">
+                            <a class="close" data-dismiss="alert">×</a>
+                            {{.Error}}
+                        </div>
+                    {{end}}
                     <button class="btn btn-primary">Login</button>
                     <a href="/reset-password" class="btn btn-primary">Forgot Password?</a>
                 </form>
