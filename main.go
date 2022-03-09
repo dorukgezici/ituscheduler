@@ -45,11 +45,11 @@ func main() {
 	app.DB.Find(&majors, "refreshed_at > ?", time.Now().Add(-time.Hour))
 
 	if len(majors) == 0 {
-		scraper.ScrapeMajors()
+		scraper.ScrapeMajors(app.DB)
 
 		// scrape courses and lectures of all majors using concurrency
 		app.DB.Find(&majors)
-		scraper.ScrapeCoursesOfMajors(majors)
+		scraper.ScrapeCoursesOfMajors(app.DB, majors)
 
 		log.Printf("%d majors were scraped and saved to db.", len(majors))
 	} else {
