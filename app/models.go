@@ -1,9 +1,33 @@
-package scraper
+package app
 
 import (
 	"gorm.io/gorm"
+	"html/template"
 	"time"
 )
+
+type User struct {
+	gorm.Model
+	Email     string `gorm:"unique"`
+	Username  string
+	Password  string
+	FirstName string
+	LastName  string
+	IsAdmin   bool
+	MajorID   *uint
+	Major     Major
+	Schedules []Schedule
+	Sessions  []Session
+}
+
+type Session struct {
+	Token     string `gorm:"primarykey"`
+	UserID    uint
+	User      User
+	ExpiresAt time.Time
+	CreatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
 
 type Major struct {
 	Code        string `gorm:"primarykey"`
@@ -41,4 +65,18 @@ type Lecture struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
+
+type Schedule struct {
+	gorm.Model
+	UserID  uint
+	User    User
+	Courses []Course `gorm:"many2many:schedule_courses;"`
+}
+
+type Post struct {
+	gorm.Model
+	Author  string        `json:"author"`
+	Date    string        `json:"date"`
+	Content template.HTML `json:"content"`
 }

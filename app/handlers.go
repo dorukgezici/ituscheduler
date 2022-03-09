@@ -1,10 +1,6 @@
 package app
 
 import (
-	"github.com/dorukgezici/ituscheduler-go/app/auth"
-	"github.com/dorukgezici/ituscheduler-go/app/blog"
-	"github.com/dorukgezici/ituscheduler-go/app/scheduler"
-	"github.com/dorukgezici/ituscheduler-go/app/scraper"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
 	"github.com/vcraescu/go-paginator/v2"
@@ -33,10 +29,10 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 		majorCode   = chi.URLParam(r, "major")
 		courseCode  = CourseCode{r.URL.Query().Get("code")}
 		dayKey      = r.URL.Query().Get("day")
-		majors      []scraper.Major
-		major       scraper.Major
+		majors      []Major
+		major       Major
 		courseCodes []CourseCode
-		courses     []scraper.Course
+		courses     []Course
 		days        = map[string]Day{
 			"1": {"Pazartesi", "Monday"},
 			"2": {"Salı", "Tuesday"},
@@ -49,10 +45,10 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 
 	DB.Order("code").Find(&majors)
 	DB.First(&major, "code = ?", majorCode)
-	DB.Model(&scraper.Course{}).Distinct("code").Order("code").Find(&courseCodes, "major_code = ?", majorCode)
+	DB.Model(&Course{}).Distinct("code").Order("code").Find(&courseCodes, "major_code = ?", majorCode)
 
 	// query courses and lectures
-	q := DB.Model(&scraper.Course{}).Preload("Lectures").Order("code").Where("major_code = ?", majorCode)
+	q := DB.Model(&Course{}).Preload("Lectures").Order("code").Where("major_code = ?", majorCode)
 	if courseCode.Code != "" {
 		q = q.Where("code = ?", courseCode.Code)
 	}
@@ -77,19 +73,19 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 		userCount     int64
 		scheduleCount int64
 		courseCount   int64
-		posts         []blog.Post
+		posts         []Post
 	)
-	DB.Model(&auth.User{}).Count(&userCount)
-	DB.Model(scheduler.Schedule{}).Count(&scheduleCount)
-	DB.Model(scraper.Course{}).Count(&courseCount)
+	DB.Model(&User{}).Count(&userCount)
+	DB.Model(Schedule{}).Count(&scheduleCount)
+	DB.Model(Course{}).Count(&courseCount)
 	DB.Find(&posts)
 
-	p := paginator.New(adapter.NewGORMAdapter(DB.Model(&scraper.Major{}).Order("code")), 25)
+	p := paginator.New(adapter.NewGORMAdapter(DB.Model(&Major{}).Order("code")), 25)
 	if page, err := strconv.Atoi(r.URL.Query().Get("page")); err == nil {
 		p.SetPage(page)
 	}
 
-	var majors []scraper.Major
+	var majors []Major
 	if err := p.Results(&majors); err != nil {
 		panic(err)
 	}
@@ -115,7 +111,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	var user auth.User
+	var user User
 	DB.First(&user, "username = ? AND password = ?", username, password)
 	if user.ID == 0 {
 		render("login.gohtml", w, r, map[string]interface{}{
@@ -124,7 +120,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session := auth.Session{
+	session := Session{
 		Token: uuid.Must(uuid.NewV4()).String(),
 		User:  user,
 	}
@@ -157,7 +153,7 @@ func GetLogout(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, cookie)
 
 		// delete session from db
-		DB.Delete(&auth.Session{}, "token = ?", cookie.Value)
+		DB.Delete(&Session{}, "token = ?", cookie.Value)
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)

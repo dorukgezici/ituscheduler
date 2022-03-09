@@ -3,8 +3,6 @@ package app
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dorukgezici/ituscheduler-go/app/auth"
-	"github.com/dorukgezici/ituscheduler-go/app/blog"
 	"github.com/imdario/mergo"
 	"gorm.io/gorm/clause"
 	"html/template"
@@ -27,7 +25,7 @@ func LoadUserFixtures(filename string) {
 		log.Printf("failed to read json file, error: %v", err)
 	}
 
-	var users []auth.User
+	var users []User
 	if err = json.Unmarshal(jsonData, &users); err != nil {
 		log.Printf("failed to unmarshal json file, error: %v\n", err)
 		log.Printf("failed to close jsonFile, error: %s", jsonFile.Close().Error())
@@ -50,7 +48,7 @@ func LoadPostFixtures(filename string) {
 		log.Printf("failed to read json file, error: %v", err)
 	}
 
-	var posts []blog.Post
+	var posts []Post
 	if err = json.Unmarshal(jsonData, &posts); err != nil {
 		log.Printf("failed to unmarshal json file, error: %v\n", err)
 		log.Printf("failed to close jsonFile, error: %s", jsonFile.Close().Error())
@@ -79,7 +77,7 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 	}
 	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
 
-	var user auth.User
+	var user User
 	if cookie, err := r.Cookie("session"); err == nil {
 		DB.Joins("JOIN sessions ON sessions.user_id = users.id").Find(&user, "sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value)
 	}

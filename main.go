@@ -3,10 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/dorukgezici/ituscheduler-go/app"
-	"github.com/dorukgezici/ituscheduler-go/app/auth"
-	"github.com/dorukgezici/ituscheduler-go/app/blog"
-	"github.com/dorukgezici/ituscheduler-go/app/scheduler"
-	"github.com/dorukgezici/ituscheduler-go/app/scraper"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
@@ -34,22 +30,22 @@ func main() {
 	}
 
 	// migrate db
-	if err = app.DB.AutoMigrate(&scraper.Major{}, &scraper.Course{}, &scraper.Lecture{}, &scheduler.Schedule{}, &blog.Post{}, &auth.User{}, &auth.Session{}); err != nil {
+	if err = app.DB.AutoMigrate(&app.User{}, &app.Session{}, &app.Major{}, &app.Course{}, &app.Lecture{}, &app.Schedule{}, &app.Post{}); err != nil {
 		panic(err)
 	} else {
 		log.Println("Successfully auto-migrated the database.")
 	}
 
 	// scrape ITU SIS and save to db if data wasn't refreshed within the last hour
-	var majors []scraper.Major
+	var majors []app.Major
 	app.DB.Find(&majors, "refreshed_at > ?", time.Now().Add(-time.Hour))
 
 	if len(majors) == 0 {
-		scraper.ScrapeMajors(app.DB)
+		app.ScrapeMajors(app.DB)
 
 		// scrape courses and lectures of all majors using concurrency
 		app.DB.Find(&majors)
-		scraper.ScrapeCoursesOfMajors(app.DB, majors)
+		app.ScrapeCoursesOfMajors(app.DB, majors)
 
 		log.Printf("%d majors were scraped and saved to db.", len(majors))
 	} else {
