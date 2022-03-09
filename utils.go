@@ -80,7 +80,7 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 
 	var user auth.User
 	if cookie, err := r.Cookie("session"); err == nil {
-		db.Joins("JOIN sessions ON sessions.user_id = users.id").Find(&user, "sessions.token = ?", cookie.Value)
+		db.Joins("JOIN sessions ON sessions.user_id = users.id").Find(&user, "sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value)
 	}
 
 	initialData := map[string]interface{}{
