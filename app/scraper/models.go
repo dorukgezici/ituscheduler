@@ -1,9 +1,7 @@
-package main
+package scraper
 
 import (
-	"github.com/dorukgezici/ituscheduler-go/auth"
 	"gorm.io/gorm"
-	"html/template"
 	"time"
 )
 
@@ -43,18 +41,4 @@ type Lecture struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
-}
-
-type Schedule struct {
-	gorm.Model
-	UserID  uint
-	User    auth.User
-	Courses []Course `gorm:"many2many:schedule_courses;"`
-}
-
-type Post struct {
-	gorm.Model
-	Author  string        `json:"author"`
-	Date    string        `json:"date"`
-	Content template.HTML `json:"content"`
 }

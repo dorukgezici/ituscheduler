@@ -1,43 +1,16 @@
-package main
+package scraper
 
 import (
+	"github.com/dorukgezici/ituscheduler-go/app"
 	"github.com/gocolly/colly"
 	"gorm.io/gorm/clause"
 	"strconv"
-	"strings"
 	"time"
 )
 
 const sisUrl string = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"
 
-func initializeCollector() *colly.Collector {
-	c := colly.NewCollector()
-	c.OnRequest(func(r *colly.Request) {
-		r.ResponseCharacterEncoding = "windows-1254"
-	})
-
-	return c
-}
-
-func splitElement(el *colly.HTMLElement, selector string) []string {
-	html, err := el.DOM.Find(selector).Html()
-	if err != nil {
-		panic(err)
-	}
-
-	// split by <br/>, then trim spaces
-	var items []string
-	for _, item := range strings.Split(html, "<br/>") {
-		item = strings.TrimSpace(item)
-		if item != "" {
-			items = append(items, item)
-		}
-	}
-
-	return items
-}
-
-func scrapeMajors() {
+func ScrapeMajors() {
 	c := initializeCollector()
 
 	c.OnHTML("select[name=derskodu]", func(e *colly.HTMLElement) {
@@ -48,7 +21,7 @@ func scrapeMajors() {
 		for _, code := range codes {
 			majors = append(majors, Major{Code: code})
 		}
-		db.Clauses(clause.OnConflict{
+		app.DB.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "code"}},
 			DoNothing: true,
 		}).Create(&majors)
@@ -60,15 +33,15 @@ func scrapeMajors() {
 	}
 }
 
-type ScraperResult struct {
+type Result struct {
 	Major    Major
 	Courses  []Course
 	Lectures []Lecture
 }
 
-func scrapeCoursesOfMajors(majors []Major) {
+func ScrapeCoursesOfMajors(majors []Major) {
 	majorsLength := len(majors)
-	channel := make(chan ScraperResult, majorsLength)
+	channel := make(chan Result, majorsLength)
 
 	for _, major := range majors {
 		go scrapeCoursesOfMajor(major, channel)
@@ -78,22 +51,22 @@ func scrapeCoursesOfMajors(majors []Major) {
 		result := <-channel
 
 		// create or update (upsert) courses and lectures
-		db.Clauses(clause.OnConflict{
+		app.DB.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "crn"}},
 			UpdateAll: true,
 		}).Create(&result.Courses)
 
-		db.Clauses(clause.OnConflict{
+		app.DB.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "course_crn"}, {Name: "day"}, {Name: "time"}},
 			UpdateAll: true,
 		}).Create(&result.Lectures)
 
 		// update major.refreshed_at
-		db.Model(&result.Major).Update("refreshed_at", time.Now())
+		app.DB.Model(&result.Major).Update("refreshed_at", time.Now())
 	}
 }
 
-func scrapeCoursesOfMajor(major Major, channel chan ScraperResult) {
+func scrapeCoursesOfMajor(major Major, channel chan Result) {
 	var (
 		c        = initializeCollector()
 		courses  []Course
@@ -171,6 +144,6 @@ func scrapeCoursesOfMajor(major Major, channel chan ScraperResult) {
 		panic(err)
 	} else {
 		// send scraper result to channel
-		channel <- ScraperResult{Major: major, Courses: courses, Lectures: lectures}
+		channel <- Result{Major: major, Courses: courses, Lectures: lectures}
 	}
 }

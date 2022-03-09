@@ -3,7 +3,6 @@ module github.com/dorukgezici/ituscheduler-go
 go 1.17
 
 require (
-	github.com/dorukgezici/ituscheduler-go/auth v0.0.0-00010101000000-000000000000
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/gocolly/colly v1.2.0
 	github.com/gofrs/uuid v4.0.0+incompatible
@@ -44,5 +43,3 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
-
-replace github.com/dorukgezici/ituscheduler-go/auth => ./auth

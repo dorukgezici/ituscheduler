@@ -1,7 +1,10 @@
-package main
+package app
 
 import (
-	"github.com/dorukgezici/ituscheduler-go/auth"
+	"github.com/dorukgezici/ituscheduler-go/app/auth"
+	"github.com/dorukgezici/ituscheduler-go/app/blog"
+	"github.com/dorukgezici/ituscheduler-go/app/scheduler"
+	"github.com/dorukgezici/ituscheduler-go/app/scraper"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
 	"github.com/vcraescu/go-paginator/v2"
@@ -13,11 +16,12 @@ import (
 )
 
 // templates
-func getIndex(w http.ResponseWriter, r *http.Request) {
+
+func GetIndex(w http.ResponseWriter, r *http.Request) {
 	render("index.gohtml", w, r, nil)
 }
 
-func getCourses(w http.ResponseWriter, r *http.Request) {
+func GetCourses(w http.ResponseWriter, r *http.Request) {
 	type CourseCode struct {
 		Code string
 	}
@@ -29,10 +33,10 @@ func getCourses(w http.ResponseWriter, r *http.Request) {
 		majorCode   = chi.URLParam(r, "major")
 		courseCode  = CourseCode{r.URL.Query().Get("code")}
 		dayKey      = r.URL.Query().Get("day")
-		majors      []Major
-		major       Major
+		majors      []scraper.Major
+		major       scraper.Major
 		courseCodes []CourseCode
-		courses     []Course
+		courses     []scraper.Course
 		days        = map[string]Day{
 			"1": {"Pazartesi", "Monday"},
 			"2": {"Salı", "Tuesday"},
@@ -43,12 +47,12 @@ func getCourses(w http.ResponseWriter, r *http.Request) {
 		day = days[dayKey]
 	)
 
-	db.Order("code").Find(&majors)
-	db.First(&major, "code = ?", majorCode)
-	db.Model(&Course{}).Distinct("code").Order("code").Find(&courseCodes, "major_code = ?", majorCode)
+	DB.Order("code").Find(&majors)
+	DB.First(&major, "code = ?", majorCode)
+	DB.Model(&scraper.Course{}).Distinct("code").Order("code").Find(&courseCodes, "major_code = ?", majorCode)
 
 	// query courses and lectures
-	q := db.Model(&Course{}).Preload("Lectures").Order("code").Where("major_code = ?", majorCode)
+	q := DB.Model(&scraper.Course{}).Preload("Lectures").Order("code").Where("major_code = ?", majorCode)
 	if courseCode.Code != "" {
 		q = q.Where("code = ?", courseCode.Code)
 	}
@@ -68,24 +72,24 @@ func getCourses(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func getInfo(w http.ResponseWriter, r *http.Request) {
+func GetInfo(w http.ResponseWriter, r *http.Request) {
 	var (
 		userCount     int64
 		scheduleCount int64
 		courseCount   int64
-		posts         []Post
+		posts         []blog.Post
 	)
-	db.Model(&auth.User{}).Count(&userCount)
-	db.Model(Schedule{}).Count(&scheduleCount)
-	db.Model(Course{}).Count(&courseCount)
-	db.Find(&posts)
+	DB.Model(&auth.User{}).Count(&userCount)
+	DB.Model(scheduler.Schedule{}).Count(&scheduleCount)
+	DB.Model(scraper.Course{}).Count(&courseCount)
+	DB.Find(&posts)
 
-	p := paginator.New(adapter.NewGORMAdapter(db.Model(&Major{}).Order("code")), 25)
+	p := paginator.New(adapter.NewGORMAdapter(DB.Model(&scraper.Major{}).Order("code")), 25)
 	if page, err := strconv.Atoi(r.URL.Query().Get("page")); err == nil {
 		p.SetPage(page)
 	}
 
-	var majors []Major
+	var majors []scraper.Major
 	if err := p.Results(&majors); err != nil {
 		panic(err)
 	}
@@ -100,11 +104,11 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func getLogin(w http.ResponseWriter, r *http.Request) {
+func GetLogin(w http.ResponseWriter, r *http.Request) {
 	render("login.gohtml", w, r, nil)
 }
 
-func postLogin(w http.ResponseWriter, r *http.Request) {
+func PostLogin(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		panic(err)
 	}
@@ -112,7 +116,7 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 
 	var user auth.User
-	db.First(&user, "username = ? AND password = ?", username, password)
+	DB.First(&user, "username = ? AND password = ?", username, password)
 	if user.ID == 0 {
 		render("login.gohtml", w, r, map[string]interface{}{
 			"Error": "I could not recognize you, please check your username and password.",
@@ -124,7 +128,7 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 		Token: uuid.Must(uuid.NewV4()).String(),
 		User:  user,
 	}
-	db.Create(&session)
+	DB.Create(&session)
 
 	cookie := http.Cookie{
 		Name:     "session",
@@ -138,36 +142,37 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func getRegister(w http.ResponseWriter, r *http.Request) {
+func GetRegister(w http.ResponseWriter, r *http.Request) {
 	render("register.gohtml", w, r, nil)
 }
 
-func postRegister(w http.ResponseWriter, r *http.Request) {
+func PostRegister(w http.ResponseWriter, r *http.Request) {
 	render("register.gohtml", w, r, nil)
 }
 
-func getLogout(w http.ResponseWriter, r *http.Request) {
+func GetLogout(w http.ResponseWriter, r *http.Request) {
 	if cookie, err := r.Cookie("session"); err == nil {
 		// delete cookie
 		cookie.MaxAge = -1
 		http.SetCookie(w, cookie)
 
 		// delete session from db
-		db.Delete(&auth.Session{}, "token = ?", cookie.Value)
+		DB.Delete(&auth.Session{}, "token = ?", cookie.Value)
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func getPrivacyPolicy(w http.ResponseWriter, r *http.Request) {
+func GetPrivacyPolicy(w http.ResponseWriter, r *http.Request) {
 	render("privacy-policy.gohtml", w, r, nil)
 }
 
 // static files
-func getFavicon(w http.ResponseWriter, r *http.Request) {
+
+func GetFavicon(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/icons/favicon.ico")
 }
 
-func getAds(w http.ResponseWriter, r *http.Request) {
+func GetAds(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/ads.txt")
 }

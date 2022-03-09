@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/dorukgezici/ituscheduler-go/auth"
+	"github.com/dorukgezici/ituscheduler-go/app"
+	"github.com/dorukgezici/ituscheduler-go/app/auth"
+	"github.com/dorukgezici/ituscheduler-go/app/blog"
+	"github.com/dorukgezici/ituscheduler-go/app/scheduler"
+	"github.com/dorukgezici/ituscheduler-go/app/scraper"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
@@ -21,31 +25,31 @@ func main() {
 	}
 
 	// connect to db
-	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%d sslmode=disable", dbHost, dbName, dbUser, dbPassword, 5432)
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{CreateBatchSize: 100})
+	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%d sslmode=disable", app.DBHost, app.DBName, app.DBUser, app.DBPassword, 5432)
+	app.DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{CreateBatchSize: 100})
 	if err != nil {
 		panic(err)
 	} else {
-		log.Println("Successfully connected to the database at: " + dbHost)
+		log.Println("Successfully connected to the database at: " + app.DBHost)
 	}
 
 	// migrate db
-	if err = db.AutoMigrate(&Major{}, &Course{}, &Lecture{}, &Schedule{}, &Post{}, &auth.User{}, &auth.Session{}); err != nil {
+	if err = app.DB.AutoMigrate(&scraper.Major{}, &scraper.Course{}, &scraper.Lecture{}, &scheduler.Schedule{}, &blog.Post{}, &auth.User{}, &auth.Session{}); err != nil {
 		panic(err)
 	} else {
 		log.Println("Successfully auto-migrated the database.")
 	}
 
 	// scrape ITU SIS and save to db if data wasn't refreshed within the last hour
-	var majors []Major
-	db.Find(&majors, "refreshed_at > ?", time.Now().Add(-time.Hour))
+	var majors []scraper.Major
+	app.DB.Find(&majors, "refreshed_at > ?", time.Now().Add(-time.Hour))
 
 	if len(majors) == 0 {
-		scrapeMajors()
+		scraper.ScrapeMajors()
 
 		// scrape courses and lectures of all majors using concurrency
-		db.Find(&majors)
-		scrapeCoursesOfMajors(majors)
+		app.DB.Find(&majors)
+		scraper.ScrapeCoursesOfMajors(majors)
 
 		log.Printf("%d majors were scraped and saved to db.", len(majors))
 	} else {
@@ -54,8 +58,8 @@ func main() {
 
 	// load fixtures
 	log.Println("Loading fixtures...")
-	loadUserFixtures("fixtures/users.json")
-	loadPostFixtures("fixtures/posts.json")
+	app.LoadUserFixtures("fixtures/users.json")
+	app.LoadPostFixtures("fixtures/posts.json")
 
 	// register handlers
 	router := chi.NewRouter()
@@ -63,20 +67,20 @@ func main() {
 	router.Use(middleware.Heartbeat("/health"))
 	router.Use(middleware.Recoverer)
 	// templates
-	router.Get("/", getIndex)
-	router.Get("/courses/{major}", getCourses)
-	router.Get("/info", getInfo)
-	router.Get("/login", getLogin)
-	router.Post("/login", postLogin)
-	router.Get("/register", getRegister)
-	router.Post("/register", postRegister)
-	router.Get("/logout", getLogout)
-	router.Get("/privacy-policy", getPrivacyPolicy)
+	router.Get("/", app.GetIndex)
+	router.Get("/courses/{major}", app.GetCourses)
+	router.Get("/info", app.GetInfo)
+	router.Get("/login", app.GetLogin)
+	router.Post("/login", app.PostLogin)
+	router.Get("/register", app.GetRegister)
+	router.Post("/register", app.PostRegister)
+	router.Get("/logout", app.GetLogout)
+	router.Get("/privacy-policy", app.GetPrivacyPolicy)
 	// APIs
 	//router.GET("/api/majors", getMajors)
 	// static files
-	router.Get("/favicon.ico", getFavicon)
-	router.Get("/ads.txt", getAds)
+	router.Get("/favicon.ico", app.GetFavicon)
+	router.Get("/ads.txt", app.GetAds)
 	router.Handle("/static/*", http.FileServer(http.Dir(".")))
 
 	// run server on 8080

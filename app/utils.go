@@ -1,9 +1,10 @@
-package main
+package app
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dorukgezici/ituscheduler-go/auth"
+	"github.com/dorukgezici/ituscheduler-go/app/auth"
+	"github.com/dorukgezici/ituscheduler-go/app/blog"
 	"github.com/imdario/mergo"
 	"gorm.io/gorm/clause"
 	"html/template"
@@ -15,7 +16,7 @@ import (
 	"time"
 )
 
-func loadUserFixtures(filename string) {
+func LoadUserFixtures(filename string) {
 	jsonFile, err := os.Open(filename)
 	if err != nil {
 		log.Printf("failed to open json file: %s, error: %v", filename, err)
@@ -32,13 +33,13 @@ func loadUserFixtures(filename string) {
 		log.Printf("failed to close jsonFile, error: %s", jsonFile.Close().Error())
 	}
 
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&users)
+	DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&users)
 	for i, user := range users {
 		log.Printf("USER#%d: ID: %d Username: %s", i, user.ID, user.Username)
 	}
 }
 
-func loadPostFixtures(filename string) {
+func LoadPostFixtures(filename string) {
 	jsonFile, err := os.Open(filename)
 	if err != nil {
 		log.Printf("failed to open json file: %s, error: %v", filename, err)
@@ -49,13 +50,13 @@ func loadPostFixtures(filename string) {
 		log.Printf("failed to read json file, error: %v", err)
 	}
 
-	var posts []Post
+	var posts []blog.Post
 	if err = json.Unmarshal(jsonData, &posts); err != nil {
 		log.Printf("failed to unmarshal json file, error: %v\n", err)
 		log.Printf("failed to close jsonFile, error: %s", jsonFile.Close().Error())
 	}
 
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&posts)
+	DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&posts)
 	for i, post := range posts {
 		log.Printf("POST#%d: Author: %s Date: %s", i, post.Author, post.Date)
 	}
@@ -80,7 +81,7 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 
 	var user auth.User
 	if cookie, err := r.Cookie("session"); err == nil {
-		db.Joins("JOIN sessions ON sessions.user_id = users.id").Find(&user, "sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value)
+		DB.Joins("JOIN sessions ON sessions.user_id = users.id").Find(&user, "sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value)
 	}
 
 	initialData := map[string]interface{}{
