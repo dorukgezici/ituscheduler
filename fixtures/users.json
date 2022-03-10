@@ -6,6 +6,7 @@
     "password": "password",
     "firstName": "Doruk",
     "lastName": "Gezici",
-    "isAdmin": true
+    "isAdmin": true,
+    "majorCode": "BLG"
   }
 ]

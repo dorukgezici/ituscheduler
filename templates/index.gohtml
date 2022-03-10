@@ -15,96 +15,103 @@
                         <small><a href="javascript:removeMyCourses();" style="padding-left: 10px">Remove All</a></small>
                     </div>
                     <div class="panel-body">
-                        <form action="" method="POST" id="courses_form">
-                            <div class="row">
-                                <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
-                                    <button class="btn btn-primary" name="save">New Schedule</button>
+                        {{if .User.ID}}
+                            <form action="" method="POST" id="courses_form">
+                                <div class="row">
+                                    <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
+                                        <button class="btn btn-primary" name="save">New Schedule</button>
+                                    </div>
+                                    <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
+                                        <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
+                                    </div>
+                                    <div class="col-md-8 col-sm-12 col-xs-12">
+                                        <small>1) Add all relevant courses from the <a href="/courses">Courses
+                                                page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or
+                                            SHIFT
+                                            (or drag with the mouse) to select courses.</small>
+                                    </div>
                                 </div>
-                                <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
-                                    <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
-                                </div>
-                                <div class="col-md-8 col-sm-12 col-xs-12">
-                                    <small>1) Add all relevant courses from the <a href="/courses/BLG">Courses
-                                            page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or
-                                        SHIFT
-                                        (or drag with the mouse) to select courses.</small>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="alert alert-danger" style="margin-top: 20px;"></div>
-                                <hr>
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger" style="margin-top: 20px;"></div>
+                                    <hr>
 
-                                <div class="alert alert-danger" id="not-">
-                                    Message | <a href="javascript:readNotification('');">Okay</a>
-                                </div>
+                                    <div class="alert alert-danger" id="not-">
+                                        Message | <a href="javascript:readNotification('');">Okay</a>
+                                    </div>
 
-                            </div>
-                        </form>
-                        <div class="row">
-                            <div class="col-md-12" style="margin-top: 20px;">
-                                <label class="control-label" for="selected-courses">Courses of the selected
-                                    schedule [Schedule: {{.selected_schedule}}]</label>
-                                <ul class="list-group" id="selected-courses">
-                                    {{range .my_courses}}
-                                        <li class="list-group-item">
-                                            {{.}}
-                                            <a href="javascript:removeCourse({{.CRN}})">Remove</a>
-                                            {{if eq .active false}}
-                                                <br>
-                                                <b style="color: red;">COURSE IS REMOVED FROM SIS</b>
+                                </div>
+                            </form>
+                            {{if .Schedule}}
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top: 20px;">
+                                        <label class="control-label" for="selected-courses">Courses of the selected
+                                            schedule [Schedule: {{.selected_schedule}}]</label>
+                                        <ul class="list-group" id="selected-courses">
+                                            {{range .my_courses}}
+                                                <li class="list-group-item">
+                                                    {{.}}
+                                                    <a href="javascript:removeCourse({{.CRN}})">Remove</a>
+                                                    {{if eq .active false}}
+                                                        <br>
+                                                        <b style="color: red;">COURSE IS REMOVED FROM SIS</b>
+                                                    {{end}}
+                                                </li>
                                             {{end}}
-                                        </li>
-                                    {{end}}
-                                </ul>
+                                        </ul>
+                                    </div>
+                                </div>
+                            {{end}}
+                        {{else}}
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1 center">
+                                    <h2>Welcome to ITU Scheduler!</h2>
+                                    <hr>
+                                    <h4 style="line-height: 1.3em;">ITUscheduler is an <a
+                                                href="https://github.com/dorukgezici/ituscheduler-go"
+                                                target="_blank">open-source</a>
+                                        web application that allows Istanbul Technical University students to browse
+                                        up-to-date & detailed information about courses and create schedules with ease.
+                                        It has features like course queries according to days, notifying the user if a
+                                        course is removed from SIS, exporting the schedule and so on. We also have some
+                                        features planned like automatic schedule generation, displaying data from
+                                        previous years, prerequisite checking, etc..</h4>
+                                    <hr>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-10 col-md-offset-1 center">
-                                <h2>Welcome to ITU Scheduler!</h2>
-                                <hr>
-                                <h4 style="line-height: 1.3em;">ITUscheduler is an <a
-                                            href="//github.com/dorukgezici/ITUscheduler"
-                                            target="_blank">open-source</a>
-                                    web application that allows Istanbul Technical University students to browse
-                                    up-to-date & detailed information about courses and create schedules with ease.
-                                    It has features like course queries according to days, notifying the user if a
-                                    course is removed from SIS, exporting the schedule and so on. We also have some
-                                    features planned like automatic schedule generation, displaying data from
-                                    previous years, prerequisite checking, etc..</h4>
-                                <hr>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3 center">
+                                    <h4>Please <a href="/register">Register</a> or <a href="/login">Login</a>
+                                        to start creating your schedules.</h4><br>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-md-offset-3 center">
-                                <h4>Please <a href="/register">Register</a> or <a href="/login">Login</a>
-                                    to start creating your schedules.</h4><br>
+                            <div class="row">
+                                <div class="col-md-5 col-md-offset-1 col-xs-6">
+                                    <a href="#"
+                                       class="btn btn-block btn-social btn-facebook"><span
+                                                class="fa fa-facebook"></span> Sign in with Facebook</a>
+                                </div>
+                                <div class="col-md-5 col-xs-6">
+                                    <a href="#"
+                                       class="btn btn-block btn-social btn-twitter"><span class="fa fa-twitter"></span>
+                                        Sign in with Twitter</a><br>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5 col-md-offset-1 col-xs-6">
-                                <a href="#"
-                                   class="btn btn-block btn-social btn-facebook"><span
-                                            class="fa fa-facebook"></span> Sign in with Facebook</a>
-                            </div>
-                            <div class="col-md-5 col-xs-6">
-                                <a href="#"
-                                   class="btn btn-block btn-social btn-twitter"><span class="fa fa-twitter"></span>
-                                    Sign in with Twitter</a><br>
-                            </div>
-                        </div>
+                        {{end}}
                     </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-md-12 center">
-                                <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com"
-                                                                            target="_blank">Doruk Gezici</a> & <a
-                                            href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
-                                <em>We do not guarantee or can be responsible for the accuracy of information found
-                                    here. If in doubt, please check <a href="http://www.sis.itu.edu.tr"
-                                                                       target="_blank">SIS</a>.</em>
+                    {{if not .User.ID}}
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12 center">
+                                    <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com"
+                                                                                target="_blank">Doruk Gezici</a> & <a
+                                                href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
+                                    <em>We do not guarantee or can be responsible for the accuracy of information found
+                                        here. If in doubt, please check <a href="http://www.sis.itu.edu.tr"
+                                                                           target="_blank">SIS</a>.</em>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {{end}}
                 </div>
             </div>
         </div>
@@ -115,14 +122,14 @@
                         <h2 class="panel-title">My Schedules</h2>
                     </div>
                     <div class="panel-body">
-                        {{if .user.is_authenticated}}
+                        {{if .User.ID}}
                             <div class="row">
                                 <div style="margin-bottom: 10px;" class="col-md-3 col-sm-12 col-xs-12">
                                     <form>
                                         <select id="schedule" class="form-control" name="schedule"
                                                 onchange="redirect(this.form.schedule)" title="schedule">
-                                            {{range .schedules}}
-                                                <option {{if eq . .selected_schedule}}selected{{end}}
+                                            {{range .User.Schedules}}
+                                                <option {{if eq . $.Schedule}}selected{{end}}
                                                         value="{{ .id }}">Schedule: {{.}}</option>
                                             {{end}}
                                         </select>
@@ -152,24 +159,24 @@
                                 </thead>
                                 <tbody>
                                 {{range .Hours}}
-                                    <tr id="{{.time | slugify}}">
-                                        <th>{{.time}}</th>
-                                        <td id="{{.time | slugify}}-{{ 1 }}"></td>
-                                        <td id="{{.time | slugify}}-{{ 2 }}"></td>
-                                        <td id="{{.time | slugify}}-{{ 3 }}"></td>
-                                        <td id="{{.time | slugify}}-{{ 4 }}"></td>
-                                        <td id="{{.time | slugify}}-{{ 5 }}"></td>
+                                    <tr id="{{.Time | slugify}}">
+                                        <th>{{.Time}}</th>
+                                        <td id="{{.Time | slugify}}-{{ 1 }}"></td>
+                                        <td id="{{.Time | slugify}}-{{ 2 }}"></td>
+                                        <td id="{{.Time | slugify}}-{{ 3 }}"></td>
+                                        <td id="{{.Time | slugify}}-{{ 4 }}"></td>
+                                        <td id="{{.Time | slugify}}-{{ 5 }}"></td>
                                     </tr>
                                 {{end}}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    {{if .user.is_authenticated}}
+                    {{if .User.ID}}
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-xs-4 col-xs-offset-8">
-                                    <a href="share{{.user.username}}" class="btn btn-block btn-primary">Share!</a>
+                                    <a href="share{{.User.Username}}" class="btn btn-block btn-primary">Share!</a>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +190,7 @@
 {{define "script"}}
     <script>
         $(document).ready(function () {
-            if ("{{.selected_schedule}}") {
+            if ("{{.Schedule}}") {
                 writeLectures();
             }
             var select = document.getElementById('id_courses');

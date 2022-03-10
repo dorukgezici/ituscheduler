@@ -14,7 +14,44 @@ import (
 // templates
 
 func GetIndex(w http.ResponseWriter, r *http.Request) {
-	render("index.gohtml", w, r, nil)
+	type Hour struct {
+		Time      string
+		TimeStart uint
+		TimeEnd   uint
+	}
+	var (
+		user, ok = r.Context().Value("user").(User)
+		schedule Schedule
+		hours    = []Hour{
+			{"8:30-9:29", 830, 929},
+			{"9:30-10:29", 930, 1029},
+			{"10:30-11:29", 1030, 1129},
+			{"11:30-12:29", 1130, 1229},
+			{"12:30-13:29", 1230, 1329},
+			{"13:30-14:29", 1330, 1429},
+			{"14:30-15:29", 1430, 1529},
+			{"15:30-16:29", 1530, 1629},
+			{"16:30-17:29", 1630, 1729},
+			{"17:30-18:29", 1730, 1829},
+		}
+	)
+	if ok {
+		DB.Find(&schedule, "user_id = ? AND is_selected = ?", user.ID, true)
+	}
+
+	render("index.gohtml", w, r, map[string]interface{}{
+		"Schedule": schedule,
+		"Hours":    hours,
+	})
+}
+
+func GetMyCourses(w http.ResponseWriter, r *http.Request) {
+	user, ok := r.Context().Value("user").(User)
+	if ok && user.MajorCode != nil {
+		http.Redirect(w, r, "/courses/"+*user.MajorCode, http.StatusSeeOther)
+	} else {
+		http.Redirect(w, r, "/courses/BLG", http.StatusSeeOther)
+	}
 }
 
 func GetCourses(w http.ResponseWriter, r *http.Request) {

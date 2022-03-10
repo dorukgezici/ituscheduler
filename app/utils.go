@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/imdario/mergo"
 	"gorm.io/gorm/clause"
@@ -60,6 +61,16 @@ func LoadPostFixtures(filename string) {
 	}
 }
 
+func authenticate(r *http.Request) (*User, error) {
+	if cookie, err := r.Cookie("session"); err == nil {
+		var user User
+		DB.Joins("JOIN sessions ON sessions.user_id = users.id").First(&user, "sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value)
+		return &user, nil
+	} else {
+		return nil, errors.New("i could not recognize you, please check your username and password")
+	}
+}
+
 func render(filename string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {
 	fm := template.FuncMap{
 		"safe": func(value interface{}) template.HTML {
@@ -77,11 +88,7 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 	}
 	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
 
-	var user User
-	if cookie, err := r.Cookie("session"); err == nil {
-		DB.Joins("JOIN sessions ON sessions.user_id = users.id").Find(&user, "sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value)
-	}
-
+	user, _ := r.Context().Value("user").(User)
 	initialData := map[string]interface{}{
 		"Time": time.Now(),
 		"Path": r.URL.Path,

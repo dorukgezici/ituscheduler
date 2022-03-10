@@ -62,18 +62,23 @@ func main() {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Heartbeat("/health"))
 	router.Use(middleware.Recoverer)
-	// templates
-	router.Get("/", app.GetIndex)
-	router.Get("/courses/{major}", app.GetCourses)
-	router.Get("/info", app.GetInfo)
-	router.Get("/login", app.GetLogin)
-	router.Post("/login", app.PostLogin)
-	router.Get("/register", app.GetRegister)
-	router.Post("/register", app.PostRegister)
-	router.Get("/logout", app.GetLogout)
-	router.Get("/privacy-policy", app.GetPrivacyPolicy)
-	// APIs
-	//router.GET("/api/majors", getMajors)
+	// app
+	router.Group(func(r chi.Router) {
+		// templates
+		r.Use(app.SessionAuth)
+		r.Get("/", app.GetIndex)
+		r.Get("/courses", app.GetMyCourses)
+		r.Get("/courses/{major}", app.GetCourses)
+		r.Get("/info", app.GetInfo)
+		r.Get("/login", app.GetLogin)
+		r.Post("/login", app.PostLogin)
+		r.Get("/register", app.GetRegister)
+		r.Post("/register", app.PostRegister)
+		r.Get("/logout", app.GetLogout)
+		r.Get("/privacy-policy", app.GetPrivacyPolicy)
+		// APIs
+		//router.GET("/api/majors", getMajors)
+	})
 	// static files
 	router.Get("/favicon.ico", app.GetFavicon)
 	router.Get("/ads.txt", app.GetAds)

@@ -14,8 +14,8 @@ type User struct {
 	FirstName string
 	LastName  string
 	IsAdmin   bool
-	MajorID   *uint
-	Major     Major
+	MajorCode *string
+	Major     Major `gorm:"foreignKey:MajorCode"`
 	Schedules []Schedule
 	Sessions  []Session
 }
@@ -69,9 +69,10 @@ type Lecture struct {
 
 type Schedule struct {
 	gorm.Model
-	UserID  uint
-	User    User
-	Courses []Course `gorm:"many2many:schedule_courses;"`
+	UserID     uint
+	User       User
+	Courses    []Course `gorm:"many2many:schedule_courses;"`
+	IsSelected bool
 }
 
 type Post struct {
