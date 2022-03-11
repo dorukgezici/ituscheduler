@@ -304,21 +304,18 @@
         }
 
         function removeMyCourses() {
-            $.post(
-                "remove_my_courses",
-                {
-                    "csrfmiddlewaretoken": getCookie('csrftoken')
-                },
-                function (response) {
-                    var isSuccessful = response["successful"];
+            $.ajax({
+                url: "/api/courses",
+                type: "DELETE",
+                success: function (response) {
+                    const isSuccessful = response["successful"];
                     if (!isSuccessful) {
                         alert("Error: " + response["error"]);
                     } else {
                         location.reload();
                     }
-                },
-                "json"
-            )
+                }
+            })
         }
 
         function removeCourse(Crn) {

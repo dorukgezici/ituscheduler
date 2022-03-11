@@ -1,7 +1,7 @@
 package app
 
 import (
-	"encoding/json"
+	"errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
 	"github.com/vcraescu/go-paginator/v2"
@@ -222,78 +222,90 @@ func GetPrivacyPolicy(w http.ResponseWriter, r *http.Request) {
 
 // APIs
 
-func GetScheduleDetail(w http.ResponseWriter, r *http.Request) {
-	var (
-		schedule   Schedule
-		scheduleId = chi.URLParam(r, "schedule")
-	)
-	DB.Preload("Courses.Lectures").Select("id").First(&schedule, scheduleId)
+func DeleteMyCourses(w http.ResponseWriter, r *http.Request) {
+	user, _ := r.Context().Value("user").(User)
 
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(schedule)
-}
-
-func PostCourseToggle(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
+	if err := DB.Model(&user).Association("Courses").Clear(); err != nil {
 		panic(err)
 	}
+	jsonResponse(w, http.StatusOK, nil, nil)
+}
+
+func PostMyCourse(w http.ResponseWriter, r *http.Request) {
 	var (
-		user, ok  = r.Context().Value("user").(User)
-		courseCrn = r.FormValue("courseCrn")
+		user, _   = r.Context().Value("user").(User)
+		courseCrn = chi.URLParam(r, "course")
 		course    Course
 	)
 
-	if !ok || courseCrn == "" {
-		http.Error(w, "'courseCrn' required", http.StatusBadRequest)
-		return
-	}
-
 	DB.First(&course, courseCrn)
 	if course.CRN == "" {
-		http.Error(w, "course not found", http.StatusNotFound)
+		jsonResponse(w, http.StatusNotFound, errors.New("course not found"), nil)
 		return
 	}
 
-	if err := DB.Model(&user).Association("Courses").Append(courseCrn); err != nil {
+	var userCourses []Course
+	if err := DB.Model(&user).Association("Courses").Find(&userCourses); err != nil {
 		panic(err)
 	}
 
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(map[string]interface{}{
-		"successful": true,
-	})
-}
+	alreadyExists := false
+	for _, userCourse := range userCourses {
+		if userCourse.CRN == course.CRN {
+			alreadyExists = true
+			break
+		}
+	}
 
-// development
-
-func PopulateDB(w http.ResponseWriter, r *http.Request) {
-	if user, err := authenticate(r); err == nil && user.IsAdmin {
-		// query 10 courses
-		var courses []Course
-		DB.Limit(10).Find(&courses)
-
-		// append to user's courses
-		_ = DB.Model(&user).Association("Courses").Append(courses)
-
-		// create schedules
-		schedules := []Schedule{{}, {}, {}}
-		DB.Create(&schedules)
-
-		// set user's schedule
-		user.Schedule = schedules[0]
-		DB.Save(&user)
-
-		// append to user's schedules
-		_ = DB.Model(&user).Association("Schedules").Append(schedules)
-
-		// append to schedule's courses
-		for _, schedule := range schedules {
-			_ = DB.Model(&schedule).Association("Courses").Append(courses)
+	if alreadyExists {
+		// remove course from user's courses
+		if err := DB.Model(&user).Association("Courses").Delete(course); err != nil {
+			panic(err)
 		}
 	} else {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		// add course to user's courses
+		if err := DB.Model(&user).Association("Courses").Append(&course); err != nil {
+			panic(err)
+		}
+	}
+
+	jsonResponse(w, http.StatusOK, nil, nil)
+}
+
+func GetSchedule(w http.ResponseWriter, r *http.Request) {
+	var (
+		scheduleId = chi.URLParam(r, "schedule")
+		schedule   Schedule
+	)
+	DB.Preload("Courses.Lectures").Select("id").First(&schedule, scheduleId)
+	jsonResponse(w, http.StatusOK, nil, schedule)
+}
+
+// admin
+
+func PopulateDB(w http.ResponseWriter, r *http.Request) {
+	user, _ := r.Context().Value("user").(User)
+
+	// query 10 courses
+	var courses []Course
+	DB.Limit(10).Find(&courses)
+
+	// append to user's courses
+	_ = DB.Model(&user).Association("Courses").Append(courses)
+
+	// create schedules
+	schedules := []Schedule{{}, {}, {}}
+	DB.Create(&schedules)
+
+	// set user's schedule
+	DB.Model(&user).Update("schedule_id", schedules[0].ID)
+
+	// append to user's schedules
+	_ = DB.Model(&user).Association("Schedules").Append(schedules)
+
+	// append to schedule's courses
+	for _, schedule := range schedules {
+		_ = DB.Model(&schedule).Association("Courses").Append(courses)
 	}
 }
 

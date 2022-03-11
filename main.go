@@ -80,9 +80,16 @@ func main() {
 		r.Group(func(r chi.Router) {
 			r.Use(middleware.AllowContentType("application/x-www-form-urlencoded"))
 			r.Use(app.AuthRequired)
-			r.Get("/api/schedules/{schedule}", app.GetScheduleDetail)
-			r.Post("/api/courses", app.PostCourseToggle)
+			r.Delete("/api/courses", app.DeleteMyCourses)
+			r.Post("/api/courses/{course}", app.PostMyCourse)
+			r.Get("/api/schedules/{schedule}", app.GetSchedule)
+			// development
 			r.Get("/populate", app.PopulateDB)
+		})
+		// admin
+		r.Group(func(r chi.Router) {
+			r.Use(app.AdminRequired)
+			r.Get("/admin/populate", app.PopulateDB)
 		})
 	})
 	// static files

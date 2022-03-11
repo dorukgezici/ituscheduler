@@ -30,3 +30,16 @@ func AuthRequired(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(fn)
 }
+
+func AdminRequired(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		user, ok := r.Context().Value("user").(User)
+		if !ok || user.IsAdmin == false {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		next.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
+}

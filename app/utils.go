@@ -114,3 +114,28 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 		panic(err)
 	}
 }
+
+func jsonResponse(w http.ResponseWriter, statusCode int, err error, data interface{}) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(statusCode)
+
+	initialData := map[string]interface{}{}
+	if err != nil {
+		initialData["successful"] = false
+		initialData["error"] = err.Error()
+	} else {
+		initialData["successful"] = true
+	}
+
+	switch data.(type) {
+	case map[string]interface{}:
+		if err = mergo.Merge(&initialData, data, mergo.WithOverride); err != nil {
+			panic(err)
+		}
+		_ = json.NewEncoder(w).Encode(initialData)
+	case nil:
+		_ = json.NewEncoder(w).Encode(initialData)
+	default:
+		_ = json.NewEncoder(w).Encode(data)
+	}
+}

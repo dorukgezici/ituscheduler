@@ -30,7 +30,8 @@
                                 <select class="form-control" name="code" onchange="redirectQuery()">
                                     <option value="">Course Code</option>
                                     {{range .CourseCodes}}
-                                        <option {{if eq . $.CourseCode}}selected {{end}}value="{{.Code}}">{{.Code}}</option>
+                                        <option {{if eq . $.CourseCode}}selected
+                                                {{end}}value="{{.Code}}">{{.Code}}</option>
                                     {{end}}
                                 </select>
                             </label>
@@ -92,7 +93,7 @@
                                                     <label>
                                                         <input class="checkbox-inline"
                                                                 {{if coursesContains $.User.Courses .CRN}} checked{{end}}
-                                                               onchange="addCourse({{.CRN}})" type="checkbox">
+                                                               onchange="toggleCourse({{.CRN}})" type="checkbox">
                                                     </label>
                                                 </td>
                                             {{end}}
@@ -135,16 +136,14 @@
 
 {{define "script"}}
     <script>
-        function addCourse(courseCRN) {
+        function toggleCourse(courseCRN) {
             $.post(
-                "/api/courses",
-                {
-                    "courseCrn": courseCRN,
-                },
+                "/api/courses/" + courseCRN,
+                {},
                 function (response) {
                     const isSuccessful = response["successful"];
                     if (!isSuccessful) {
-                        alert("Error: " + response["error"] + "\nMy Courses: " + response["courses"]);
+                        alert(response["error"]);
                     }
                 },
                 "json"
