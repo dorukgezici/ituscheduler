@@ -12,11 +12,23 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h2 class="panel-title" style="display: inline-block">My Courses</h2>
-                        <small><a href="javascript:removeMyCourses();" style="padding-left: 10px">Remove All</a></small>
+                        {{if .User.ID}}
+                            <small><a href="javascript:removeMyCourses();" style="padding-left: 10px">Remove
+                                    All</a></small>
+                        {{end}}
                     </div>
                     <div class="panel-body">
                         {{if .User.ID}}
                             <form action="" method="POST" id="courses_form">
+                                <div class="form-group">
+                                    <label class="control-label" for="id_courses">Courses</label>
+                                    <select name="courses" class=" form-control" required="" id="id_courses" multiple=""
+                                            size="3">
+                                        {{range .User.Courses}}
+                                            <option value="{{.CRN}}">{{. | course}}</option>
+                                        {{end}}
+                                    </select>
+                                </div>
                                 <div class="row">
                                     <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
                                         <button class="btn btn-primary" name="save">New Schedule</button>
@@ -41,20 +53,16 @@
 
                                 </div>
                             </form>
-                            {{if .Schedule}}
+                            {{if .User.Schedule.ID}}
                                 <div class="row">
                                     <div class="col-md-12" style="margin-top: 20px;">
                                         <label class="control-label" for="selected-courses">Courses of the selected
-                                            schedule [Schedule: {{.selected_schedule}}]</label>
+                                            schedule [Schedule: {{.User.Schedule.ID}}]</label>
                                         <ul class="list-group" id="selected-courses">
-                                            {{range .my_courses}}
+                                            {{range .User.Schedule.Courses}}
                                                 <li class="list-group-item">
-                                                    {{.}}
+                                                    {{. | course}}
                                                     <a href="javascript:removeCourse({{.CRN}})">Remove</a>
-                                                    {{if eq .active false}}
-                                                        <br>
-                                                        <b style="color: red;">COURSE IS REMOVED FROM SIS</b>
-                                                    {{end}}
                                                 </li>
                                             {{end}}
                                         </ul>
@@ -102,11 +110,12 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-md-12 center">
-                                    <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com"
+                                    <p style="margin-top: 5px;">Developed by <a href="https://doruk.gezici.me"
                                                                                 target="_blank">Doruk Gezici</a> & <a
-                                                href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
+                                                href="https://github.com/mehmetaltuner" target="_blank">Mehmet
+                                            Altuner</a></p>
                                     <em>We do not guarantee or can be responsible for the accuracy of information found
-                                        here. If in doubt, please check <a href="http://www.sis.itu.edu.tr"
+                                        here. If in doubt, please check <a href="https://www.sis.itu.edu.tr"
                                                                            target="_blank">SIS</a>.</em>
                                 </div>
                             </div>
@@ -129,8 +138,8 @@
                                         <select id="schedule" class="form-control" name="schedule"
                                                 onchange="redirect(this.form.schedule)" title="schedule">
                                             {{range .User.Schedules}}
-                                                <option {{if eq . $.Schedule}}selected{{end}}
-                                                        value="{{ .id }}">Schedule: {{.}}</option>
+                                                <option {{if eq .ID $.User.Schedule.ID}}selected{{end}}
+                                                        value="{{.ID}}">Schedule: {{.ID}}</option>
                                             {{end}}
                                         </select>
                                     </form>
@@ -159,13 +168,13 @@
                                 </thead>
                                 <tbody>
                                 {{range .Hours}}
-                                    <tr id="{{.Time | slugify}}">
+                                    <tr id="{{.Time}}">
                                         <th>{{.Time}}</th>
-                                        <td id="{{.Time | slugify}}-{{ 1 }}"></td>
-                                        <td id="{{.Time | slugify}}-{{ 2 }}"></td>
-                                        <td id="{{.Time | slugify}}-{{ 3 }}"></td>
-                                        <td id="{{.Time | slugify}}-{{ 4 }}"></td>
-                                        <td id="{{.Time | slugify}}-{{ 5 }}"></td>
+                                        <td id="{{.Time}}-{{1}}"></td>
+                                        <td id="{{.Time}}-{{2}}"></td>
+                                        <td id="{{.Time}}-{{3}}"></td>
+                                        <td id="{{.Time}}-{{4}}"></td>
+                                        <td id="{{.Time}}-{{5}}"></td>
                                     </tr>
                                 {{end}}
                                 </tbody>
@@ -176,7 +185,7 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-xs-4 col-xs-offset-8">
-                                    <a href="share{{.User.Username}}" class="btn btn-block btn-primary">Share!</a>
+                                    <a href="/share/{{.User.Username}}" class="btn btn-block btn-primary">Share!</a>
                                 </div>
                             </div>
                         </div>
@@ -190,12 +199,13 @@
 {{define "script"}}
     <script>
         $(document).ready(function () {
-            if ("{{.Schedule}}") {
-                writeLectures();
-            }
+            {{if .User.Schedule.ID}}
+            writeLectures();
+            {{end}}
             var select = document.getElementById('id_courses');
             select.size = select.length;
 
+            {{if .User.ID}}
             $("#addToSchedule").click(function (e) {
                 e.preventDefault();
                 var _data = $("#courses_form").serializeArray();
@@ -223,6 +233,7 @@
                     alert('You must choose at least one course.');
                 }
             });
+            {{end}}
         });
 
         function idGenerator(start, finish, Ids) {
@@ -237,17 +248,20 @@
         }
 
         function writeLectures() {
-            {{$selected_id := "0"}}
             $.ajax({
-                url: "/schedule",
+                url: "/api/schedules/{{.User.Schedule.ID}}",
                 success: function (result) {
-                    console.log("Lectures writing.");
-                    for (var course in result.courses) {
-                        for (var lecture in result.courses[course].lectures) {
-                            var c_lecture = result.courses[course].lectures[lecture];
-                            var c_course = result.courses[course];
+                    console.log("Writing lectures...");
+                    console.log(result.Courses);
+                    for (var course in result.Courses) {
+                        for (var lecture in result.Courses[course].Lectures) {
+                            var c_lecture = result.Courses[course].Lectures[lecture];
+                            var c_course = result.Courses[course];
 
-                            if (c_lecture.time_start.toString().substring(2) === "00") {
+                            var times = c_lecture.Time.split("/");
+                            var time_start = times[0];
+
+                            if (times[0].substring(2) === "00") {
                                 c_lecture.time_start = (c_lecture.time_start - 70);
                                 c_lecture.time_finish = (c_lecture.time_finish + 70);
                             }

@@ -14,9 +14,10 @@
                     <div class="form-group col-md-12">
                         <form id="form-major">
                             <select class="form-control" name="major" onchange="redirectQuery(true)">
-                                <option {{if not .Major}}selected {{end}}value="">Major</option>
+                                <option value="">Major</option>
                                 {{range .Majors}}
-                                    <option {{if eq . $.Major}}selected {{end}}value="{{.Code}}">{{.Code}}</option>
+                                    <option {{if eq .Code $.Major.Code}}selected {{end}}
+                                            value="{{.Code}}">{{.Code}}</option>
                                 {{end}}
                             </select>
                         </form>
@@ -24,7 +25,7 @@
                     <div class="form-group col-md-12">
                         <form id="form-code">
                             <select class="form-control" name="code" onchange="redirectQuery()">
-                                <option {{if not .CourseCode}}selected {{end}}value="">Course Code</option>
+                                <option value="">Course Code</option>
                                 {{range .CourseCodes}}
                                     <option {{if eq . $.CourseCode}}selected {{end}}value="{{.Code}}">{{.Code}}</option>
                                 {{end}}
@@ -34,7 +35,7 @@
                     <div class="form-group col-md-12 col-xs-12">
                         <form id="form-day">
                             <select class="form-control" name="day" onchange="redirectQuery()">
-                                <option {{if not .Day}}selected {{end}}value="">Day</option>
+                                <option value="">Day</option>
                                 {{range $i, $day := .Days}}
                                     <option {{if eq . $.Day}}selected {{end}}value="{{$i}}">{{.NameEn}}</option>
                                 {{end}}
@@ -59,7 +60,9 @@
                                 <table class="table table-hover table-striped">
                                     <thead>
                                     <tr>
-                                        <th>My Courses</th>
+                                        {{if .User.ID}}
+                                            <th>My Courses</th>
+                                        {{end}}
                                         <th>CRN</th>
                                         <th>Major Code</th>
                                         <th>Title</th>
@@ -78,19 +81,22 @@
                                     <tbody>
                                     {{range .Courses}}
                                         <tr>
-                                            <td>
-                                                <label>
-                                                    <input class="checkbox-inline" checked
-                                                           onchange="addCourse({{.CRN}})" type="checkbox">
-                                                </label>
-                                            </td>
+                                            {{if $.User.ID}}
+                                                <td>
+                                                    <label>
+                                                        <input class="checkbox-inline"{{if coursesContains $.MyCourses .CRN}} checked{{end}}
+                                                               onchange="addCourse({{.CRN}})" type="checkbox">
+                                                    </label>
+                                                </td>
+                                            {{end}}
                                             <th>{{.CRN}}</th>
                                             <td><a target="_blank" href="{{.Catalogue}}">{{.Code}}</a>
                                             </td>
                                             <td>{{.Title}}</td>
                                             <td>{{.TeachingMethod}}</td>
                                             <td>{{.Instructor}}</td>
-                                            <td><a href="javascript:listBuildings();">{{range .Lectures}}{{.Building}}<br>{{end}}</a></td>
+                                            <td><a href="javascript:listBuildings();">{{range .Lectures}}{{.Building}}
+                                                    <br>{{end}}</a></td>
                                             <td>{{range .Lectures}}{{.Day}}<br>{{end}}</td>
                                             <td>{{range .Lectures}}{{.Time}}<br>{{end}}</td>
                                             <td>{{range .Lectures}}{{.Room}}<br>{{end}}</td>
@@ -124,10 +130,9 @@
     <script>
         function addCourse(courseCRN) {
             $.post(
-                "/api/courses/add",
+                "/api/courses",
                 {
-                    "course_crn": parseInt(courseCRN),
-                    "csrfmiddlewaretoken": getCookie('csrftoken')
+                    "courseCrn": courseCRN,
                 },
                 function (response) {
                     const isSuccessful = response["successful"];

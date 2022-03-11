@@ -64,26 +64,37 @@ func LoadPostFixtures(filename string) {
 func authenticate(r *http.Request) (*User, error) {
 	if cookie, err := r.Cookie("session"); err == nil {
 		var user User
-		DB.Joins("JOIN sessions ON sessions.user_id = users.id").First(&user, "sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value)
-		return &user, nil
-	} else {
-		return nil, errors.New("i could not recognize you, please check your username and password")
+		DB.Joins("JOIN sessions ON sessions.user_id = users.id AND sessions.token = ? AND sessions.deleted_at IS NULL", cookie.Value).Omit("password").First(&user)
+		if user.ID != 0 {
+			return &user, nil
+		}
 	}
+	return nil, errors.New("i could not recognize you, please check your username and password")
 }
 
 func render(filename string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {
 	fm := template.FuncMap{
+		// formatters
 		"safe": func(value interface{}) template.HTML {
 			return template.HTML(fmt.Sprint(value))
 		},
 		"date": func(date time.Time) template.HTML {
 			return template.HTML(date.Format("Jan 2, 2006, 3:04 PM"))
 		},
-		"slugify": func(value interface{}) template.HTML {
-			return template.HTML(fmt.Sprint(value))
+		"course": func(course Course) template.HTML {
+			return template.HTML(fmt.Sprintf("%s | %s | %s | %v", course.CRN, course.Code, course.Title, course.Lectures))
 		},
-		"pathContains": func(value interface{}) bool {
-			return strings.Contains(r.URL.Path, fmt.Sprint(value))
+		// helpers
+		"pathContains": func(path string) bool {
+			return strings.Contains(r.URL.Path, path)
+		},
+		"coursesContains": func(courses []Course, crn string) bool {
+			for _, course := range courses {
+				if course.CRN == crn {
+					return true
+				}
+			}
+			return false
 		},
 	}
 	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
@@ -94,7 +105,7 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 		"Path": r.URL.Path,
 		"User": user,
 	}
-	if err := mergo.Merge(&data, initialData); err != nil {
+	if err := mergo.Merge(&initialData, data, mergo.WithOverride); err != nil {
 		panic(err)
 	}
 

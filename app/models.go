@@ -8,16 +8,19 @@ import (
 
 type User struct {
 	gorm.Model
-	Email     string `gorm:"unique"`
-	Username  string
-	Password  string
-	FirstName string
-	LastName  string
-	IsAdmin   bool
-	MajorCode *string
-	Major     Major `gorm:"foreignKey:MajorCode"`
-	Schedules []Schedule
-	Sessions  []Session
+	Email      string `gorm:"unique"`
+	Username   string
+	Password   string
+	FirstName  string
+	LastName   string
+	IsAdmin    bool
+	MajorCode  *string
+	Major      Major `gorm:"foreignKey:MajorCode"`
+	ScheduleID *uint
+	Schedule   Schedule
+	Courses    []Course   `gorm:"many2many:user_courses;"`
+	Schedules  []Schedule `gorm:"many2many:user_schedules;"`
+	Sessions   []Session
 }
 
 type Session struct {
@@ -32,12 +35,13 @@ type Session struct {
 type Major struct {
 	Code        string `gorm:"primarykey"`
 	RefreshedAt time.Time
+	Courses     []Course
 }
 
 type Course struct {
-	MajorCode        string
-	Major            Major  `gorm:"foreignKey:MajorCode"`
 	CRN              string `gorm:"primarykey"`
+	MajorCode        string
+	Major            Major `gorm:"foreignKey:MajorCode"`
 	Code             string
 	Catalogue        string
 	Title            string
@@ -56,23 +60,18 @@ type Course struct {
 }
 
 type Lecture struct {
-	CourseCRN string `gorm:"primarykey"`
+	gorm.Model
+	CourseCRN string `gorm:"uniqueIndex:idx_lecture"`
 	Course    Course `gorm:"foreignKey:CourseCRN"`
 	Building  string
-	Day       string `gorm:"primarykey"`
-	Time      string `gorm:"primarykey"`
+	Day       string `gorm:"uniqueIndex:idx_lecture"`
+	Time      string `gorm:"uniqueIndex:idx_lecture"`
 	Room      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 type Schedule struct {
 	gorm.Model
-	UserID     uint
-	User       User
-	Courses    []Course `gorm:"many2many:schedule_courses;"`
-	IsSelected bool
+	Courses []Course `gorm:"many2many:schedule_courses;"`
 }
 
 type Post struct {

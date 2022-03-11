@@ -77,7 +77,13 @@ func main() {
 		r.Get("/logout", app.GetLogout)
 		r.Get("/privacy-policy", app.GetPrivacyPolicy)
 		// APIs
-		//router.GET("/api/majors", getMajors)
+		r.Group(func(r chi.Router) {
+			r.Use(middleware.AllowContentType("application/x-www-form-urlencoded"))
+			r.Use(app.AuthRequired)
+			r.Get("/api/schedules/{schedule}", app.GetScheduleDetail)
+			r.Post("/api/courses", app.PostCourseToggle)
+			r.Get("/populate", app.PopulateDB)
+		})
 	})
 	// static files
 	router.Get("/favicon.ico", app.GetFavicon)

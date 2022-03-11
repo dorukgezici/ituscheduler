@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
 	"github.com/vcraescu/go-paginator/v2"
@@ -21,7 +22,6 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	}
 	var (
 		user, ok = r.Context().Value("user").(User)
-		schedule Schedule
 		hours    = []Hour{
 			{"8:30-9:29", 830, 929},
 			{"9:30-10:29", 930, 1029},
@@ -36,12 +36,12 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	)
 	if ok {
-		DB.Find(&schedule, "user_id = ? AND is_selected = ?", user.ID, true)
+		DB.Preload("Courses.Lectures").Preload("Schedules").Preload("Schedule.Courses.Lectures").Omit("password").First(&user)
 	}
 
 	render("index.gohtml", w, r, map[string]interface{}{
-		"Schedule": schedule,
-		"Hours":    hours,
+		"User":  user,
+		"Hours": hours,
 	})
 }
 
@@ -77,12 +77,15 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 			"4": {"Perşembe", "Thursday"},
 			"5": {"Cuma", "Friday"},
 		}
-		day = days[dayKey]
+		day       = days[dayKey]
+		user, _   = r.Context().Value("user").(User)
+		myCourses []Course
 	)
 
 	DB.Order("code").Find(&majors)
 	DB.First(&major, "code = ?", majorCode)
 	DB.Model(&Course{}).Distinct("code").Order("code").Find(&courseCodes, "major_code = ?", majorCode)
+	_ = DB.Model(&user).Association("Courses").Find(&myCourses)
 
 	// query courses and lectures
 	q := DB.Model(&Course{}).Preload("Lectures").Order("code").Where("major_code = ?", majorCode)
@@ -100,6 +103,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 		"CourseCodes": courseCodes,
 		"CourseCode":  courseCode,
 		"Courses":     courses,
+		"MyCourses":   myCourses,
 		"Days":        days,
 		"Day":         day,
 	})
@@ -138,7 +142,11 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLogin(w http.ResponseWriter, r *http.Request) {
-	render("login.gohtml", w, r, nil)
+	if _, ok := r.Context().Value("user").(User); ok {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
+		render("login.gohtml", w, r, nil)
+	}
 }
 
 func PostLogin(w http.ResponseWriter, r *http.Request) {
@@ -149,7 +157,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 
 	var user User
-	DB.First(&user, "username = ? AND password = ?", username, password)
+	DB.Omit("password").First(&user, "username = ? AND password = ?", username, password)
 	if user.ID == 0 {
 		render("login.gohtml", w, r, map[string]interface{}{
 			"Error": "I could not recognize you, please check your username and password.",
@@ -176,11 +184,19 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetRegister(w http.ResponseWriter, r *http.Request) {
-	render("register.gohtml", w, r, nil)
+	if _, ok := r.Context().Value("user").(User); ok {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
+		render("register.gohtml", w, r, nil)
+	}
 }
 
 func PostRegister(w http.ResponseWriter, r *http.Request) {
-	render("register.gohtml", w, r, nil)
+	if _, ok := r.Context().Value("user").(User); ok {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
+		render("register.gohtml", w, r, nil)
+	}
 }
 
 func GetLogout(w http.ResponseWriter, r *http.Request) {
@@ -198,6 +214,83 @@ func GetLogout(w http.ResponseWriter, r *http.Request) {
 
 func GetPrivacyPolicy(w http.ResponseWriter, r *http.Request) {
 	render("privacy-policy.gohtml", w, r, nil)
+}
+
+// APIs
+
+func GetScheduleDetail(w http.ResponseWriter, r *http.Request) {
+	var (
+		schedule   Schedule
+		scheduleId = chi.URLParam(r, "schedule")
+	)
+	DB.Preload("Courses.Lectures").Select("id").First(&schedule, scheduleId)
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(schedule)
+}
+
+func PostCourseToggle(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		panic(err)
+	}
+	var (
+		user, ok  = r.Context().Value("user").(User)
+		courseCrn = r.FormValue("courseCrn")
+		course    Course
+	)
+
+	if !ok || courseCrn == "" {
+		http.Error(w, "'courseCrn' required", http.StatusBadRequest)
+		return
+	}
+
+	DB.First(&course, courseCrn)
+	if course.CRN == "" {
+		http.Error(w, "course not found", http.StatusNotFound)
+		return
+	}
+
+	if err := DB.Model(&user).Association("Courses").Append(courseCrn); err != nil {
+		panic(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
+		"successful": true,
+	})
+}
+
+// development
+
+func PopulateDB(w http.ResponseWriter, r *http.Request) {
+	if user, err := authenticate(r); err == nil && user.IsAdmin {
+		// query 10 courses
+		var courses []Course
+		DB.Limit(10).Find(&courses)
+
+		// append to user's courses
+		_ = DB.Model(&user).Association("Courses").Append(courses)
+
+		// create schedules
+		schedules := []Schedule{{}, {}, {}}
+		DB.Create(&schedules)
+
+		// set user's schedule
+		user.Schedule = schedules[0]
+		DB.Save(&user)
+
+		// append to user's schedules
+		_ = DB.Model(&user).Association("Schedules").Append(schedules)
+
+		// append to schedule's courses
+		for _, schedule := range schedules {
+			_ = DB.Model(&schedule).Association("Courses").Append(courses)
+		}
+	} else {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+	}
 }
 
 // static files
