@@ -80,11 +80,12 @@ func main() {
 		r.Group(func(r chi.Router) {
 			r.Use(middleware.AllowContentType("application/x-www-form-urlencoded"))
 			r.Use(app.AuthRequired)
-			r.Delete("/api/courses", app.DeleteMyCourses)
-			r.Post("/api/courses/{course}", app.PostMyCourse)
+			r.Delete("/api/my-courses", app.DeleteMyCourses)
+			r.Post("/api/my-courses/{course}", app.PostMyCourse)
+			r.Post("/api/my-schedule/{schedule}", app.PostMySchedule)
 			r.Get("/api/schedules/{schedule}", app.GetSchedule)
-			// development
-			r.Get("/populate", app.PopulateDB)
+			r.Delete("/api/schedules/{schedule}", app.DeleteSchedule)
+			r.Delete("/api/schedule-courses/{course}", app.DeleteScheduleCourse)
 		})
 		// admin
 		r.Group(func(r chi.Router) {

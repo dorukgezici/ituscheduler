@@ -136,18 +136,17 @@
 
 {{define "script"}}
     <script>
-        function toggleCourse(courseCRN) {
-            $.post(
-                "/api/courses/" + courseCRN,
-                {},
-                function (response) {
+        function toggleCourse(courseCrn) {
+            $.ajax({
+                url: "/api/my-courses/" + courseCrn,
+                type: "POST",
+                success: function (response) {
                     const isSuccessful = response["successful"];
                     if (!isSuccessful) {
                         alert(response["error"]);
                     }
-                },
-                "json"
-            );
+                }
+            })
         }
 
         function redirectQuery(isMajorChanged) {

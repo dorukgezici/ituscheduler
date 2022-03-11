@@ -43,15 +43,6 @@
                                             (or drag with the mouse) to select courses.</small>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="alert alert-danger" style="margin-top: 20px;"></div>
-                                    <hr>
-
-                                    <div class="alert alert-danger" id="not-">
-                                        Message | <a href="javascript:readNotification('');">Okay</a>
-                                    </div>
-
-                                </div>
                             </form>
                             {{if .User.Schedule.ID}}
                                 <div class="row">
@@ -62,7 +53,7 @@
                                             {{range .User.Schedule.Courses}}
                                                 <li class="list-group-item">
                                                     {{. | course}}
-                                                    <a href="javascript:removeCourse({{.CRN}})">Remove</a>
+                                                    <a href="javascript:removeScheduleCourse({{.CRN}})">Remove</a>
                                                 </li>
                                             {{end}}
                                         </ul>
@@ -134,15 +125,15 @@
                         {{if .User.ID}}
                             <div class="row">
                                 <div style="margin-bottom: 10px;" class="col-md-3 col-sm-12 col-xs-12">
-                                    <form>
-                                        <select id="schedule" class="form-control" name="schedule"
-                                                onchange="redirect(this.form.schedule)" title="schedule">
-                                            {{range .User.Schedules}}
-                                                <option {{if eq .ID $.User.Schedule.ID}}selected{{end}}
-                                                        value="{{.ID}}">Schedule: {{.ID}}</option>
-                                            {{end}}
-                                        </select>
-                                    </form>
+                                    <select id="schedule" class="form-control" name="schedule"
+                                            onchange="selectSchedule($('#schedule').find('option:selected').val())"
+                                            title="schedule">
+                                        <option value="">Select Schedule</option>
+                                        {{range .User.Schedules}}
+                                            <option {{if eq .ID $.User.Schedule.ID}}selected{{end}}
+                                                    value="{{.ID}}">Schedule: {{.ID}}</option>
+                                        {{end}}
+                                    </select>
                                 </div>
                                 <div class="col-md-9 col-sm-12 col-xs-12">
                                     <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
@@ -202,37 +193,37 @@
             {{if .User.Schedule.ID}}
             writeLectures();
             {{end}}
-            var select = document.getElementById('id_courses');
-            select.size = select.length;
+            // var select = document.getElementById('id_courses');
+            // select.size = select.length;
 
             {{if .User.ID}}
-            $("#addToSchedule").click(function (e) {
-                e.preventDefault();
-                var _data = $("#courses_form").serializeArray();
-                var _url = "add_to_schedule";
-                var empty = false;
-
-                if (_data[2]) {
-                    empty = true
-                }
-
-                if (empty) {
-                    $.ajax({
-                        url: _url,
-                        type: "POST",
-                        data: _data,
-                        success: function (data) {
-                            location.reload();
-                        },
-                        error: function (data) {
-                            alert("First you must create a new schedule.");
-
-                        }
-                    });
-                } else {
-                    alert('You must choose at least one course.');
-                }
-            });
+            // $("#addToSchedule").click(function (e) {
+            //     e.preventDefault();
+            //     var _data = $("#courses_form").serializeArray();
+            //     var _url = "add_to_schedule";
+            //     var empty = false;
+            //
+            //     if (_data[2]) {
+            //         empty = true
+            //     }
+            //
+            //     if (empty) {
+            //         $.ajax({
+            //             url: _url,
+            //             type: "POST",
+            //             data: _data,
+            //             success: function (data) {
+            //                 location.reload();
+            //             },
+            //             error: function (data) {
+            //                 alert("First you must create a new schedule.");
+            //
+            //             }
+            //         });
+            //     } else {
+            //         alert('You must choose at least one course.');
+            //     }
+            // });
             {{end}}
         });
 
@@ -305,30 +296,22 @@
 
         function removeMyCourses() {
             $.ajax({
-                url: "/api/courses",
+                url: "/api/my-courses",
                 type: "DELETE",
-                success: function (response) {
-                    const isSuccessful = response["successful"];
-                    if (!isSuccessful) {
-                        alert("Error: " + response["error"]);
-                    } else {
-                        location.reload();
-                    }
+                success: function () {
+                    location.reload();
+                },
+                error: function (result) {
+                    console.log(result);
                 }
             })
         }
 
-        function removeCourse(Crn) {
+        function removeScheduleCourse(courseCrn) {
             $.ajax({
-                url: "course_remove",
-                type: "POST",
-                dataType: 'json',
-                data: {
-                    "crn": Crn,
-                    "csrfmiddlewaretoken": getCookie('csrftoken'),
-                    "schedule_id": "{{.selected_schedule.id}}"
-                },
-                success: function (result) {
+                url: "/api/schedule-courses/" + courseCrn,
+                type: "DELETE",
+                success: function () {
                     location.reload();
                 },
                 error: function (result) {
@@ -337,49 +320,17 @@
             });
         }
 
-        function redirect(selected) {
-            var scheduleId = selected.options[selected.selectedIndex].value;
-            if (scheduleId) {
-                $.post(
-                    "select_schedule",
-                    {
-                        "schedule_id": parseInt(scheduleId),
-                        "csrfmiddlewaretoken": getCookie('csrftoken')
-                    },
-                    function (response) {
-                        var isSuccessful = response["successful"];
-                        if (!isSuccessful) {
-                            alert("Error: " + response["error"]);
-                        } else {
-                            location.href = "/schedule/" + scheduleId;
-                        }
-                    },
-                    "json"
-                )
-            }
-        }
-
         function selectSchedule(scheduleId) {
             if (scheduleId == null) {
                 alert("Create and select a schedule first.");
             } else {
-                $.post(
-                    "select_schedule",
-                    {
-                        "schedule_id": parseInt(scheduleId),
-                        "csrfmiddlewaretoken": getCookie('csrftoken')
-                    },
-                    function (response) {
-                        var isSuccessful = response["successful"];
-                        if (!isSuccessful) {
-                            alert("Error: " + response["error"]);
-                        } else {
-                            alert("Your selected schedule: Schedule #" + response["scheduleId"]);
-
-                        }
-                    },
-                    "json"
-                )
+                $.ajax({
+                    url: "/api/my-schedule/" + scheduleId,
+                    type: "POST",
+                    success: function () {
+                        location.reload()
+                    }
+                })
             }
         }
 
@@ -387,22 +338,13 @@
             if (scheduleId == null) {
                 alert("Create and select a schedule first.");
             } else {
-                $.post(
-                    "delete_schedule",
-                    {
-                        "schedule_id": parseInt(scheduleId),
-                        "csrfmiddlewaretoken": getCookie('csrftoken')
-                    },
-                    function (response) {
-                        var isSuccessful = response["successful"];
-                        if (!isSuccessful) {
-                            alert("Error: " + response["error"]);
-                        } else {
-                            location.href = "/";
-                        }
-                    },
-                    "json"
-                )
+                $.ajax({
+                    url: "/api/schedules/" + scheduleId,
+                    type: "DELETE",
+                    success: function () {
+                        location.reload()
+                    }
+                })
             }
         }
 

@@ -272,6 +272,15 @@ func PostMyCourse(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, http.StatusOK, nil, nil)
 }
 
+func PostMySchedule(w http.ResponseWriter, r *http.Request) {
+	var (
+		user, _    = r.Context().Value("user").(User)
+		scheduleId = chi.URLParam(r, "schedule")
+	)
+	DB.Model(&user).Update("schedule_id", scheduleId)
+	jsonResponse(w, http.StatusOK, nil, nil)
+}
+
 func GetSchedule(w http.ResponseWriter, r *http.Request) {
 	var (
 		scheduleId = chi.URLParam(r, "schedule")
@@ -279,6 +288,36 @@ func GetSchedule(w http.ResponseWriter, r *http.Request) {
 	)
 	DB.Preload("Courses.Lectures").Select("id").First(&schedule, scheduleId)
 	jsonResponse(w, http.StatusOK, nil, schedule)
+}
+
+func DeleteSchedule(w http.ResponseWriter, r *http.Request) {
+	var (
+		scheduleId = chi.URLParam(r, "schedule")
+		schedule   Schedule
+	)
+	DB.Select("id").First(&schedule, scheduleId)
+	DB.Delete(&schedule)
+	jsonResponse(w, http.StatusOK, nil, nil)
+}
+
+func DeleteScheduleCourse(w http.ResponseWriter, r *http.Request) {
+	var (
+		user, _   = r.Context().Value("user").(User)
+		courseCrn = chi.URLParam(r, "course")
+		course    Course
+	)
+
+	DB.Preload("Schedule").Omit("password").First(&user)
+	DB.First(&course, courseCrn)
+	if course.CRN == "" {
+		jsonResponse(w, http.StatusNotFound, errors.New("course not found"), nil)
+		return
+	}
+
+	if err := DB.Model(&user.Schedule).Association("Courses").Delete(course); err != nil {
+		panic(err)
+	}
+	jsonResponse(w, http.StatusOK, nil, nil)
 }
 
 // admin
