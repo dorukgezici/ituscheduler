@@ -23,6 +23,7 @@ func AuthRequired(next http.Handler) http.Handler {
 		_, ok := r.Context().Value("user").(User)
 		if !ok {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
 		}
 		next.ServeHTTP(w, r)
 	}

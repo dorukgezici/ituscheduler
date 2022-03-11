@@ -63,6 +63,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 		NameEn string
 	}
 	var (
+		user, ok    = r.Context().Value("user").(User)
 		majorCode   = chi.URLParam(r, "major")
 		courseCode  = CourseCode{r.URL.Query().Get("code")}
 		dayKey      = r.URL.Query().Get("day")
@@ -77,15 +78,18 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 			"4": {"Perşembe", "Thursday"},
 			"5": {"Cuma", "Friday"},
 		}
-		day       = days[dayKey]
-		user, _   = r.Context().Value("user").(User)
-		myCourses []Course
+		day = days[dayKey]
 	)
 
 	DB.Order("code").Find(&majors)
 	DB.First(&major, "code = ?", majorCode)
+
+	if ok {
+		DB.Preload("Courses").Omit("password").First(&user)
+		DB.Model(&user).Update("major_code", majorCode)
+	}
+
 	DB.Model(&Course{}).Distinct("code").Order("code").Find(&courseCodes, "major_code = ?", majorCode)
-	_ = DB.Model(&user).Association("Courses").Find(&myCourses)
 
 	// query courses and lectures
 	q := DB.Model(&Course{}).Preload("Lectures").Order("code").Where("major_code = ?", majorCode)
@@ -98,12 +102,12 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 	q.Find(&courses)
 
 	render("courses.gohtml", w, r, map[string]interface{}{
+		"User":        user,
 		"Majors":      majors,
 		"Major":       major,
 		"CourseCodes": courseCodes,
 		"CourseCode":  courseCode,
 		"Courses":     courses,
-		"MyCourses":   myCourses,
 		"Days":        days,
 		"Day":         day,
 	})

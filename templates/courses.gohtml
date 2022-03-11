@@ -13,33 +13,39 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <form id="form-major">
-                            <select class="form-control" name="major" onchange="redirectQuery(true)">
-                                <option value="">Major</option>
-                                {{range .Majors}}
-                                    <option {{if eq .Code $.Major.Code}}selected {{end}}
-                                            value="{{.Code}}">{{.Code}}</option>
-                                {{end}}
-                            </select>
+                            <label>
+                                <select class="form-control" name="major" onchange="redirectQuery(true)">
+                                    <option value="">Major</option>
+                                    {{range .Majors}}
+                                        <option {{if eq .Code $.Major.Code}}selected {{end}}
+                                                value="{{.Code}}">{{.Code}}</option>
+                                    {{end}}
+                                </select>
+                            </label>
                         </form>
                     </div>
                     <div class="form-group col-md-12">
                         <form id="form-code">
-                            <select class="form-control" name="code" onchange="redirectQuery()">
-                                <option value="">Course Code</option>
-                                {{range .CourseCodes}}
-                                    <option {{if eq . $.CourseCode}}selected {{end}}value="{{.Code}}">{{.Code}}</option>
-                                {{end}}
-                            </select>
+                            <label>
+                                <select class="form-control" name="code" onchange="redirectQuery()">
+                                    <option value="">Course Code</option>
+                                    {{range .CourseCodes}}
+                                        <option {{if eq . $.CourseCode}}selected {{end}}value="{{.Code}}">{{.Code}}</option>
+                                    {{end}}
+                                </select>
+                            </label>
                         </form>
                     </div>
                     <div class="form-group col-md-12 col-xs-12">
                         <form id="form-day">
-                            <select class="form-control" name="day" onchange="redirectQuery()">
-                                <option value="">Day</option>
-                                {{range $i, $day := .Days}}
-                                    <option {{if eq . $.Day}}selected {{end}}value="{{$i}}">{{.NameEn}}</option>
-                                {{end}}
-                            </select>
+                            <label>
+                                <select class="form-control" name="day" onchange="redirectQuery()">
+                                    <option value="">Day</option>
+                                    {{range $i, $day := .Days}}
+                                        <option {{if eq . $.Day}}selected {{end}}value="{{$i}}">{{.NameEn}}</option>
+                                    {{end}}
+                                </select>
+                            </label>
                         </form>
                     </div>
                 </div>
@@ -84,7 +90,8 @@
                                             {{if $.User.ID}}
                                                 <td>
                                                     <label>
-                                                        <input class="checkbox-inline"{{if coursesContains $.MyCourses .CRN}} checked{{end}}
+                                                        <input class="checkbox-inline"
+                                                                {{if coursesContains $.User.Courses .CRN}} checked{{end}}
                                                                onchange="addCourse({{.CRN}})" type="checkbox">
                                                     </label>
                                                 </td>

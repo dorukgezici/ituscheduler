@@ -109,7 +109,7 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 		panic(err)
 	}
 
-	if err := tpl.Execute(w, data); err != nil {
+	if err := tpl.Execute(w, initialData); err != nil {
 		log.Printf("failed to render template: %s, error: %v", filename, err)
 		panic(err)
 	}
