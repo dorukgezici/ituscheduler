@@ -19,10 +19,10 @@
                     </div>
                     <div class="panel-body">
                         {{if .User.ID}}
-                            <form action="" method="POST" id="courses_form">
+                            <form action="/" method="POST" id="courses_form">
                                 <div class="form-group">
                                     <label class="control-label" for="id_courses">Courses</label>
-                                    <select name="courses" class=" form-control" required="" id="id_courses" multiple=""
+                                    <select name="courses" class="form-control" required="" id="id_courses" multiple=""
                                             size="3">
                                         {{range .User.Courses}}
                                             <option value="{{.CRN}}">{{. | course}}</option>
@@ -190,49 +190,36 @@
 {{define "script"}}
     <script>
         $(document).ready(function () {
-            {{if .User.Schedule.ID}}
-            writeLectures();
-            {{end}}
-            // var select = document.getElementById('id_courses');
-            // select.size = select.length;
+            {{if .User.Schedule.ID}}writeLectures();{{end}}
 
-            {{if .User.ID}}
-            // $("#addToSchedule").click(function (e) {
-            //     e.preventDefault();
-            //     var _data = $("#courses_form").serializeArray();
-            //     var _url = "add_to_schedule";
-            //     var empty = false;
-            //
-            //     if (_data[2]) {
-            //         empty = true
-            //     }
-            //
-            //     if (empty) {
-            //         $.ajax({
-            //             url: _url,
-            //             type: "POST",
-            //             data: _data,
-            //             success: function (data) {
-            //                 location.reload();
-            //             },
-            //             error: function (data) {
-            //                 alert("First you must create a new schedule.");
-            //
-            //             }
-            //         });
-            //     } else {
-            //         alert('You must choose at least one course.');
-            //     }
-            // });
+            const select = document.getElementById('id_courses');
+            select.size = select.length;
+
+            {{if and .User.ID .User.Schedule.ID}}
+            $("#addToSchedule").click(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "/api/my-schedule-courses",
+                    type: "POST",
+                    data: $("#courses_form").serializeArray(),
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert("First you must create a new schedule.");
+                    }
+                });
+            });
             {{end}}
         });
 
         function idGenerator(start, finish, Ids) {
-            var ids = Ids;
+            let ids = Ids;
             if ((start - 1) === finish) {
                 return ids
             } else {
-                var id = "#" + start + "-" + (start + 99);
+                const id = "#" + start + "-" + (start + 99);
                 ids.push(id);
                 return idGenerator(start + 100, finish, ids);
             }
@@ -244,32 +231,32 @@
                 success: function (result) {
                     console.log("Writing lectures...");
                     console.log(result.Courses);
-                    for (var course in result.Courses) {
-                        for (var lecture in result.Courses[course].Lectures) {
-                            var c_lecture = result.Courses[course].Lectures[lecture];
-                            var c_course = result.Courses[course];
+                    for (let course in result.Courses) {
+                        for (let lecture in result.Courses[course].Lectures) {
+                            let c_lecture = result.Courses[course].Lectures[lecture];
+                            let c_course = result.Courses[course];
 
-                            var times = c_lecture.Time.split("/");
-                            var time_start = times[0];
+                            let times = c_lecture.Time.split("/");
+                            let time_start = times[0];
 
                             if (times[0].substring(2) === "00") {
                                 c_lecture.time_start = (c_lecture.time_start - 70);
                                 c_lecture.time_finish = (c_lecture.time_finish + 70);
                             }
 
-                            var ids = [];
-                            var blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
+                            let ids = [];
+                            let blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
 
                             if (blocks === 1) {
-                                var id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
+                                let id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
                                 ids.push(id);
                             } else {
                                 //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
                                 ids = idGenerator(c_lecture.time_start, c_lecture.time_finish, []);
                             }
 
-                            for (var Id in ids) {
-                                var id = ids[Id];
+                            for (let Id in ids) {
+                                let id = ids[Id];
                                 if (c_lecture.day === "Pazartesi") {
                                     id += "-" + "1"
                                 } else if (c_lecture.day === "Salı") {
@@ -356,7 +343,7 @@
                     "id": id,
                     "csrfmiddlewaretoken": getCookie('csrftoken')
                 },
-                success: function (result) {
+                success: function () {
                     $('#not-' + id).fadeOut();
                 },
                 error: function (result) {

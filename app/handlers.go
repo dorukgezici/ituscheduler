@@ -7,6 +7,7 @@ import (
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 	"time"
@@ -15,29 +16,44 @@ import (
 // templates
 
 func GetIndex(w http.ResponseWriter, r *http.Request) {
-	type Hour struct {
-		Time      string
-		TimeStart uint
-		TimeEnd   uint
-	}
-	var (
-		user, ok = r.Context().Value("user").(User)
-		hours    = []Hour{
-			{"8:30-9:29", 830, 929},
-			{"9:30-10:29", 930, 1029},
-			{"10:30-11:29", 1030, 1129},
-			{"11:30-12:29", 1130, 1229},
-			{"12:30-13:29", 1230, 1329},
-			{"13:30-14:29", 1330, 1429},
-			{"14:30-15:29", 1430, 1529},
-			{"15:30-16:29", 1530, 1629},
-			{"16:30-17:29", 1630, 1729},
-			{"17:30-18:29", 1730, 1829},
-		}
-	)
+	user, ok := r.Context().Value("user").(User)
 	if ok {
 		DB.Preload("Courses.Lectures").Preload("Schedules").Preload("Schedule.Courses.Lectures").Omit("password").First(&user)
 	}
+
+	render("index.gohtml", w, r, map[string]interface{}{
+		"User":  user,
+		"Hours": hours,
+	})
+}
+
+func PostIndex(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		panic(err)
+	}
+	crns := r.PostForm["courses"]
+
+	var courses []Course
+	DB.Find(&courses, "crn IN (?)", crns)
+
+	user, _ := r.Context().Value("user").(User)
+	schedule := Schedule{}
+
+	_ = DB.Transaction(func(tx *gorm.DB) error {
+		tx.Create(&schedule)
+		if err := tx.Model(&user).Association("Schedule").Replace(&schedule); err != nil {
+			return err
+		}
+		if err := tx.Model(&user).Association("Schedules").Append(&schedule); err != nil {
+			return err
+		}
+		if err := tx.Model(&schedule).Association("Courses").Append(courses); err != nil {
+			return err
+		}
+		return nil
+	})
+
+	DB.Preload("Courses.Lectures").Preload("Schedules").Preload("Schedule.Courses.Lectures").Omit("password").First(&user)
 
 	render("index.gohtml", w, r, map[string]interface{}{
 		"User":  user,
@@ -281,6 +297,23 @@ func PostMySchedule(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, http.StatusOK, nil, nil)
 }
 
+func PostMyScheduleCourses(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		panic(err)
+	}
+	crns := r.PostForm["courses"]
+
+	var courses []Course
+	DB.Find(&courses, "crn IN (?)", crns)
+
+	user, _ := r.Context().Value("user").(User)
+	var schedule Schedule
+	DB.Find(&schedule, user.ScheduleID)
+	_ = DB.Model(&schedule).Association("Courses").Append(&courses)
+
+	jsonResponse(w, http.StatusOK, nil, nil)
+}
+
 func GetSchedule(w http.ResponseWriter, r *http.Request) {
 	var (
 		scheduleId = chi.URLParam(r, "schedule")
@@ -322,7 +355,7 @@ func DeleteScheduleCourse(w http.ResponseWriter, r *http.Request) {
 
 // admin
 
-func PopulateDB(w http.ResponseWriter, r *http.Request) {
+func PopulateDB(_ http.ResponseWriter, r *http.Request) {
 	user, _ := r.Context().Value("user").(User)
 
 	// query 10 courses

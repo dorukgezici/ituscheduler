@@ -67,6 +67,7 @@ func main() {
 		// templates
 		r.Use(app.SessionAuth)
 		r.Get("/", app.GetIndex)
+		r.Post("/", app.PostIndex)
 		r.Get("/courses", app.GetMyCourses)
 		r.Get("/courses/{major}", app.GetCourses)
 		r.Get("/info", app.GetInfo)
@@ -83,6 +84,7 @@ func main() {
 			r.Delete("/api/my-courses", app.DeleteMyCourses)
 			r.Post("/api/my-courses/{course}", app.PostMyCourse)
 			r.Post("/api/my-schedule/{schedule}", app.PostMySchedule)
+			r.Post("/api/my-schedule-courses", app.PostMyScheduleCourses)
 			r.Get("/api/schedules/{schedule}", app.GetSchedule)
 			r.Delete("/api/schedules/{schedule}", app.DeleteSchedule)
 			r.Delete("/api/schedule-courses/{course}", app.DeleteScheduleCourse)
