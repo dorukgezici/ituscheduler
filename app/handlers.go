@@ -17,13 +17,17 @@ import (
 
 func GetIndex(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value("user").(User)
+	var schedule Schedule
+
 	if ok {
-		DB.Preload("Courses.Lectures").Preload("Schedules").Preload("Schedule.Courses.Lectures").Omit("password").First(&user)
+		DB.Preload("Courses.Lectures").Preload("Schedules").Omit("password").First(&user)
+		DB.Preload("Courses.Lectures").First(&schedule, "user_id = ? AND is_selected = true", user.ID)
 	}
 
 	render("index.gohtml", w, r, map[string]interface{}{
-		"User":  user,
-		"Hours": hours,
+		"User":     user,
+		"Schedule": schedule,
+		"Hours":    hours,
 	})
 }
 
@@ -37,27 +41,24 @@ func PostIndex(w http.ResponseWriter, r *http.Request) {
 	DB.Find(&courses, "crn IN (?)", crns)
 
 	user, _ := r.Context().Value("user").(User)
-	schedule := Schedule{}
+	schedule := Schedule{UserID: user.ID, IsSelected: true}
 
 	_ = DB.Transaction(func(tx *gorm.DB) error {
+		tx.Model(&Schedule{}).Where(schedule).Update("is_selected", false)
 		tx.Create(&schedule)
-		if err := tx.Model(&user).Association("Schedule").Replace(&schedule); err != nil {
-			return err
-		}
-		if err := tx.Model(&user).Association("Schedules").Append(&schedule); err != nil {
-			return err
-		}
 		if err := tx.Model(&schedule).Association("Courses").Append(courses); err != nil {
 			return err
 		}
 		return nil
 	})
 
-	DB.Preload("Courses.Lectures").Preload("Schedules").Preload("Schedule.Courses.Lectures").Omit("password").First(&user)
+	DB.Preload("Courses.Lectures").Preload("Schedules").Omit("password").First(&user)
+	DB.Preload("Courses.Lectures").First(&schedule)
 
 	render("index.gohtml", w, r, map[string]interface{}{
-		"User":  user,
-		"Hours": hours,
+		"User":     user,
+		"Schedule": schedule,
+		"Hours":    hours,
 	})
 }
 
@@ -293,7 +294,11 @@ func PostMySchedule(w http.ResponseWriter, r *http.Request) {
 		user, _    = r.Context().Value("user").(User)
 		scheduleId = chi.URLParam(r, "schedule")
 	)
-	DB.Model(&user).Update("schedule_id", scheduleId)
+
+	q := DB.Model(&Schedule{}).Where("user_id = ?", user.ID)
+	q.Update("is_selected", false)
+	q.Where("id = ?", scheduleId).Update("is_selected", true)
+
 	jsonResponse(w, http.StatusOK, nil, nil)
 }
 
@@ -308,7 +313,7 @@ func PostMyScheduleCourses(w http.ResponseWriter, r *http.Request) {
 
 	user, _ := r.Context().Value("user").(User)
 	var schedule Schedule
-	DB.Find(&schedule, user.ScheduleID)
+	DB.First(&schedule, "user_id = ? AND is_selected = true", user.ID)
 	_ = DB.Model(&schedule).Association("Courses").Append(&courses)
 
 	jsonResponse(w, http.StatusOK, nil, nil)
@@ -329,6 +334,7 @@ func DeleteSchedule(w http.ResponseWriter, r *http.Request) {
 		schedule   Schedule
 	)
 	DB.Select("id").First(&schedule, scheduleId)
+	DB.Model(&schedule).Update("is_selected", false)
 	DB.Delete(&schedule)
 	jsonResponse(w, http.StatusOK, nil, nil)
 }
@@ -338,16 +344,17 @@ func DeleteScheduleCourse(w http.ResponseWriter, r *http.Request) {
 		user, _   = r.Context().Value("user").(User)
 		courseCrn = chi.URLParam(r, "course")
 		course    Course
+		schedule  Schedule
 	)
 
-	DB.Preload("Schedule").Omit("password").First(&user)
 	DB.First(&course, courseCrn)
 	if course.CRN == "" {
 		jsonResponse(w, http.StatusNotFound, errors.New("course not found"), nil)
 		return
 	}
 
-	if err := DB.Model(&user.Schedule).Association("Courses").Delete(course); err != nil {
+	DB.First(&schedule, "user_id = ? AND is_selected = true", user.ID)
+	if err := DB.Model(&schedule).Association("Courses").Delete(course); err != nil {
 		panic(err)
 	}
 	jsonResponse(w, http.StatusOK, nil, nil)

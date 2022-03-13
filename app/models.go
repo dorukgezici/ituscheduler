@@ -8,19 +8,17 @@ import (
 
 type User struct {
 	gorm.Model
-	Email      string `gorm:"unique"`
-	Username   string
-	Password   string
-	FirstName  string
-	LastName   string
-	IsAdmin    bool
-	MajorCode  *string
-	Major      Major `gorm:"foreignKey:MajorCode"`
-	ScheduleID *uint
-	Schedule   Schedule
-	Courses    []Course   `gorm:"many2many:user_courses;"`
-	Schedules  []Schedule `gorm:"many2many:user_schedules;"`
-	Sessions   []Session
+	Email     string `gorm:"unique"`
+	Username  string
+	Password  string
+	FirstName string
+	LastName  string
+	IsAdmin   bool
+	MajorCode *string
+	Major     Major    `gorm:"foreignKey:MajorCode"`
+	Courses   []Course `gorm:"many2many:user_courses;"`
+	Schedules []Schedule
+	Sessions  []Session
 }
 
 type Session struct {
@@ -71,7 +69,10 @@ type Lecture struct {
 
 type Schedule struct {
 	gorm.Model
-	Courses []Course `gorm:"many2many:schedule_courses;"`
+	UserID     uint
+	User       User
+	IsSelected bool
+	Courses    []Course `gorm:"many2many:schedule_courses;"`
 }
 
 type Post struct {

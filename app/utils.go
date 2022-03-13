@@ -82,7 +82,12 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 			return template.HTML(date.Format("Jan 2, 2006, 3:04 PM"))
 		},
 		"course": func(course Course) template.HTML {
-			return template.HTML(fmt.Sprintf("%s | %s | %s | %v", course.CRN, course.Code, course.Title, course.Lectures))
+			str := fmt.Sprintf("%s | %s | %s | %s", course.CRN, course.Code, course.Title, course.Instructor)
+			for _, lecture := range course.Lectures {
+				str += fmt.Sprintf(" | %s %s %s %s", lecture.Building, lecture.Room, lecture.Day, lecture.Time)
+			}
+			str += fmt.Sprintf(" | %d/%d", course.Enrolled, course.Capacity)
+			return template.HTML(str)
 		},
 		// helpers
 		"pathContains": func(path string) bool {

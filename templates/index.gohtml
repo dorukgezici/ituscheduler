@@ -44,13 +44,13 @@
                                     </div>
                                 </div>
                             </form>
-                            {{if .User.Schedule.ID}}
+                            {{if .Schedule.ID}}
                                 <div class="row">
                                     <div class="col-md-12" style="margin-top: 20px;">
                                         <label class="control-label" for="selected-courses">Courses of the selected
-                                            schedule [Schedule: {{.User.Schedule.ID}}]</label>
+                                            schedule [Schedule: {{.Schedule.ID}}]</label>
                                         <ul class="list-group" id="selected-courses">
-                                            {{range .User.Schedule.Courses}}
+                                            {{range .Schedule.Courses}}
                                                 <li class="list-group-item">
                                                     {{. | course}}
                                                     <a href="javascript:removeScheduleCourse({{.CRN}})">Remove</a>
@@ -130,7 +130,7 @@
                                             title="schedule">
                                         <option value="">Select Schedule</option>
                                         {{range .User.Schedules}}
-                                            <option {{if eq .ID $.User.Schedule.ID}}selected{{end}}
+                                            <option {{if eq .ID $.Schedule.ID}}selected{{end}}
                                                     value="{{.ID}}">Schedule: {{.ID}}</option>
                                         {{end}}
                                     </select>
@@ -190,12 +190,12 @@
 {{define "script"}}
     <script>
         $(document).ready(function () {
-            {{if .User.Schedule.ID}}writeLectures();{{end}}
+            {{if .Schedule.ID}}writeLectures();{{end}}
 
             const select = document.getElementById('id_courses');
             select.size = select.length;
 
-            {{if and .User.ID .User.Schedule.ID}}
+            {{if and .User.ID .Schedule.ID}}
             $("#addToSchedule").click(function (e) {
                 e.preventDefault();
 
@@ -227,7 +227,7 @@
 
         function writeLectures() {
             $.ajax({
-                url: "/api/schedules/{{.User.Schedule.ID}}",
+                url: "/api/schedules/{{.Schedule.ID}}",
                 success: function (result) {
                     console.log("Writing lectures...");
                     console.log(result.Courses);
