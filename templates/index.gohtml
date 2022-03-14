@@ -441,7 +441,7 @@
                             }, function () {
                                 if ($(this).html() !== "<a></a>") {
                                     $(this).html(result['title']);
-                                }
+                               }
                             });
                         }
 
@@ -464,7 +464,6 @@
                     console.log(selected_courses, $(this).val(), $(this).val() in selected_courses);
                     if (selected_courses.includes($(this).val())) {
                         selected_courses.splice(selected_courses.indexOf($(this).val()), 1);
-                        console.log("naber zeka ", $(this).val());
                         getCourseDetail($(this).val(), true) // stop displaying the course!
                     }
                 }

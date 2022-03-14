@@ -20,7 +20,9 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	var schedule Schedule
 
 	if ok {
-		DB.Preload("Courses.Lectures").Preload("Schedules").Omit("password").First(&user)
+		DB.Preload("Courses.Lectures").Preload("Schedules", func(db *gorm.DB) *gorm.DB {
+			return db.Order("id ASC")
+		}).Omit("password").First(&user)
 		DB.Preload("Courses.Lectures").First(&schedule, "user_id = ? AND is_selected = true", user.ID)
 	}
 
@@ -52,7 +54,9 @@ func PostIndex(w http.ResponseWriter, r *http.Request) {
 		return nil
 	})
 
-	DB.Preload("Courses.Lectures").Preload("Schedules").Omit("password").First(&user)
+	DB.Preload("Courses.Lectures").Preload("Schedules", func(db *gorm.DB) *gorm.DB {
+		return db.Order("id ASC")
+	}).Omit("password").First(&user)
 	DB.Preload("Courses.Lectures").First(&schedule)
 
 	render("index.gohtml", w, r, map[string]interface{}{
