@@ -71,6 +71,7 @@ func main() {
 		r.Get("/courses", app.GetMyCourses)
 		r.Get("/courses/{major}", app.GetCourses)
 		r.Get("/info", app.GetInfo)
+		r.Get("/share/{username}", app.GetShare)
 		r.Get("/login", app.GetLogin)
 		r.Post("/login", app.PostLogin)
 		r.Get("/register", app.GetRegister)

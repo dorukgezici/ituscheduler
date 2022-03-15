@@ -64,6 +64,8 @@ type Lecture struct {
 	Building  string
 	Day       string `gorm:"uniqueIndex:idx_lecture"`
 	Time      string `gorm:"uniqueIndex:idx_lecture"`
+	TimeStart int
+	TimeEnd   int
 	Room      string
 }
 

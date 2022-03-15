@@ -109,11 +109,15 @@ func scrapeCoursesOfMajor(major Major, channel chan Result) {
 				days      = splitElement(el, "td:nth-child(7)")
 				times     = splitElement(el, "td:nth-child(8)")
 				rooms     = splitElement(el, "td:nth-child(9)")
-				building  string
-				timeStr   string
-				room      string
 			)
 			for i, day := range days {
+				var (
+					building  string
+					timeStr   string
+					timeStart int
+					timeEnd   int
+					room      string
+				)
 				if i < len(buildings) {
 					building = buildings[i]
 				} else {
@@ -121,8 +125,10 @@ func scrapeCoursesOfMajor(major Major, channel chan Result) {
 				}
 				if i < len(times) {
 					timeStr = times[i]
+					timeStart, timeEnd = splitTimeStr(timeStr)
 				} else {
-					timeStr = "---"
+					timeStr = "/"
+					timeStart, timeEnd = 0, 0
 				}
 				if i < len(rooms) {
 					room = rooms[i]
@@ -130,11 +136,13 @@ func scrapeCoursesOfMajor(major Major, channel chan Result) {
 					room = "---"
 				}
 				lectures = append(lectures, Lecture{
-					Course:   course,
-					Building: building,
-					Day:      day,
-					Time:     timeStr,
-					Room:     room,
+					Course:    course,
+					Building:  building,
+					Day:       day,
+					Time:      timeStr,
+					TimeStart: timeStart,
+					TimeEnd:   timeEnd,
+					Room:      room,
 				})
 			}
 		})
@@ -176,4 +184,25 @@ func splitElement(el *colly.HTMLElement, selector string) []string {
 	}
 
 	return items
+}
+
+func splitTimeStr(timeStr string) (int, int) {
+	var (
+		timeStrs  = strings.Split(timeStr, "/")
+		timeStart = 0
+		timeEnd   = 0
+	)
+
+	if len(timeStrs) > 0 {
+		if timeInt, err := strconv.Atoi(timeStrs[0]); err == nil {
+			timeStart = timeInt
+		}
+	}
+	if len(timeStrs) > 1 {
+		if timeInt, err := strconv.Atoi(timeStrs[1]); err == nil {
+			timeEnd = timeInt
+		}
+	}
+
+	return timeStart, timeEnd
 }

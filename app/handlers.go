@@ -29,7 +29,7 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	render("index.gohtml", w, r, map[string]interface{}{
 		"User":     user,
 		"Schedule": schedule,
-		"Hours":    hours,
+		"Hours":    hourSlots,
 	})
 }
 
@@ -62,7 +62,7 @@ func PostIndex(w http.ResponseWriter, r *http.Request) {
 	render("index.gohtml", w, r, map[string]interface{}{
 		"User":     user,
 		"Schedule": schedule,
-		"Hours":    hours,
+		"Hours":    hourSlots,
 	})
 }
 
@@ -79,10 +79,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 	type CourseCode struct {
 		Code string
 	}
-	type Day struct {
-		NameTr string
-		NameEn string
-	}
+
 	var (
 		user, ok    = r.Context().Value("user").(User)
 		majorCode   = chi.URLParam(r, "major")
@@ -92,14 +89,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 		major       Major
 		courseCodes []CourseCode
 		courses     []Course
-		days        = map[string]Day{
-			"1": {"Pazartesi", "Monday"},
-			"2": {"Salı", "Tuesday"},
-			"3": {"Çarşamba", "Wednesday"},
-			"4": {"Perşembe", "Thursday"},
-			"5": {"Cuma", "Friday"},
-		}
-		day = days[dayKey]
+		day         = daySlots[dayKey]
 	)
 
 	DB.Order("code").Find(&majors)
@@ -129,7 +119,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 		"CourseCodes": courseCodes,
 		"CourseCode":  courseCode,
 		"Courses":     courses,
-		"Days":        days,
+		"Days":        daySlots,
 		"Day":         day,
 	})
 }
@@ -163,6 +153,20 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 		"Posts":         posts,
 		"Majors":        majors,
 		"Paginator":     view.New(p),
+	})
+}
+
+func GetShare(w http.ResponseWriter, r *http.Request) {
+	username := chi.URLParam(r, "username")
+	var schedule Schedule
+
+	DB.Preload("User", func(tx *gorm.DB) *gorm.DB {
+		return tx.Omit("password")
+	}).Preload("Courses.Lectures").Joins("JOIN users ON users.id = schedules.user_id AND users.username = ?", username).First(&schedule)
+
+	render("share.gohtml", w, r, map[string]interface{}{
+		"Schedule": schedule,
+		"Hours":    hourSlots,
 	})
 }
 

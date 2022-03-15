@@ -161,11 +161,11 @@
                                 {{range .Hours}}
                                     <tr id="{{.Time}}">
                                         <th>{{.Time}}</th>
-                                        <td id="{{.Time}}-{{1}}"></td>
-                                        <td id="{{.Time}}-{{2}}"></td>
-                                        <td id="{{.Time}}-{{3}}"></td>
-                                        <td id="{{.Time}}-{{4}}"></td>
-                                        <td id="{{.Time}}-{{5}}"></td>
+                                        <td id="{{.TimeStart}}-{{.TimeEnd}}-{{1}}"></td>
+                                        <td id="{{.TimeStart}}-{{.TimeEnd}}-{{2}}"></td>
+                                        <td id="{{.TimeStart}}-{{.TimeEnd}}-{{3}}"></td>
+                                        <td id="{{.TimeStart}}-{{.TimeEnd}}-{{4}}"></td>
+                                        <td id="{{.TimeStart}}-{{.TimeEnd}}-{{5}}"></td>
                                     </tr>
                                 {{end}}
                                 </tbody>
@@ -229,51 +229,33 @@
             $.ajax({
                 url: "/api/schedules/{{.Schedule.ID}}",
                 success: function (result) {
-                    console.log("Writing lectures...");
-                    console.log(result.Courses);
-                    for (let course in result.Courses) {
-                        for (let lecture in result.Courses[course].Lectures) {
-                            let c_lecture = result.Courses[course].Lectures[lecture];
-                            let c_course = result.Courses[course];
-
-                            let times = c_lecture.Time.split("/");
-                            let time_start = times[0];
-
-                            if (times[0].substring(2) === "00") {
-                                c_lecture.time_start = (c_lecture.time_start - 70);
-                                c_lecture.time_finish = (c_lecture.time_finish + 70);
-                            }
-
+                    for (let course of result.Courses) {
+                        for (let lecture of course.Lectures) {
                             let ids = [];
-                            let blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
+                            let blocks = ((lecture.TimeEnd - lecture.TimeStart) % 99) + 1;
 
                             if (blocks === 1) {
-                                let id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
+                                let id = "#" + lecture.TimeStart + "-" + lecture.TimeEnd;
                                 ids.push(id);
                             } else {
-                                //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
-                                ids = idGenerator(c_lecture.time_start, c_lecture.time_finish, []);
+                                ids = idGenerator(lecture.TimeStart, lecture.TimeEnd, []);
                             }
 
                             for (let Id in ids) {
                                 let id = ids[Id];
-                                if (c_lecture.day === "Pazartesi") {
+                                if (lecture.Day === "Pazartesi") {
                                     id += "-" + "1"
-                                } else if (c_lecture.day === "Salı") {
+                                } else if (lecture.Day === "Salı") {
                                     id += "-" + "2"
-                                } else if (c_lecture.day === "Çarşamba") {
+                                } else if (lecture.Day === "Çarşamba") {
                                     id += "-" + "3"
-                                } else if (c_lecture.day === "Perşembe") {
+                                } else if (lecture.Day === "Perşembe") {
                                     id += "-" + "4"
-                                } else if (c_lecture.day === "Cuma") {
+                                } else if (lecture.Day === "Cuma") {
                                     id += "-" + "5"
                                 }
 
-                                if (c_course.overlaps) {
-                                    $(id).css({'background-color': '#d9534f', 'color': 'white'});
-                                }
-
-                                $(id).html(c_course.title);
+                                $(id).html(course.Title);
                             }
                         }
                     }
@@ -334,141 +316,5 @@
                 })
             }
         }
-
-        function readNotification(id) {
-            $.ajax({
-                url: "rest_api_scheduler:read_notification",
-                type: 'POST',
-                data: {
-                    "id": id,
-                    "csrfmiddlewaretoken": getCookie('csrftoken')
-                },
-                success: function () {
-                    $('#not-' + id).fadeOut();
-                },
-                error: function (result) {
-                    console.log(result);
-                }
-            })
-        }
-
-        var latest_ids = [];
-        var count = 0;
-
-        function deleteHtml(id) {
-            console.log("stop displaying ", id);
-            $(id).css({"background-color": "white", "color": "black"});
-            $(id).empty();
-            $(id).html("<a></a>");
-        }
-
-        var selected_courses = [];
-
-        function getCourseDetail(crn, remove) {
-            $.ajax({
-                url: "course_api:list_detail",
-                type: 'POST',
-                data: {
-                    'crn': crn,
-                    "csrfmiddlewaretoken": getCookie('csrftoken')
-                },
-                success: function (result) {
-                    console.log(result['id']);
-                    var general_ids = [];
-
-                    $.each(result['lectures'], function (index, value) {
-
-                        displayCourses(result, value, remove);
-
-                    });
-
-                    latest_ids = general_ids;
-                },
-                error: function (result) {
-                    console.log(result);
-                }
-            });
-        }
-
-        function displayCourses(result, value, remove) {
-            var ids = [];
-            var time_start = value['time_start'];
-            var time_finish = value['time_finish'];
-            console.log(result);
-            console.log(value);
-
-            if (time_start.toString().substring(2) === "00") {
-                time_start = (time_start - 70);
-                time_finish = (time_finish + 70);
-            }
-
-            var blocks = ((time_finish - time_start) % 99) + 1;
-
-            if (blocks === 1) {
-                var id = "#" + time_start + "-" + time_finish;
-                ids.push(id);
-            } else {
-                //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
-                ids = idGenerator(time_start, time_finish, []);
-
-
-                for (var Id in ids) {
-                    var id = ids[Id];
-                    if (value['day'] === "Pazartesi") {
-                        id += "-" + "1"
-                    } else if (value['day'] === "Salı") {
-                        id += "-" + "2"
-                    } else if (value['day'] === "Çarşamba") {
-                        id += "-" + "3"
-                    } else if (value['day'] === "Perşembe") {
-                        id += "-" + "4"
-                    } else if (value['day'] === "Cuma") {
-                        id += "-" + "5"
-                    }
-
-                    if (remove) {
-                        deleteHtml(id);
-                        writeLectures();
-                    } else {
-                        $(id).css({'background-color': '#fcf8e3', 'color': '#8a6d3b'});
-
-                        if (result['overlaps'] || ($(id).html().length > 0 & $(id).html() !== result['title'])) {
-                            $(id).css({'background-color': '#d9534f', 'color': 'white'});
-                            $(id).hover(function () {
-                                if ($(this).html() !== "<a></a>") {
-                                    $(this).html(result['title'] + "<br>This course overlaps with another course<br>Or its full.");
-                                }
-                            }, function () {
-                                if ($(this).html() !== "<a></a>") {
-                                    $(this).html(result['title']);
-                               }
-                            });
-                        }
-
-                        $(id).html(result['title']);
-                    }
-                }
-            }
-        }
-
-        $("#id_courses").change(function () {
-            $("#schedule select option").each(function () {
-                if ($(this).is(':selected')) {
-                    var crn = $(this).val();
-                    selected_courses.push(crn);
-                    if (crn.length === 5) {
-                        console.log(crn, "asd");
-                        getCourseDetail(crn, false);
-                    }
-                } else {
-                    console.log(selected_courses, $(this).val(), $(this).val() in selected_courses);
-                    if (selected_courses.includes($(this).val())) {
-                        selected_courses.splice(selected_courses.indexOf($(this).val()), 1);
-                        getCourseDetail($(this).val(), true) // stop displaying the course!
-                    }
-                }
-            });
-            return "";
-        }).trigger("change");
     </script>
 {{end}}
