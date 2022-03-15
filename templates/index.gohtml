@@ -19,10 +19,10 @@
                     </div>
                     <div class="panel-body">
                         {{if .User.ID}}
-                            <form action="/" method="POST" id="courses_form">
+                            <form action="" method="POST" id="courses_form">
                                 <div class="form-group">
                                     <label class="control-label" for="id_courses">Courses</label>
-                                    <select name="courses" class="form-control" required="" id="id_courses" multiple=""
+                                    <select name="courses" class="form-control" required id="id_courses" multiple
                                             size="3">
                                         {{range .User.Courses}}
                                             <option value="{{.CRN}}">{{. | course}}</option>

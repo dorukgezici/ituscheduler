@@ -27,9 +27,11 @@
                         </div>
                     </div>
                     {{if .Error}}
-                        <div class="alert alert-danger">
-                            <a class="close" data-dismiss="alert">×</a>
-                            {{.Error}}
+                        <div class="form-group">
+                            <div class="alert alert-danger">
+                                <a class="close" data-dismiss="alert">×</a>
+                                {{.Error}}
+                            </div>
                         </div>
                     {{end}}
                     <button class="btn btn-primary">Login</button>

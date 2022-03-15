@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gofrs/uuid"
 	"github.com/imdario/mergo"
 	"gorm.io/gorm/clause"
 	"html/template"
@@ -70,6 +71,23 @@ func authenticate(r *http.Request) (*User, error) {
 		}
 	}
 	return nil, errors.New("i could not recognize you, please check your username and password")
+}
+
+func initSession(w http.ResponseWriter, user User) {
+	session := Session{
+		Token: uuid.Must(uuid.NewV4()).String(),
+		User:  user,
+	}
+	DB.Create(&session)
+
+	cookie := http.Cookie{
+		Name:     "session",
+		Value:    session.Token,
+		Expires:  time.Now().Add(time.Hour * 24 * 30),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	}
+	http.SetCookie(w, &cookie)
 }
 
 func render(filename string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {

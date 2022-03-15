@@ -79,21 +79,26 @@ func main() {
 		r.Get("/logout", app.GetLogout)
 		r.Get("/privacy-policy", app.GetPrivacyPolicy)
 		// APIs
-		r.Group(func(r chi.Router) {
+		r.Route("/api", func(r chi.Router) {
 			r.Use(middleware.AllowContentType("application/x-www-form-urlencoded"))
 			r.Use(app.AuthRequired)
-			r.Delete("/api/my-courses", app.DeleteMyCourses)
-			r.Post("/api/my-courses/{course}", app.PostMyCourse)
-			r.Post("/api/my-schedule/{schedule}", app.PostMySchedule)
-			r.Post("/api/my-schedule-courses", app.PostMyScheduleCourses)
-			r.Get("/api/schedules/{schedule}", app.GetSchedule)
-			r.Delete("/api/schedules/{schedule}", app.DeleteSchedule)
-			r.Delete("/api/schedule-courses/{course}", app.DeleteScheduleCourse)
+			r.Delete("/my-courses", app.DeleteMyCourses)
+			r.Post("/my-courses/{course}", app.PostMyCourse)
+			r.Post("/my-schedule/{schedule}", app.PostMySchedule)
+			r.Post("/my-schedule-courses", app.PostMyScheduleCourses)
+			r.Get("/schedules/{schedule}", app.GetSchedule)
+			r.Delete("/schedules/{schedule}", app.DeleteSchedule)
+			r.Delete("/schedule-courses/{course}", app.DeleteScheduleCourse)
 		})
 		// admin
-		r.Group(func(r chi.Router) {
+		r.Route("/admin", func(r chi.Router) {
 			r.Use(app.AdminRequired)
-			r.Get("/admin/populate", app.PopulateDB)
+			r.Get("/refresh-majors", app.GetRefreshMajors)
+			r.Post("/refresh-majors", app.PostRefreshMajors)
+			r.Get("/refresh-courses", app.GetRefreshCourses)
+			r.Post("/refresh-courses", app.PostRefreshCourses)
+			r.Get("/populate-db", app.GetPopulateDB)
+			r.Post("/populate-db", app.PostPopulateDB)
 		})
 	})
 	// static files

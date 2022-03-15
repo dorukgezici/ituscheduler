@@ -8,11 +8,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Email     string `gorm:"unique"`
-	Username  string
+	Username  string `gorm:"unique" validate:"required"`
+	Email     string `gorm:"unique" validate:"required,email"`
 	Password  string
-	FirstName string
-	LastName  string
 	IsAdmin   bool
 	MajorCode *string
 	Major     Major    `gorm:"foreignKey:MajorCode"`
@@ -34,6 +32,7 @@ type Major struct {
 	Code        string `gorm:"primarykey"`
 	RefreshedAt time.Time
 	Courses     []Course
+	UpdatedAt   time.Time
 }
 
 type Course struct {

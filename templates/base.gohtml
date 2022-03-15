@@ -87,23 +87,17 @@
                 </li>
                 {{if .User.IsAdmin}}
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Admin
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="/admin/populate">Populate DB</a></li>
                             <li><a href="/admin/refresh-majors">Refresh Major Codes</a></li>
                             <li><a href="/admin/refresh-courses">Refresh Courses</a></li>
+                            <li><a href="/admin/populate-db">Populate DB (Debugging)</a></li>
                         </ul>
                     </li>
                 {{end}}
                 {{if .User.ID}}
-                    <li>
-                        {{if .User.IsAdmin}}
-                            <a href="/admin">{{.User.Username}} </a>
-                        {{else}}
-                            {{.User.Username}}
-                        {{end}}
-                    </li>
+                    <li><a href="">{{.User.Username}}</a></li>
                     <li><a href="/logout">Logout </a></li>
                 {{else}}
                     <li{{if pathContains "/register"}} class="active"{{end}}><a href="/register">Register </a></li>

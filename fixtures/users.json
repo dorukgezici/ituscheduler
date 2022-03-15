@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "email": "doruk@gezici.me",
     "username": "username",
+    "email": "doruk@gezici.me",
     "password": "password",
     "firstName": "Doruk",
     "lastName": "Gezici",

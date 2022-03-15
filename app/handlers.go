@@ -3,14 +3,13 @@ package app
 import (
 	"errors"
 	"github.com/go-chi/chi/v5"
-	"github.com/gofrs/uuid"
+	"github.com/go-playground/validator/v10"
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 // templates
@@ -191,25 +190,10 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 		render("login.gohtml", w, r, map[string]interface{}{
 			"Error": "I could not recognize you, please check your username and password.",
 		})
-		return
+	} else {
+		initSession(w, user)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
-
-	session := Session{
-		Token: uuid.Must(uuid.NewV4()).String(),
-		User:  user,
-	}
-	DB.Create(&session)
-
-	cookie := http.Cookie{
-		Name:     "session",
-		Value:    session.Token,
-		Expires:  time.Now().Add(time.Hour * 24 * 30),
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-	}
-	http.SetCookie(w, &cookie)
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func GetRegister(w http.ResponseWriter, r *http.Request) {
@@ -223,9 +207,38 @@ func GetRegister(w http.ResponseWriter, r *http.Request) {
 func PostRegister(w http.ResponseWriter, r *http.Request) {
 	if _, ok := r.Context().Value("user").(User); ok {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-	} else {
-		render("register.gohtml", w, r, nil)
+		return
 	}
+
+	if err := r.ParseForm(); err != nil {
+		panic(err)
+	}
+	var (
+		username  = r.FormValue("username")
+		email     = r.FormValue("email")
+		password  = r.FormValue("password1")
+		password2 = r.FormValue("password2")
+	)
+
+	if password != password2 {
+		render("register.gohtml", w, r, map[string]interface{}{
+			"Error": "The passwords you entered do not match.",
+		})
+		return
+	}
+
+	user := User{Username: username, Email: email, Password: password}
+	validate := validator.New()
+	if err := validate.Struct(user); err != nil {
+		render("register.gohtml", w, r, map[string]interface{}{
+			"Error": err.Error(),
+		})
+		return
+	}
+
+	DB.Create(&user)
+	initSession(w, user)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func GetLogout(w http.ResponseWriter, r *http.Request) {
@@ -370,7 +383,49 @@ func DeleteScheduleCourse(w http.ResponseWriter, r *http.Request) {
 
 // admin
 
-func PopulateDB(_ http.ResponseWriter, r *http.Request) {
+func GetRefreshMajors(w http.ResponseWriter, r *http.Request) {
+	render("refresh-majors.gohtml", w, r, nil)
+}
+
+func PostRefreshMajors(w http.ResponseWriter, r *http.Request) {
+	ScrapeMajors(DB)
+	var majors []Major
+	DB.Find(&majors)
+
+	render("refresh-majors.gohtml", w, r, map[string]interface{}{
+		"Majors": majors,
+	})
+}
+
+func GetRefreshCourses(w http.ResponseWriter, r *http.Request) {
+	var majors []Major
+	DB.Find(&majors)
+	render("refresh-courses.gohtml", w, r, map[string]interface{}{
+		"Majors": majors,
+	})
+}
+
+func PostRefreshCourses(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		panic(err)
+	}
+	majorCodes := r.PostForm["majorCodes"]
+
+	var majors []Major
+	DB.Find(&majors, "code IN (?)", majorCodes)
+	ScrapeCoursesOfMajors(DB, majors)
+
+	render("refresh-courses.gohtml", w, r, map[string]interface{}{
+		"Majors":      majors,
+		"IsRefreshed": true,
+	})
+}
+
+func GetPopulateDB(w http.ResponseWriter, r *http.Request) {
+	render("populate-db.gohtml", w, r, nil)
+}
+
+func PostPopulateDB(w http.ResponseWriter, r *http.Request) {
 	user, _ := r.Context().Value("user").(User)
 
 	// query 10 courses
@@ -381,19 +436,15 @@ func PopulateDB(_ http.ResponseWriter, r *http.Request) {
 	_ = DB.Model(&user).Association("Courses").Append(courses)
 
 	// create schedules
-	schedules := []Schedule{{}, {}, {}}
+	schedules := []Schedule{{UserID: user.ID, IsSelected: false}, {UserID: user.ID, IsSelected: false}, {UserID: user.ID, IsSelected: false}}
 	DB.Create(&schedules)
-
-	// set user's schedule
-	DB.Model(&user).Update("schedule_id", schedules[0].ID)
-
-	// append to user's schedules
-	_ = DB.Model(&user).Association("Schedules").Append(schedules)
 
 	// append to schedule's courses
 	for _, schedule := range schedules {
 		_ = DB.Model(&schedule).Association("Courses").Append(courses)
 	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // static files
