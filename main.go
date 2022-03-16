@@ -83,7 +83,7 @@ func main() {
 	router.Get("/ads.txt", app.GetAds)
 	router.Handle("/static/*", http.FileServer(http.Dir(".")))
 
-	// run server on 8080
-	log.Println("Server is running on: http://localhost:8080")
-	log.Fatalln(http.ListenAndServe(":8080", router))
+	// run server on PORT
+	log.Println("Server is running on: http://localhost:" + app.Port)
+	log.Fatalln(http.ListenAndServe(":"+app.Port, router))
 }

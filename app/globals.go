@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	Port       = os.Getenv("PORT")
 	DBHost     = os.Getenv("ITUSCHEDULER_POSTGRES_HOST")
 	DBName     = os.Getenv("ITUSCHEDULER_POSTGRES_NAME")
 	DBUser     = os.Getenv("ITUSCHEDULER_POSTGRES_USER")
