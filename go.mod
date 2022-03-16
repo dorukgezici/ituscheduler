@@ -1,3 +1,5 @@
+// +heroku goVersion go1.17
+
 module github.com/dorukgezici/ituscheduler-go
 
 go 1.17
