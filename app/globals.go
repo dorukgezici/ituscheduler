@@ -11,6 +11,7 @@ var (
 	DBName     = os.Getenv("ITUSCHEDULER_POSTGRES_NAME")
 	DBUser     = os.Getenv("ITUSCHEDULER_POSTGRES_USER")
 	DBPassword = os.Getenv("ITUSCHEDULER_POSTGRES_PASSWORD")
+	DBSSLMode  = os.Getenv("ITUSCHEDULER_POSTGRES_SSLMODE")
 	DB         *gorm.DB
 )
 
