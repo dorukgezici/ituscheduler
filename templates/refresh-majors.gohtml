@@ -19,7 +19,7 @@
                     <h2>Major Codes Refreshed</h2>
                     <hr>
                     {{range .Majors}}
-                        <p>{{.Code}} | {{.UpdatedAt | date}}</p>
+                        <p>{{.Code}} | {{.CreatedAt | date}}</p>
                     {{end}}
                 {{end}}
             </div>

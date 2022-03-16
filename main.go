@@ -10,7 +10,6 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
-	"time"
 )
 
 func main() {
@@ -34,22 +33,6 @@ func main() {
 		panic(err)
 	} else {
 		log.Println("Successfully auto-migrated the database.")
-	}
-
-	// scrape ITU SIS and save to db if data wasn't refreshed within the last hour
-	var majors []app.Major
-	app.DB.Find(&majors, "refreshed_at > ?", time.Now().Add(-time.Hour))
-
-	if len(majors) == 0 {
-		app.ScrapeMajors(app.DB)
-
-		// scrape courses and lectures of all majors using concurrency
-		app.DB.Find(&majors)
-		app.ScrapeCoursesOfMajors(app.DB, majors)
-
-		log.Printf("%d majors were scraped and saved to db.", len(majors))
-	} else {
-		log.Println("Majors were refreshed within the last hour, skipped scraping.")
 	}
 
 	// load fixtures

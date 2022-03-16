@@ -4,9 +4,6 @@
     "username": "username",
     "email": "doruk@gezici.me",
     "password": "password",
-    "firstName": "Doruk",
-    "lastName": "Gezici",
-    "isAdmin": true,
-    "majorCode": "BLG"
+    "isAdmin": true
   }
 ]

@@ -2,7 +2,6 @@ package app
 
 import (
 	"github.com/gocolly/colly"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"strconv"
 	"strings"
@@ -11,7 +10,7 @@ import (
 
 const sisUrl string = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"
 
-func ScrapeMajors(db *gorm.DB) {
+func ScrapeMajors() {
 	c := initializeCollector()
 
 	c.OnHTML("select[name=derskodu]", func(e *colly.HTMLElement) {
@@ -22,7 +21,7 @@ func ScrapeMajors(db *gorm.DB) {
 		for _, code := range codes {
 			majors = append(majors, Major{Code: code})
 		}
-		db.Clauses(clause.OnConflict{
+		DB.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "code"}},
 			DoNothing: true,
 		}).Create(&majors)
@@ -40,7 +39,7 @@ type Result struct {
 	Lectures []Lecture
 }
 
-func ScrapeCoursesOfMajors(db *gorm.DB, majors []Major) {
+func ScrapeCoursesOfMajors(majors []Major) {
 	majorsLength := len(majors)
 	channel := make(chan Result, majorsLength)
 
@@ -52,18 +51,18 @@ func ScrapeCoursesOfMajors(db *gorm.DB, majors []Major) {
 		result := <-channel
 
 		// create or update (upsert) courses and lectures
-		db.Clauses(clause.OnConflict{
+		DB.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "crn"}},
 			UpdateAll: true,
 		}).Create(&result.Courses)
 
-		db.Clauses(clause.OnConflict{
+		DB.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "course_crn"}, {Name: "day"}, {Name: "time"}},
 			UpdateAll: true,
 		}).Create(&result.Lectures)
 
 		// update major.refreshed_at
-		db.Model(&result.Major).Update("refreshed_at", time.Now())
+		DB.Model(&result.Major).Update("refreshed_at", time.Now())
 	}
 }
 

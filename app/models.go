@@ -30,9 +30,9 @@ type Session struct {
 
 type Major struct {
 	Code        string `gorm:"primarykey"`
-	RefreshedAt time.Time
 	Courses     []Course
-	UpdatedAt   time.Time
+	CreatedAt   time.Time
+	RefreshedAt time.Time
 }
 
 type Course struct {

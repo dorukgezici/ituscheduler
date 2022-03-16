@@ -388,7 +388,7 @@ func GetRefreshMajors(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostRefreshMajors(w http.ResponseWriter, r *http.Request) {
-	ScrapeMajors(DB)
+	ScrapeMajors()
 	var majors []Major
 	DB.Find(&majors)
 
@@ -413,7 +413,8 @@ func PostRefreshCourses(w http.ResponseWriter, r *http.Request) {
 
 	var majors []Major
 	DB.Find(&majors, "code IN (?)", majorCodes)
-	ScrapeCoursesOfMajors(DB, majors)
+	ScrapeCoursesOfMajors(majors)
+	DB.Find(&majors, "code IN (?)", majorCodes)
 
 	render("refresh-courses.gohtml", w, r, map[string]interface{}{
 		"Majors":      majors,
