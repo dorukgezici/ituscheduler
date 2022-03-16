@@ -10,7 +10,6 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/imdario/mergo v0.3.12
-	github.com/joho/godotenv v1.4.0
 	github.com/vcraescu/go-paginator/v2 v2.0.0
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/gorm v1.23.2

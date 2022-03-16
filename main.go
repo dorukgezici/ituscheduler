@@ -5,7 +5,6 @@ import (
 	"github.com/dorukgezici/ituscheduler-go/app"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -13,13 +12,8 @@ import (
 )
 
 func main() {
-	// load env variables
-	err := godotenv.Load(".env")
-	if err != nil {
-		panic(err)
-	}
-
 	// connect to db
+	var err error
 	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%d sslmode=disable", app.DBHost, app.DBName, app.DBUser, app.DBPassword, 5432)
 	app.DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{CreateBatchSize: 100})
 	if err != nil {
