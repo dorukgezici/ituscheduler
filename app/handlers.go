@@ -191,7 +191,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 			"Error": "I could not recognize you, please check your username and password.",
 		})
 	} else {
-		initSession(w, user)
+		InitSession(w, user)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
@@ -227,7 +227,7 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := User{Username: username, Email: email, Password: password}
+	user := User{Username: username, Email: &email, Password: &password}
 	validate := validator.New()
 	if err := validate.Struct(user); err != nil {
 		render("register.gohtml", w, r, map[string]interface{}{
@@ -237,7 +237,7 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	DB.Create(&user)
-	initSession(w, user)
+	InitSession(w, user)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

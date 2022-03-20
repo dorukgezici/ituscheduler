@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/dorukgezici/ituscheduler-go/app"
+	"github.com/dorukgezici/ituscheduler-go/app/oauth"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"gorm.io/driver/postgres"
@@ -57,8 +58,10 @@ func main() {
 		r.Get("/privacy-policy", app.GetPrivacyPolicy)
 		// OAuth
 		r.Route("/oauth", func(r chi.Router) {
-			r.Get("/facebook/login", app.OAuthFacebookLogin)
-			r.Get("/facebook/callback", app.OAuthFacebookCallback)
+			r.Get("/facebook/login", oauth.FacebookLogin)
+			r.Get("/facebook/callback", oauth.FacebookCallback)
+			r.Get("/twitter/login", oauth.TwitterLogin)
+			r.Get("/twitter/callback", oauth.TwitterCallback)
 		})
 		// APIs
 		r.Route("/api", func(r chi.Router) {

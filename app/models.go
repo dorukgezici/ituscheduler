@@ -8,11 +8,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Username   string `gorm:"unique" validate:"required"`
-	Email      string `gorm:"unique" validate:"required,email"`
-	Password   string
+	Username   string  `gorm:"unique" validate:"required"`
+	Email      *string `gorm:"unique" validate:"required,email"`
+	Password   *string
 	IsAdmin    bool
-	FacebookID string
+	FacebookID *string
+	TwitterID  *string
 	MajorCode  *string
 	Major      Major    `gorm:"foreignKey:MajorCode"`
 	Courses    []Course `gorm:"many2many:user_courses;"`

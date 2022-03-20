@@ -1,34 +1,33 @@
-package app
+package oauth
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/dorukgezici/ituscheduler-go/app"
 	"github.com/gofrs/uuid"
 	"github.com/gosimple/slug"
-	_ "github.com/gosimple/slug"
 	"golang.org/x/oauth2"
 	"net/http"
 	"os"
 	"time"
 )
 
-var (
-	endpoint = oauth2.Endpoint{
-		AuthURL:  "https://www.facebook.com/v13.0/dialog/oauth",
-		TokenURL: "https://graph.facebook.com/v13.0/oauth/access_token",
-	}
-	userUrl = "https://graph.facebook.com/v13.0/me"
-	config  = &oauth2.Config{
+var facebook = OAuth{
+	Config: &oauth2.Config{
 		RedirectURL:  os.Getenv("ITUSCHEDULER_URL") + "/oauth/facebook/callback",
 		ClientID:     os.Getenv("ITUSCHEDULER_FACEBOOK_CLIENT_ID"),
 		ClientSecret: os.Getenv("ITUSCHEDULER_FACEBOOK_CLIENT_SECRET"),
 		Scopes:       []string{"email"},
-		Endpoint:     endpoint,
-	}
-)
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  "https://www.facebook.com/v13.0/dialog/oauth",
+			TokenURL: "https://graph.facebook.com/v13.0/oauth/access_token",
+		},
+	},
+	UserDataURL: "https://graph.facebook.com/v13.0/me",
+}
 
-func OAuthFacebookLogin(w http.ResponseWriter, r *http.Request) {
+func FacebookLogin(w http.ResponseWriter, r *http.Request) {
 	// CSRF check - set OAuth state cookie
 	state := uuid.Must(uuid.NewV4()).String()
 	cookie := http.Cookie{
@@ -38,10 +37,10 @@ func OAuthFacebookLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
-	http.Redirect(w, r, config.AuthCodeURL(state), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, facebook.Config.AuthCodeURL(state), http.StatusTemporaryRedirect)
 }
 
-func OAuthFacebookCallback(w http.ResponseWriter, r *http.Request) {
+func FacebookCallback(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("oauth")
 	if err != nil {
 		http.Error(w, "oauth cookie required", http.StatusBadRequest)
@@ -61,15 +60,15 @@ func OAuthFacebookCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user User
-	DB.Model(&user).Where("facebook_id = ? OR email = ?", data.ID, data.Email).FirstOrCreate(&user, User{
-		FacebookID: data.ID,
+	var user app.User
+	app.DB.Model(&user).Where("facebook_id = ? OR email = ?", data.ID, data.Email).FirstOrCreate(&user, app.User{
+		FacebookID: &data.ID,
 		Username:   slug.Make(data.Name),
-		Email:      data.Email,
+		Email:      &data.Email,
 	})
 
 	// Login
-	initSession(w, user)
+	app.InitSession(w, user)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -80,12 +79,12 @@ type FacebookUserData struct {
 }
 
 func getFacebookUserData(code string) (*FacebookUserData, error) {
-	token, err := config.Exchange(context.Background(), code)
+	token, err := facebook.Config.Exchange(context.Background(), code)
 	if err != nil {
 		return nil, fmt.Errorf("failed code exchange: %s", err.Error())
 	}
 
-	response, err := http.Get(userUrl + "?fields=id,name,email&access_token=" + token.AccessToken)
+	response, err := http.Get(facebook.UserDataURL + "?fields=id,name,email&access_token=" + token.AccessToken)
 	if err != nil {
 		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
 	}

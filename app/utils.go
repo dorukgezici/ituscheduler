@@ -73,17 +73,18 @@ func authenticate(r *http.Request) (*User, error) {
 	return nil, errors.New("i could not recognize you, please check your username and password")
 }
 
-func initSession(w http.ResponseWriter, user User) {
+func InitSession(w http.ResponseWriter, user User) {
 	session := Session{
-		Token: uuid.Must(uuid.NewV4()).String(),
-		User:  user,
+		Token:     uuid.Must(uuid.NewV4()).String(),
+		User:      user,
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 30),
 	}
 	DB.Create(&session)
 
 	cookie := http.Cookie{
 		Name:     "session",
 		Value:    session.Token,
-		Expires:  time.Now().Add(time.Hour * 24 * 30),
+		Expires:  session.ExpiresAt,
 		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
