@@ -20,7 +20,7 @@ var (
 	}
 	userUrl = "https://graph.facebook.com/v13.0/me"
 	config  = &oauth2.Config{
-		RedirectURL:  "http://localhost:8080/oauth/facebook/callback",
+		RedirectURL:  os.Getenv("ITUSCHEDULER_URL") + "/oauth/facebook/callback",
 		ClientID:     os.Getenv("ITUSCHEDULER_FACEBOOK_CLIENT_ID"),
 		ClientSecret: os.Getenv("ITUSCHEDULER_FACEBOOK_CLIENT_SECRET"),
 		Scopes:       []string{"email"},
