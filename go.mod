@@ -9,8 +9,10 @@ require (
 	github.com/go-playground/validator/v10 v10.10.1
 	github.com/gocolly/colly v1.2.0
 	github.com/gofrs/uuid v4.0.0+incompatible
+	github.com/gosimple/slug v1.12.0
 	github.com/imdario/mergo v0.3.12
 	github.com/vcraescu/go-paginator/v2 v2.0.0
+	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/gorm v1.23.2
 )
@@ -26,6 +28,7 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

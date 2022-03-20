@@ -84,6 +84,7 @@ func initSession(w http.ResponseWriter, user User) {
 		Name:     "session",
 		Value:    session.Token,
 		Expires:  time.Now().Add(time.Hour * 24 * 30),
+		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	}

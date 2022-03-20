@@ -55,6 +55,11 @@ func main() {
 		r.Post("/register", app.PostRegister)
 		r.Get("/logout", app.GetLogout)
 		r.Get("/privacy-policy", app.GetPrivacyPolicy)
+		// OAuth
+		r.Route("/oauth", func(r chi.Router) {
+			r.Get("/facebook/login", app.OAuthFacebookLogin)
+			r.Get("/facebook/callback", app.OAuthFacebookCallback)
+		})
 		// APIs
 		r.Route("/api", func(r chi.Router) {
 			r.Use(middleware.AllowContentType("application/x-www-form-urlencoded"))
