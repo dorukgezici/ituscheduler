@@ -48,7 +48,7 @@
                                 <div class="row">
                                     <div class="col-md-12" style="margin-top: 20px;">
                                         <label class="control-label" for="selected-courses">Courses of the selected
-                                            schedule [Schedule: {{.Schedule.ID}}]</label>
+                                            schedule</label>
                                         <ul class="list-group" id="selected-courses">
                                             {{range .Schedule.Courses}}
                                                 <li class="list-group-item">
@@ -129,9 +129,9 @@
                                             onchange="selectSchedule($('#schedule').find('option:selected').val())"
                                             title="schedule">
                                         <option value="">Select Schedule</option>
-                                        {{range .User.Schedules}}
-                                            <option {{if eq .ID $.Schedule.ID}}selected{{end}}
-                                                    value="{{.ID}}">Schedule: {{.ID}}</option>
+                                        {{range $i, $schedule := .User.Schedules}}
+                                            <option {{if eq $schedule.ID $.Schedule.ID}}selected{{end}}
+                                                    value="{{$schedule.ID}}">Schedule: {{$i | increment}}</option>
                                         {{end}}
                                     </select>
                                 </div>

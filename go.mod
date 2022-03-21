@@ -11,6 +11,7 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/gosimple/slug v1.12.0
 	github.com/imdario/mergo v0.3.12
+	github.com/saurabh0719/pswHash v1.0.1
 	github.com/vcraescu/go-paginator/v2 v2.0.0
 	github.com/wagslane/go-password-validator v0.3.0
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a

@@ -1,10 +1,10 @@
 [
   {
     "id": 1,
-    "username": "username",
+    "username": "dorukgezici",
     "email": "doruk@gezici.me",
-    "password": "password",
     "isAdmin": true,
-    "facebookId": "10224745255512159"
+    "facebookId": "10224745255512159",
+    "twitterId": "537935948"
   }
 ]

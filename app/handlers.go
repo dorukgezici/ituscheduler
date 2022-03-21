@@ -4,6 +4,8 @@ import (
 	"errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
+	"github.com/gofrs/uuid"
+	"github.com/saurabh0719/pswHash"
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
@@ -11,6 +13,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // templates
@@ -186,15 +189,16 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 
 	var user User
-	DB.Omit("password").First(&user, "username = ? AND password = ?", username, password)
-	if user.ID == 0 {
+	DB.First(&user, "username = ?", username)
+	if user.ID == 0 || user.Password == nil || !pswHash.Verify(password, *user.Password) {
 		render("login.gohtml", w, r, map[string]interface{}{
-			"Error": "I could not recognize you, please check your username and password.",
+			"Error": "Authentication failed, please check your username and password.",
 		})
-	} else {
-		StartSession(w, user)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
+
+	StartSession(w, user)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func GetRegister(w http.ResponseWriter, r *http.Request) {
@@ -221,6 +225,22 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 		password2 = r.FormValue("password2")
 	)
 
+	var user User
+	DB.First(&user, "username = ?", username)
+	if user.ID != 0 {
+		render("register.gohtml", w, r, map[string]interface{}{
+			"Error": "This username is already taken.",
+		})
+		return
+	}
+
+	if strings.HasSuffix(email, "@itu.edu.tr") == false {
+		render("register.gohtml", w, r, map[string]interface{}{
+			"Error": "Please enter a valid ITU email address.",
+		})
+		return
+	}
+
 	if password != password2 {
 		render("register.gohtml", w, r, map[string]interface{}{
 			"Error": "The passwords you entered do not match.",
@@ -228,7 +248,7 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := passwordvalidator.Validate(password, 60)
+	err := passwordvalidator.Validate(password, 40)
 	if err != nil {
 		render("register.gohtml", w, r, map[string]interface{}{
 			"Error": err.Error(),
@@ -236,9 +256,10 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := User{Username: username, Email: &email, Password: &password}
+	encodedPassword := pswHash.Encode(password, []byte(uuid.Must(uuid.NewV4()).String()), 216000)
+	user = User{Username: username, Email: &email, Password: &encodedPassword}
 	validate := validator.New()
-	if err := validate.Struct(user); err != nil {
+	if err = validate.Struct(user); err != nil {
 		render("register.gohtml", w, r, map[string]interface{}{
 			"Error": err.Error(),
 		})

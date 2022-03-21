@@ -110,6 +110,9 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 			return template.HTML(str)
 		},
 		// helpers
+		"increment": func(i int) int {
+			return i + 1
+		},
 		"pathContains": func(path string) bool {
 			return strings.Contains(r.URL.Path, path)
 		},
