@@ -7,6 +7,7 @@ import (
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
+	"github.com/wagslane/go-password-validator"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
@@ -223,6 +224,14 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 	if password != password2 {
 		render("register.gohtml", w, r, map[string]interface{}{
 			"Error": "The passwords you entered do not match.",
+		})
+		return
+	}
+
+	err := passwordvalidator.Validate(password, 60)
+	if err != nil {
+		render("register.gohtml", w, r, map[string]interface{}{
+			"Error": err.Error(),
 		})
 		return
 	}

@@ -10,7 +10,7 @@ type User struct {
 	gorm.Model
 	Username   string  `gorm:"unique" validate:"required"`
 	Email      *string `gorm:"unique" validate:"required,email"`
-	Password   *string
+	Password   *string `validate:"required"`
 	IsAdmin    bool
 	FacebookID *string `gorm:"unique"`
 	TwitterID  *string `gorm:"unique"`
