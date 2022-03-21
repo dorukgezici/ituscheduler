@@ -4,6 +4,7 @@
     "username": "username",
     "email": "doruk@gezici.me",
     "password": "password",
-    "isAdmin": true
+    "isAdmin": true,
+    "facebookId": "10224745255512159"
   }
 ]

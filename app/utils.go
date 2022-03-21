@@ -73,7 +73,7 @@ func authenticate(r *http.Request) (*User, error) {
 	return nil, errors.New("i could not recognize you, please check your username and password")
 }
 
-func InitSession(w http.ResponseWriter, user User) {
+func StartSession(w http.ResponseWriter, user User) {
 	session := Session{
 		Token:     uuid.Must(uuid.NewV4()).String(),
 		User:      user,

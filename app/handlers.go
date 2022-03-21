@@ -191,7 +191,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 			"Error": "I could not recognize you, please check your username and password.",
 		})
 	} else {
-		InitSession(w, user)
+		StartSession(w, user)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
@@ -237,7 +237,7 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	DB.Create(&user)
-	InitSession(w, user)
+	StartSession(w, user)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

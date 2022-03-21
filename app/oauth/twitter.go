@@ -9,6 +9,7 @@ import (
 	"github.com/gosimple/slug"
 	"golang.org/x/oauth2"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 )
@@ -29,21 +30,23 @@ var twitter = OAuth{
 }
 
 func TwitterLogin(w http.ResponseWriter, r *http.Request) {
-	// CSRF check - set OAuth state cookie
-	state := uuid.Must(uuid.NewV4()).String()
+	values := url.Values{}
+	values.Add("state", uuid.Must(uuid.NewV4()).String())
+	values.Add("code_verifier", uuid.Must(uuid.NewV4()).String())
+
 	cookie := http.Cookie{
 		Name:    "oauth",
-		Value:   state,
+		Value:   values.Encode(),
 		Expires: time.Now().Add(20 * time.Minute),
 	}
 	http.SetCookie(w, &cookie)
 
-	url := twitter.Config.AuthCodeURL(
-		state,
-		oauth2.SetAuthURLParam("code_challenge", "challenge"),
+	redirectUrl := twitter.Config.AuthCodeURL(
+		values.Get("state"),
+		oauth2.SetAuthURLParam("code_challenge", values.Get("code_verifier")),
 		oauth2.SetAuthURLParam("code_challenge_method", "plain"),
 	)
-	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, redirectUrl, http.StatusTemporaryRedirect)
 }
 
 func TwitterCallback(w http.ResponseWriter, r *http.Request) {
@@ -52,29 +55,28 @@ func TwitterCallback(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "oauth cookie required", http.StatusBadRequest)
 		return
 	}
+	values, err := url.ParseQuery(cookie.Value)
+	if err != nil {
+		http.Error(w, "invalid oauth cookie value", http.StatusBadRequest)
+		return
+	}
 
 	// CSRF check - check OAuth state cookie
-	if r.FormValue("state") != cookie.Value {
+	if r.FormValue("state") != values.Get("state") {
 		http.Error(w, "invalid OAuth state", http.StatusForbidden)
 		return
 	}
 
-	code := r.FormValue("code")
-	data, err := getTwitterUserData(code)
+	data, err := getTwitterUserData(r.FormValue("code"), values.Get("code_verifier"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusTemporaryRedirect)
 		return
 	}
 
-	var user app.User
-	q := app.DB.Model(&user).Where("twitter_id = ?", data.Data.ID)
-	q.FirstOrCreate(&user, app.User{
-		TwitterID: &data.Data.ID,
-		Username:  slug.Make(data.Data.Username),
-	})
+	user := getOrCreateTwitterUser(*data)
 
 	// Login
-	app.InitSession(w, user)
+	app.StartSession(w, user)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -85,11 +87,11 @@ type TwitterUserData struct {
 	} `json:"data"`
 }
 
-func getTwitterUserData(code string) (*TwitterUserData, error) {
+func getTwitterUserData(code string, codeVerifier string) (*TwitterUserData, error) {
 	token, err := twitter.Config.Exchange(
 		context.Background(),
 		code,
-		oauth2.SetAuthURLParam("code_verifier", "challenge"),
+		oauth2.SetAuthURLParam("code_verifier", codeVerifier),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed code exchange: %s", err.Error())
@@ -109,4 +111,32 @@ func getTwitterUserData(code string) (*TwitterUserData, error) {
 	}
 
 	return &data, nil
+}
+
+func getOrCreateTwitterUser(data TwitterUserData) app.User {
+	var user app.User
+	app.DB.First(&user, "twitter_id = ?", data.Data.ID)
+
+	if user.ID == 0 {
+		var (
+			username       = slug.Make(data.Data.Username)
+			count    int64 = -1
+		)
+
+		for count != 0 {
+			app.DB.Model(&app.User{}).Where("username = ?", username).Count(&count)
+
+			if count != 0 {
+				username += "-"
+			}
+		}
+
+		user = app.User{
+			TwitterID: &data.Data.ID,
+			Username:  username,
+		}
+		app.DB.Create(&user)
+	}
+
+	return user
 }

@@ -12,8 +12,8 @@ type User struct {
 	Email      *string `gorm:"unique" validate:"required,email"`
 	Password   *string
 	IsAdmin    bool
-	FacebookID *string
-	TwitterID  *string
+	FacebookID *string `gorm:"unique"`
+	TwitterID  *string `gorm:"unique"`
 	MajorCode  *string
 	Major      Major    `gorm:"foreignKey:MajorCode"`
 	Courses    []Course `gorm:"many2many:user_courses;"`

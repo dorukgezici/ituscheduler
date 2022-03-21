@@ -60,15 +60,10 @@ func FacebookCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user app.User
-	app.DB.Model(&user).Where("facebook_id = ? OR email = ?", data.ID, data.Email).FirstOrCreate(&user, app.User{
-		FacebookID: &data.ID,
-		Username:   slug.Make(data.Name),
-		Email:      &data.Email,
-	})
+	user := getOrCreateFacebookUser(*data)
 
 	// Login
-	app.InitSession(w, user)
+	app.StartSession(w, user)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -95,4 +90,33 @@ func getFacebookUserData(code string) (*FacebookUserData, error) {
 	}
 
 	return &data, nil
+}
+
+func getOrCreateFacebookUser(data FacebookUserData) app.User {
+	var user app.User
+	app.DB.First(&user, "facebook_id = ?", data.ID)
+
+	if user.ID == 0 {
+		var (
+			username       = slug.Make(data.Name)
+			count    int64 = -1
+		)
+
+		for count != 0 {
+			app.DB.Model(&app.User{}).Where("username = ?", username).Count(&count)
+
+			if count != 0 {
+				username += "-"
+			}
+		}
+
+		user = app.User{
+			FacebookID: &data.ID,
+			Username:   username,
+			Email:      &data.Email,
+		}
+		app.DB.Create(&user)
+	}
+
+	return user
 }
