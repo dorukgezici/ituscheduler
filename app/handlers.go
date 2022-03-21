@@ -256,7 +256,7 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	encodedPassword := pswHash.Encode(password, []byte(uuid.Must(uuid.NewV4()).String()), 216000)
+	encodedPassword := pswHash.Encode(password, []byte(uuid.Must(uuid.NewV4()).String()), 320000)
 	user = User{Username: username, Email: &email, Password: &encodedPassword}
 	validate := validator.New()
 	if err = validate.Struct(user); err != nil {
