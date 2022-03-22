@@ -24,7 +24,7 @@ type User struct {
 type Session struct {
 	Token     string `gorm:"primarykey"`
 	UserID    uint
-	User      User
+	User      User `gorm:"constraint:OnDelete:CASCADE;"`
 	ExpiresAt time.Time
 	CreatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
@@ -73,7 +73,7 @@ type Lecture struct {
 type Schedule struct {
 	gorm.Model
 	UserID     uint
-	User       User
+	User       User `gorm:"constraint:OnDelete:CASCADE;"`
 	IsSelected bool
 	Courses    []Course `gorm:"many2many:schedule_courses;"`
 }

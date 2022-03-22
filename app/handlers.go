@@ -4,12 +4,11 @@ import (
 	"errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
-	"github.com/gofrs/uuid"
-	"github.com/saurabh0719/pswHash"
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
 	"github.com/wagslane/go-password-validator"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
@@ -190,7 +189,15 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 
 	var user User
 	DB.First(&user, "username = ?", username)
-	if user.ID == 0 || user.Password == nil || !pswHash.Verify(password, *user.Password) {
+	if user.ID == 0 || user.Password == nil {
+		render("login.gohtml", w, r, map[string]interface{}{
+			"Error": "Authentication failed, please check your username and password.",
+		})
+		return
+	}
+
+	// check password
+	if err := bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(password)); err != nil {
 		render("login.gohtml", w, r, map[string]interface{}{
 			"Error": "Authentication failed, please check your username and password.",
 		})
@@ -256,18 +263,22 @@ func PostRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	encodedPassword := pswHash.Encode(password, []byte(uuid.Must(uuid.NewV4()).String()), 320000)
-	user = User{Username: username, Email: &email, Password: &encodedPassword}
+	// hash password
+	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword := string(hashedBytes)
+
+	// validate model
+	newUser := User{Username: username, Email: &email, Password: &hashedPassword}
 	validate := validator.New()
-	if err = validate.Struct(user); err != nil {
+	if err = validate.Struct(newUser); err != nil {
 		render("register.gohtml", w, r, map[string]interface{}{
 			"Error": err.Error(),
 		})
 		return
 	}
 
-	DB.Create(&user)
-	StartSession(w, user)
+	DB.Create(&newUser)
+	StartSession(w, newUser)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

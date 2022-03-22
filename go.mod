@@ -11,9 +11,9 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/gosimple/slug v1.12.0
 	github.com/imdario/mergo v0.3.12
-	github.com/saurabh0719/pswHash v1.0.1
 	github.com/vcraescu/go-paginator/v2 v2.0.0
 	github.com/wagslane/go-password-validator v0.3.0
+	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/gorm v1.23.2
@@ -47,7 +47,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
-	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect

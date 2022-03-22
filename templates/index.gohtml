@@ -192,8 +192,11 @@
         $(document).ready(function () {
             {{if .Schedule.ID}}writeLectures();{{end}}
 
+            {{if .User.ID}}
             const select = document.getElementById('id_courses');
             select.size = select.length;
+            {{end}}
+
 
             {{if and .User.ID .Schedule.ID}}
             $("#addToSchedule").click(function (e) {
