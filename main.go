@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/dorukgezici/ituscheduler-go/app"
+	"github.com/dorukgezici/ituscheduler-go/app/migrations"
 	"github.com/dorukgezici/ituscheduler-go/app/oauth"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -23,7 +24,7 @@ func main() {
 		log.Println("Successfully connected to the database at: " + app.DBHost)
 	}
 
-	// migrate db
+	// auto-migrate db schema
 	if err = app.DB.AutoMigrate(&app.User{}, &app.Session{}, &app.Major{}, &app.Course{}, &app.Lecture{}, &app.Schedule{}, &app.Post{}); err != nil {
 		panic(err)
 	} else {
@@ -34,6 +35,10 @@ func main() {
 	log.Println("Loading fixtures...")
 	app.LoadUserFixtures("fixtures/users.json")
 	app.LoadPostFixtures("fixtures/posts.json")
+
+	// run data migrations
+	migrations.MigrateUsers()
+	migrations.MigrateUserAssociations()
 
 	// register handlers
 	router := chi.NewRouter()
