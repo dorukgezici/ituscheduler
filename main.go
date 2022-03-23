@@ -5,6 +5,8 @@ import (
 	"github.com/dorukgezici/ituscheduler-go/app"
 	"github.com/dorukgezici/ituscheduler-go/app/migrations"
 	"github.com/dorukgezici/ituscheduler-go/app/oauth"
+	"github.com/getsentry/sentry-go"
+	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"gorm.io/driver/postgres"
@@ -14,6 +16,11 @@ import (
 )
 
 func main() {
+	// initialize Sentry
+	if err := sentry.Init(sentry.ClientOptions{Dsn: app.SentryDSN, Environment: app.Stage, TracesSampleRate: 0.2}); err != nil {
+		panic(err)
+	}
+
 	// connect to db
 	var err error
 	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%d sslmode=%s", app.DBHost, app.DBName, app.DBUser, app.DBPassword, 5432, app.DBSSLMode)
@@ -45,6 +52,7 @@ func main() {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Heartbeat("/health"))
 	router.Use(middleware.Recoverer)
+	router.Use(sentryhttp.New(sentryhttp.Options{Repanic: true}).Handle)
 	// app
 	router.Group(func(r chi.Router) {
 		// templates
@@ -91,6 +99,8 @@ func main() {
 			r.Post("/populate-db", app.PostPopulateDB)
 		})
 	})
+	// panic test
+	router.Get("/panic", func(w http.ResponseWriter, r *http.Request) { panic("server panic") })
 	// static files
 	router.Get("/favicon.ico", app.GetFavicon)
 	router.Get("/ads.txt", app.GetAds)

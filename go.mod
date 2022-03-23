@@ -5,6 +5,7 @@ module github.com/dorukgezici/ituscheduler-go
 go 1.18
 
 require (
+	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-playground/validator/v10 v10.10.1
 	github.com/gocolly/colly v1.2.0
