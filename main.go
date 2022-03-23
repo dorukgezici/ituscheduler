@@ -99,8 +99,6 @@ func main() {
 			r.Post("/populate-db", app.PostPopulateDB)
 		})
 	})
-	// panic test
-	router.Get("/panic", func(w http.ResponseWriter, r *http.Request) { panic("server panic") })
 	// static files
 	router.Get("/favicon.ico", app.GetFavicon)
 	router.Get("/ads.txt", app.GetAds)
