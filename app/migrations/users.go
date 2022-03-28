@@ -1,10 +1,8 @@
 package migrations
 
 import (
-	"github.com/dorukgezici/ituscheduler-go/app"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"log"
 	"time"
 )
 
@@ -20,20 +18,28 @@ func (DjangoUser) TableName() string {
 	return "scheduler_extendeduser"
 }
 
-func MigrateUsers() {
-	db := connectToDjangoDB()
-	var djangoUsers []DjangoUser
-	db.Find(&djangoUsers)
-	log.Println("Django User Count:", len(djangoUsers))
+type User struct {
+	gorm.Model
+	Username   string  `gorm:"unique"`
+	Email      *string `gorm:"unique"`
+	Password   *string
+	FacebookID *string `gorm:"unique"`
+	TwitterID  *string `gorm:"unique"`
+}
 
-	var users []app.User
+func MigrateUsers(db *gorm.DB) {
+	djangoDb := connectToDjangoDB()
+	var djangoUsers []DjangoUser
+	djangoDb.Find(&djangoUsers)
+
+	var users []User
 	for _, djangoUser := range djangoUsers {
 
 		var email *string
 		if djangoUser.Email != nil && *djangoUser.Email == "" {
 			email = nil
 		}
-		users = append(users, app.User{
+		users = append(users, User{
 			Model:    gorm.Model{ID: djangoUser.ID, CreatedAt: djangoUser.DateJoined},
 			Username: djangoUser.Username,
 			Email:    email,
@@ -41,5 +47,5 @@ func MigrateUsers() {
 		})
 	}
 
-	app.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&users)
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&users)
 }

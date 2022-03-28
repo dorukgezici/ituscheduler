@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"github.com/dorukgezici/ituscheduler-go/app"
+	"gorm.io/gorm"
 )
 
 type DjangoUserOAuth struct {
@@ -14,13 +14,13 @@ func (DjangoUserOAuth) TableName() string {
 	return "social_auth_usersocialauth"
 }
 
-func MigrateUserAssociations() {
-	db := connectToDjangoDB()
+func MigrateUserAssociations(db *gorm.DB) {
+	djangoDb := connectToDjangoDB()
 	var userAssociations []DjangoUserOAuth
-	db.Find(&userAssociations)
+	djangoDb.Find(&userAssociations)
 
 	for _, userAssociation := range userAssociations {
-		q := app.DB.Model(&app.User{}).Where("id = ?", userAssociation.UserID)
+		q := db.Model(&User{}).Where("id = ?", userAssociation.UserID)
 
 		if userAssociation.Provider == "facebook" {
 			q.Update("facebook_id", userAssociation.UID)

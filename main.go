@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/dorukgezici/ituscheduler-go/app"
-	"github.com/dorukgezici/ituscheduler-go/app/migrations"
 	"github.com/dorukgezici/ituscheduler-go/app/oauth"
 	"github.com/getsentry/sentry-go"
 	sentryhttp "github.com/getsentry/sentry-go/http"
@@ -42,10 +41,6 @@ func main() {
 	log.Println("Loading fixtures...")
 	app.LoadUserFixtures("fixtures/users.json")
 	app.LoadPostFixtures("fixtures/posts.json")
-
-	// run data migrations
-	migrations.MigrateUsers()
-	migrations.MigrateUserAssociations()
 
 	// register handlers
 	router := chi.NewRouter()
@@ -95,6 +90,8 @@ func main() {
 			r.Post("/refresh-majors", app.PostRefreshMajors)
 			r.Get("/refresh-courses", app.GetRefreshCourses)
 			r.Post("/refresh-courses", app.PostRefreshCourses)
+			r.Get("/migrate-django-db", app.GetMigrateDjangoDB)
+			r.Post("/migrate-django-db", app.PostMigrateDjangoDB)
 			r.Get("/populate-db", app.GetPopulateDB)
 			r.Post("/populate-db", app.PostPopulateDB)
 		})

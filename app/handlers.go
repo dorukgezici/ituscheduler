@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"github.com/dorukgezici/ituscheduler-go/app/migrations"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/vcraescu/go-paginator/v2"
@@ -461,6 +462,17 @@ func PostRefreshCourses(w http.ResponseWriter, r *http.Request) {
 		"Majors":      majors,
 		"IsRefreshed": true,
 	})
+}
+
+func GetMigrateDjangoDB(w http.ResponseWriter, r *http.Request) {
+	render("migrate-django-db.gohtml", w, r, nil)
+}
+
+func PostMigrateDjangoDB(w http.ResponseWriter, r *http.Request) {
+	migrations.MigrateUsers(DB)
+	migrations.MigrateUserAssociations(DB)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func GetPopulateDB(w http.ResponseWriter, r *http.Request) {
