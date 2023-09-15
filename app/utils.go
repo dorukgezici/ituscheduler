@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gofrs/uuid"
-	"github.com/imdario/mergo"
-	"gorm.io/gorm/clause"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -14,6 +11,10 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"dario.cat/mergo"
+	"github.com/gofrs/uuid"
+	"gorm.io/gorm/clause"
 )
 
 func LoadUserFixtures(filename string) {

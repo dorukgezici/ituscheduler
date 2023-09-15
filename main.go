@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/dorukgezici/ituscheduler-go/app"
 	"github.com/dorukgezici/ituscheduler-go/app/oauth"
 	"github.com/getsentry/sentry-go"
@@ -10,8 +13,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"net/http"
 )
 
 func main() {
@@ -90,8 +91,6 @@ func main() {
 			r.Post("/refresh-majors", app.PostRefreshMajors)
 			r.Get("/refresh-courses", app.GetRefreshCourses)
 			r.Post("/refresh-courses", app.PostRefreshCourses)
-			r.Get("/migrate-django-db", app.GetMigrateDjangoDB)
-			r.Post("/migrate-django-db", app.PostMigrateDjangoDB)
 			r.Get("/populate-db", app.GetPopulateDB)
 			r.Post("/populate-db", app.PostPopulateDB)
 		})

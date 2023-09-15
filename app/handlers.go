@@ -2,18 +2,18 @@ package app
 
 import (
 	"errors"
-	"github.com/dorukgezici/ituscheduler-go/app/migrations"
+	"net/http"
+	"strconv"
+	"strings"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/vcraescu/go-paginator/v2"
 	"github.com/vcraescu/go-paginator/v2/adapter"
 	"github.com/vcraescu/go-paginator/v2/view"
-	"github.com/wagslane/go-password-validator"
+	passwordvalidator "github.com/wagslane/go-password-validator"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"net/http"
-	"strconv"
-	"strings"
 )
 
 // templates
@@ -462,17 +462,6 @@ func PostRefreshCourses(w http.ResponseWriter, r *http.Request) {
 		"Majors":      majors,
 		"IsRefreshed": true,
 	})
-}
-
-func GetMigrateDjangoDB(w http.ResponseWriter, r *http.Request) {
-	render("migrate-django-db.gohtml", w, r, nil)
-}
-
-func PostMigrateDjangoDB(w http.ResponseWriter, r *http.Request) {
-	migrations.MigrateUsers(DB)
-	migrations.MigrateUserAssociations(DB)
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func GetPopulateDB(w http.ResponseWriter, r *http.Request) {

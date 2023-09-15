@@ -1,11 +1,12 @@
 package app
 
 import (
-	"github.com/gocolly/colly"
-	"gorm.io/gorm/clause"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gocolly/colly/v2"
+	"gorm.io/gorm/clause"
 )
 
 const sisUrl string = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"

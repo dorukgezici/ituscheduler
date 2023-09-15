@@ -4,3 +4,4 @@
 .envrc
 templates-old/
 /bin/
+__debug*
