@@ -1,0 +1,84 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js",
+        });
+        const f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l !== "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-KRHNSWR");
+    </script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta property="og:title" content="ITU Scheduler" />
+    <meta
+      property="og:description"
+      content="With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily without the need of another resource."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ituscheduler.com/" />
+    <meta property="og:image" content="https://ituscheduler.com/static/icons/android-chrome-512x512.png" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:width" content="512" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png" />
+    <link rel="manifest" href="/static/icons/manifest.json" />
+    <link rel="mask-icon" href="/static/icons/safari-pinned-tab.svg" color="#063d4d" />
+    <link rel="shortcut icon" href="/static/icons/favicon.ico" />
+    <meta name="apple-mobile-web-app-title" content="ITUscheduler" />
+    <meta name="application-name" content="ITUscheduler" />
+    <meta name="msapplication-config" content="/static/icons/browser-config.xml" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/bootstrap-social.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <script is:inline src="/static/js/jquery-3.2.1.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-KRHNSWR"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="content">
+      <Header />
+      <slot />
+      <Footer />
+    </div>
+
+    <script is:inline src="/static/js/tether.min.js"></script>
+    <script is:inline src="/static/js/bootstrap.min.js"></script>
+    <script is:inline src="/static/js/main.js"></script>
+  </body>
+</html>

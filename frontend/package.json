@@ -1,0 +1,28 @@
+{
+  "name": "ituscheduler",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "supabase": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > database.types.ts"
+  },
+  "dependencies": {
+    "@astrojs/react": "^3.0.2",
+    "@astrojs/vercel": "^5.0.0",
+    "@supabase/auth-ui-react": "^0.4.4",
+    "@supabase/auth-ui-shared": "^0.1.6",
+    "@supabase/supabase-js": "^2.33.2",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "astro": "^3.1.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "supabase": "^1.93.0"
+  }
+}
