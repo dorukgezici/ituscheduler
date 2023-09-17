@@ -8,21 +8,28 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "supabase": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > database.types.ts"
+    "supabase": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > src/types/database.types.ts"
   },
   "dependencies": {
     "@astrojs/react": "^3.0.2",
     "@astrojs/vercel": "^5.0.0",
+    "@nanostores/react": "^0.7.1",
     "@supabase/auth-ui-react": "^0.4.4",
     "@supabase/auth-ui-shared": "^0.1.6",
     "@supabase/supabase-js": "^2.33.2",
+    "@tanstack/query-core": "5.0.0-beta.29",
+    "@tanstack/react-query": "5.0.0-beta.29",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "astro": "^3.1.0",
+    "nanostores": "^0.9.3",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "supabase-auth-helpers-astro": "^0.0.9"
   },
   "devDependencies": {
-    "supabase": "^1.93.0"
+    "@tanstack/react-query-devtools": "5.0.0-beta.31",
+    "supabase": "^1.93.0",
+    "typescript": "^5.2.2"
   }
 }

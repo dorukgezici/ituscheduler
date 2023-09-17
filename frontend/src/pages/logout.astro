@@ -1,0 +1,9 @@
+---
+import { serverRouteClient } from "@/lib/supabaseClient";
+
+const supabase = serverRouteClient(Astro.cookies);
+const { error } = await supabase.auth.signOut();
+if (!error) return Astro.redirect("/");
+---
+
+<p>{error}</p>

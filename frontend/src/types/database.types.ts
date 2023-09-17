@@ -342,7 +342,28 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      course_codes: {
+        Row: {
+          code: string | null
+          major_code: string | null
+        }
+        Insert: {
+          code?: string | null
+          major_code?: string | null
+        }
+        Update: {
+          code?: string | null
+          major_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_majors_courses"
+            columns: ["major_code"]
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
+          }
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
