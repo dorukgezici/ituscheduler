@@ -24,7 +24,13 @@ export default function CourseFilter({ majors, courseCodes, selectedMajor: selec
           <CardTitle>Major</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select value={selectedMajor} onValueChange={(value) => $selectedMajor.set(value)}>
+          <Select
+            value={selectedMajor}
+            onValueChange={(value) => {
+              $selectedMajor.set(value);
+              $selectedCourseCode.set(undefined);
+            }}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>

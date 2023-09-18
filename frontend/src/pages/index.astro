@@ -1,27 +1,48 @@
 ---
 import AuthCard from "@/components/AuthCard";
+import MyCourses from "@/components/MyCourses";
 import ScheduleTable from "@/components/ScheduleTable";
 import Layout from "@/layouts/Layout.astro";
+import { serverComponentClient } from "@/lib/supabaseClient";
+
+const supabase = serverComponentClient(Astro.cookies);
+const {
+  data: { session },
+} = await supabase.auth.getSession();
 ---
 
 <Layout title="ITU Scheduler">
   <main class="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
-    <section class="flex flex-wrap gap-y-10">
-      <div class="flex flex-col items-start md:w-2/3 gap-4">
-        <h1 class="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">Welcome to ITU Scheduler!</h1>
-        <p class="md:max-w-[700px] text-lg text-muted-foreground">
-          ITUscheduler is an <a href="https://github.com/dorukgezici/ituscheduler-go" target="_blank"> open-source</a>
-           web application that allows Istanbul Technical University students to browse up-to-date & detailed
-          information about courses and create schedules with ease. It has features like course queries according to
-          days, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also have some
-          features planned like automatic schedule generation, displaying data from previous years, prerequisite
-          checking, etc..
-        </p>
-      </div>
-      <div class="md:w-1/3">
-        <AuthCard client:load />
-      </div>
-    </section>
+    {
+      session ? (
+        <section class="w-full">
+          <MyCourses session={session} client:load />
+        </section>
+      ) : (
+        <section class="flex flex-wrap gap-y-10">
+          <div class="flex flex-col items-start md:w-2/3 gap-4">
+            <h1 class="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
+              Welcome to ITU Scheduler!
+            </h1>
+            <p class="md:max-w-[700px] text-lg text-muted-foreground">
+              ITUscheduler is an{" "}
+              <a href="https://github.com/dorukgezici/ituscheduler-go" target="_blank">
+                {" "}
+                open-source
+              </a>
+              web application that allows Istanbul Technical University students to browse up-to-date & detailed
+              information about courses and create schedules with ease. It has features like course queries according to
+              days, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also have
+              some features planned like automatic schedule generation, displaying data from previous years,
+              prerequisite checking, etc..
+            </p>
+          </div>
+          <div class="md:w-1/3">
+            <AuthCard client:load />
+          </div>
+        </section>
+      )
+    }
 
     <section class="w-full">
       <ScheduleTable client:load />

@@ -6,7 +6,7 @@ import { $selectedMajor } from "@/store/courses";
 
 const supabase = serverComponentClient(Astro.cookies);
 
-const { data: majors } = await supabase.from("majors").select("code");
+const { data: majors } = await supabase.from("majors").select("code").order("code");
 const { data: courseCodes } = await supabase.from("course_codes").select().eq("major_code", $selectedMajor.get());
 const { data: courses } = await supabase.from("courses").select().eq("major_code", $selectedMajor.get());
 const { data: selectedMajor } = await supabase

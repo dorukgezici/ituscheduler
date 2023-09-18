@@ -7,7 +7,7 @@ export default function AuthCard({ site }: { site?: URL }) {
       <CardHeader>
         <CardTitle>Login or Register</CardTitle>
       </CardHeader>
-      <CardContent className="max-w">
+      <CardContent>
         <SupabaseAuth site={site} />
       </CardContent>
       <CardFooter>
