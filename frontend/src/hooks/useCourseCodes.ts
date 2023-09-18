@@ -10,14 +10,14 @@ export default function useCourseCodes(initialData: Views<"course_codes">[] | nu
     {
       queryKey: ["course_codes", major],
       queryFn: async () => {
-        let query = supabase.from("course_codes").select().eq("major_code", major);
+        let query = supabase.from("course_codes").select().eq("major_code", major).order("code");
         const { data, error } = await query;
         if (error) throw new Error("Query failed");
         return data;
       },
       placeholderData: (prev) => prev,
       // initialData,
-      staleTime: 1000 * 5,
+      staleTime: 1000 * 60,
     },
     queryClient
   );

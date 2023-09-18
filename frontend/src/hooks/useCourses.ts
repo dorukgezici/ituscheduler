@@ -15,7 +15,7 @@ export default function useCourses(
     {
       queryKey: ["courses", major, courseCode, day],
       queryFn: async () => {
-        let query = supabase.from("courses").select().eq("major_code", major);
+        let query = supabase.from("courses").select().eq("major_code", major).order("crn");
         if (courseCode) query = query.eq("code", courseCode);
         //   if (day) query = query.eq("", day);
         const { data, error } = await query;

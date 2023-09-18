@@ -1,6 +1,9 @@
 ---
+import ScheduleTable from "@/components/ScheduleTable";
+import SupabaseAuth from "@/components/SupabaseAuth";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Layout from "@/layouts/Layout.astro";
-import { hourSlots } from "@/lib/globals";
+
 import { serverComponentClient } from "@/lib/supabaseClient";
 
 const supabase = serverComponentClient(Astro.cookies);
@@ -10,315 +13,39 @@ const {
 ---
 
 <Layout title="ITU Scheduler">
-  <main>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h2 class="panel-title" style="display: inline-block">My Courses</h2>
-              <!-- {{if .User.ID}}
-                            <small><a href="javascript:removeMyCourses();" style="padding-left: 10px">Remove
-                                    All</a></small>
-                        {{end}} -->
-            </div>
-            <div class="panel-body">
-              <!-- {{if .User.ID}} -->
-              <form action="" method="POST" id="courses_form">
-                <div class="form-group">
-                  <label class="control-label" for="id_courses">Courses</label>
-                  <select name="courses" class="form-control" required id="id_courses" multiple size="3">
-                    <!-- {{range .User.Courses}}
-                                            <option value="{{.CRN}}">{{. | course}}</option>
-                                        {{end}} -->
-                  </select>
-                </div>
-                <div class="row">
-                  <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
-                    <button class="btn btn-primary" name="save">New Schedule</button>
-                  </div>
-                  <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
-                    <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
-                  </div>
-                  <div class="col-md-8 col-sm-12 col-xs-12">
-                    <small
-                      >1) Add all relevant courses from the <a href="/courses">Courses page</a> and come back here.</small
-                    ><br /><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
-                  </div>
-                </div>
-              </form>
-              <!-- {{if .Schedule.ID}}
-                                <div class="row">
-                                    <div class="col-md-12" style="margin-top: 20px;">
-                                        <label class="control-label" for="selected-courses">Courses of the selected
-                                            schedule</label>
-                                        <ul class="list-group" id="selected-courses">
-                                            {{range .Schedule.Courses}}
-                                                <li class="list-group-item">
-                                                    {{. | course}}
-                                                    <a href="javascript:removeScheduleCourse({{.CRN}})">Remove</a>
-                                                </li>
-                                            {{end}}
-                                        </ul>
-                                    </div>
-                                </div>
-                            {{end}}
-                        {{else}} -->
-              {
-                !session?.user && (
-                  <>
-                    <div class="row">
-                      <div class="col-md-10 col-md-offset-1 center">
-                        <h2>Welcome to ITU Scheduler!</h2>
-                        <hr />
-                        <h4 style="line-height: 1.3em;">
-                          ITUscheduler is an{" "}
-                          <a href="https://github.com/dorukgezici/ituscheduler" target="_blank">
-                            open-source
-                          </a>
-                          web application that allows Istanbul Technical University students to browse up-to-date &
-                          detailed information about courses and create schedules with ease. It has features like course
-                          queries according to days, notifying the user if a course is removed from SIS, exporting the
-                          schedule and so on. We also have some features planned like automatic schedule generation,
-                          displaying data from previous years, prerequisite checking, etc..
-                        </h4>
-                        <hr />
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6 col-md-offset-3 center">
-                        <h4>
-                          Please <a href="/login">Login</a> to start creating your schedules.
-                        </h4>
-                        <br />
-                      </div>
-                    </div>
-                  </>
-                )
-              }
-              <!-- {{end}} -->
-            </div>
-            <!-- {{if not .User.ID}}
-                        <div class="panel-footer">
-                            <div class="row">
-                                <div class="col-md-12 center">
-                                    <p style="margin-top: 5px;">Developed by <a href="https://doruk.gezici.me"
-                                                                                target="_blank">Doruk Gezici</a> & <a
-                                                href="https://github.com/mehmetaltuner" target="_blank">Mehmet
-                                            Altuner</a></p>
-                                    <em>We do not guarantee or can be responsible for the accuracy of information found
-                                        here. If in doubt, please check <a href="https://www.sis.itu.edu.tr"
-                                                                           target="_blank">SIS</a>.</em>
-                                </div>
-                            </div>
-                        </div>
-                    {{end}} -->
-          </div>
-        </div>
+  <main class="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
+    <section class="flex flex-wrap gap-y-10">
+      <div class="flex flex-col items-start md:w-2/3 gap-4">
+        <h1 class="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">Welcome to ITU Scheduler!</h1>
+        <p class="md:max-w-[700px] text-lg text-muted-foreground">
+          ITUscheduler is an <a href="https://github.com/dorukgezici/ituscheduler-go" target="_blank"> open-source</a>
+           web application that allows Istanbul Technical University students to browse up-to-date & detailed
+          information about courses and create schedules with ease. It has features like course queries according to
+          days, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also have some
+          features planned like automatic schedule generation, displaying data from previous years, prerequisite
+          checking, etc..
+        </p>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h2 class="panel-title">My Schedules</h2>
-            </div>
-            <div class="panel-body">
-              <!-- {{if .User.ID}}
-                            <div class="row">
-                                <div style="margin-bottom: 10px;" class="col-md-3 col-sm-12 col-xs-12">
-                                    <select id="schedule" class="form-control" name="schedule"
-                                            onchange="selectSchedule($('#schedule').find('option:selected').val())"
-                                            title="schedule">
-                                        <option value="">Select Schedule</option>
-                                        {{range $i, $schedule := .User.Schedules}}
-                                            <option {{if eq $schedule.ID $.Schedule.ID}}selected{{end}}
-                                                    value="{{$schedule.ID}}">Schedule: {{$i | increment}}</option>
-                                        {{end}}
-                                    </select>
-                                </div>
-                                <div class="col-md-9 col-sm-12 col-xs-12">
-                                    <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
-                                        <button class="btn btn-block btn-primary"
-                                                onclick="deleteSchedule($('#schedule').find('option:selected').val())">
-                                            Delete Schedule
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        {{end}} -->
-              <div style="margin-top: 10px;" class="table-responsive">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Hours</th>
-                      <th>Monday</th>
-                      <th>Tuesday</th>
-                      <th>Wednesday</th>
-                      <th>Thursday</th>
-                      <th>Friday</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      hourSlots.map((slot) => (
-                        <tr id={slot.time}>
-                          <th>{slot.time}</th>
-                          <td id={`${slot.timeStart}-${slot.timeEnd}-${1}`} />
-                          <td id={`${slot.timeStart}-${slot.timeEnd}-${2}`} />
-                          <td id={`${slot.timeStart}-${slot.timeEnd}-${3}`} />
-                          <td id={`${slot.timeStart}-${slot.timeEnd}-${4}`} />
-                          <td id={`${slot.timeStart}-${slot.timeEnd}-${5}`} />
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <!-- {{if .User.ID}}
-                        <div class="panel-footer">
-                            <div class="row">
-                                <div class="col-xs-4 col-xs-offset-8">
-                                    <a href="/share/{{.User.Username}}" class="btn btn-block btn-primary">Share!</a>
-                                </div>
-                            </div>
-                        </div>
-                    {{end}} -->
-          </div>
-        </div>
+      <div class="md:w-1/3">
+        <Card className="text-center">
+          <CardHeader>
+            <CardTitle>Login or Register</CardTitle>
+          </CardHeader>
+          <CardContent className="max-w">
+            <SupabaseAuth client:load />
+          </CardContent>
+          <CardFooter>
+            <small class="italic">
+              We do not guarantee or can be responsible for the accuracy of information found here. If in doubt, please
+              check <a href="https://www.sis.itu.edu.tr" target="_blank" class="underline">SIS</a>.
+            </small>
+          </CardFooter>
+        </Card>
       </div>
-    </div>
+    </section>
+
+    <section class="w-full">
+      <ScheduleTable client:load />
+    </section>
   </main>
-
-  <script is:inline>
-    $(document).ready(function () {
-      // {{if .Schedule.ID}} writeLectures();{{end}}
-
-      // {{if .User.ID}}
-      const select = document.getElementById("id_courses");
-      select.size = select.length;
-      // {{end}}
-
-      // { { if and.User.ID.Schedule.ID} }
-      $("#addToSchedule").click(function (e) {
-        e.preventDefault();
-
-        $.ajax({
-          url: "/api/my-schedule-courses",
-          type: "POST",
-          data: $("#courses_form").serializeArray(),
-          success: function () {
-            location.reload();
-          },
-          error: function () {
-            alert("First you must create a new schedule.");
-          },
-        });
-      });
-      // {{end}}
-    });
-
-    function idGenerator(start, finish, Ids) {
-      let ids = Ids;
-      if (start - 1 === finish) {
-        return ids;
-      } else {
-        const id = "#" + start + "-" + (start + 99);
-        ids.push(id);
-        return idGenerator(start + 100, finish, ids);
-      }
-    }
-
-    function writeLectures() {
-      $.ajax({
-        url: "/api/schedules/{{.Schedule.ID}}",
-        success: function (result) {
-          for (let course of result.Courses) {
-            for (let lecture of course.Lectures) {
-              let ids = [];
-              let blocks = ((lecture.TimeEnd - lecture.TimeStart) % 99) + 1;
-
-              if (blocks === 1) {
-                let id = "#" + lecture.TimeStart + "-" + lecture.TimeEnd;
-                ids.push(id);
-              } else {
-                ids = idGenerator(lecture.TimeStart, lecture.TimeEnd, []);
-              }
-
-              for (let Id in ids) {
-                let id = ids[Id];
-                if (lecture.Day === "Pazartesi") {
-                  id += "-" + "1";
-                } else if (lecture.Day === "Salı") {
-                  id += "-" + "2";
-                } else if (lecture.Day === "Çarşamba") {
-                  id += "-" + "3";
-                } else if (lecture.Day === "Perşembe") {
-                  id += "-" + "4";
-                } else if (lecture.Day === "Cuma") {
-                  id += "-" + "5";
-                }
-
-                $(id).html(course.Title);
-              }
-            }
-          }
-        },
-      });
-    }
-
-    function removeMyCourses() {
-      $.ajax({
-        url: "/api/my-courses",
-        type: "DELETE",
-        success: function () {
-          location.reload();
-        },
-        error: function (result) {
-          console.log(result);
-        },
-      });
-    }
-
-    function removeScheduleCourse(courseCrn) {
-      $.ajax({
-        url: "/api/schedule-courses/" + courseCrn,
-        type: "DELETE",
-        success: function () {
-          location.reload();
-        },
-        error: function (result) {
-          console.log(result);
-        },
-      });
-    }
-
-    function selectSchedule(scheduleId) {
-      if (scheduleId == null) {
-        alert("Create and select a schedule first.");
-      } else {
-        $.ajax({
-          url: "/api/my-schedule/" + scheduleId,
-          type: "POST",
-          success: function () {
-            location.reload();
-          },
-        });
-      }
-    }
-
-    function deleteSchedule(scheduleId) {
-      if (scheduleId == null) {
-        alert("Create and select a schedule first.");
-      } else {
-        $.ajax({
-          url: "/api/schedules/" + scheduleId,
-          type: "DELETE",
-          success: function () {
-            location.reload();
-          },
-        });
-      }
-    }
-  </script>
 </Layout>

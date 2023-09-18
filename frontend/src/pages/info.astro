@@ -12,102 +12,106 @@ const { count: schedulesCount } = await supabase.from("schedules").select("*", {
 ---
 
 <Layout title="Info | ITU Scheduler">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3 col-xs-12">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3>Statistics</h3>
-          </div>
-          <div class="panel-body">
-            <h4>ITUscheduler has</h4>
-            <h4><strong>{usersCount}</strong> users</h4>
-            <hr />
-            <h4>Users have created</h4>
-            <h4><strong>{schedulesCount}</strong> schedules</h4>
-            <hr />
-            <h4>This semester has</h4>
-            <h4><strong>{coursesCount}</strong> courses</h4>
-          </div>
-          <div class="panel-heading">
-            <h3>Latest Refresh</h3>
-          </div>
-          <div class="panel-body">
-            {
-              majors?.map((major) => (
-                <>
-                  <p>
-                    {major.code}: {major.refreshed_at}
-                  </p>
-                  <hr />
-                </>
-              ))
-            }
-            <!-- <nav aria-label="Latest Refresh Pagination">
-                <ul id="p" class="pagination pagination-sm">
-                    {{range .Paginator.Pages}}
-                        <li class="page-item{{if eq $.Paginator.Current .}} active{{end}}">
-                            <a class="page-link" href="/info?page={{.}}#p">{{.}}</a>
-                        </li>
-                    {{end}}
-                </ul>
-            </nav> -->
-          </div>
+  <main class="flex gap-8 prose dark:prose-invert max-w-none m-8">
+    <div class="w-1/5 prose prose-invert">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3>Statistics</h3>
         </div>
-      </div>
-      <div class="col-md-5 col-xs-12 center">
-        <div class="row">
-          <div class="col-md-10 col-md-offset-1">
-            <div class="row">
-              <h2>Welcome to ITU Scheduler!</h2>
-              <hr />
-              <h4 style="line-height: 1.3em;">
-                ITUscheduler is an <a href="https://github.com/dorukgezici/ituscheduler-go" target="_blank"
-                  >open-source</a
-                > web application that allows Istanbul Technical University students to browse up-to-date & detailed
-                information about courses and create schedules with ease. It has features like course queries according
-                to days, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also
-                have some features planned like automatic schedule generation, displaying data from previous years,
-                prerequisite checking, etc..
-              </h4>
-            </div>
-            <div class="row">
-              <p style="margin-top: 5px;">
-                Developed by <a href="https://doruk.gezici.me" target="_blank">Doruk Gezici</a> & <a
-                  href="https://github.com/mehmetaltuner"
-                  target="_blank">Mehmet Altuner</a
-                >
-              </p>
-              <em>
-                We do not guarantee or can be responsible for the accuracy of information found here. If in doubt,
-                please check <a href="https://www.sis.itu.edu.tr" target="_blank">SIS</a>.
-              </em>
-            </div>
-            <hr />
-          </div>
+        <div class="panel-body">
+          <h4>ITUscheduler has</h4>
+          <h4><strong>{usersCount}</strong> users</h4>
+          <hr />
+          <h4>Users have created</h4>
+          <h4><strong>{schedulesCount}</strong> schedules</h4>
+          <hr />
+          <h4>This semester has</h4>
+          <h4><strong>{coursesCount}</strong> courses</h4>
         </div>
-        <div class="row">
+        <div class="panel-heading">
+          <h3>Latest Refresh</h3>
+        </div>
+        <div class="panel-body">
           {
-            posts?.map((post) => (
-              <div class="media">
-                <div class="media-body">
-                  <h5 class="media-heading">
-                    by <strong>{post.author}</strong>, {post.date}
-                  </h5>
-                  <p set:html={post.content} />
-                  <hr />
-                </div>
-              </div>
+            majors?.map((major) => (
+              <>
+                <p>
+                  {major.code}: {major.refreshed_at}
+                </p>
+                <hr />
+              </>
             ))
           }
+          <!-- <nav aria-label="Latest Refresh Pagination">
+                  <ul id="p" class="pagination pagination-sm">
+                      {{range .Paginator.Pages}}
+                          <li class="page-item{{if eq $.Paginator.Current .}} active{{end}}">
+                              <a class="page-link" href="/info?page={{.}}#p">{{.}}</a>
+                          </li>
+                      {{end}}
+                  </ul>
+              </nav> -->
         </div>
       </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="twitter-timeline" data-height="2150" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">
-          Tweets by ITUscheduler
-        </a>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+    <div class="w-3/5 center">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="row">
+            <h2>Welcome to ITU Scheduler!</h2>
+            <hr />
+            <h4 style="line-height: 1.3em;">
+              ITUscheduler is an <a href="https://github.com/dorukgezici/ituscheduler-go" target="_blank">open-source</a
+              >
+               web application that allows Istanbul Technical University students to browse up-to-date & detailed
+              information about courses and create schedules with ease. It has features like course queries according to
+              days, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also have
+              some features planned like automatic schedule generation, displaying data from previous years,
+              prerequisite checking, etc..
+            </h4>
+          </div>
+          <div class="row">
+            <p style="margin-top: 5px;">
+              Developed by <a href="https://doruk.gezici.me" target="_blank">Doruk Gezici</a> & <a
+                href="https://github.com/mehmetaltuner"
+                target="_blank">Mehmet Altuner</a
+              >
+            </p>
+            <em>
+              We do not guarantee or can be responsible for the accuracy of information found here. If in doubt, please
+              check <a href="https://www.sis.itu.edu.tr" target="_blank">SIS</a>.
+            </em>
+          </div>
+          <hr />
+        </div>
+      </div>
+      <div class="row">
+        {
+          posts?.map((post) => (
+            <div class="media">
+              <div class="media-body">
+                <h5 class="media-heading">
+                  by <strong>{post.author}</strong>, {post.date}
+                </h5>
+                <p set:html={post.content} />
+                <hr />
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
-  </div>
+    <div class="w-1/5">
+      <a
+        class="twitter-timeline"
+        data-height="2150"
+        data-theme="dark"
+        data-chrome="transparent"
+        href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw"
+      >
+        Tweets by ITUscheduler
+      </a>
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+  </main>
 </Layout>

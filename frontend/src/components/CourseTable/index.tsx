@@ -1,4 +1,5 @@
 import CourseFilter from "@/components/CourseFilter";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useCourseCodes from "@/hooks/useCourseCodes";
 import useCourses from "@/hooks/useCourses";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store/courses";
@@ -21,77 +22,53 @@ export default function CourseTable(props: Props) {
   const { data: courses } = useCourses(props.courses, major, courseCode, day);
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <CourseFilter majors={props.majors} courseCodes={courseCodes} />
-
-        <div className="col-md-10 col-lg-9">
-          <div className="panel panel-primary">
-            <div className="panel-heading">
-              <div className="row">
-                <div className="col-md-8 col-xs-6">
-                  <h2 className="panel-title">Courses</h2>
-                </div>
-              </div>
-            </div>
-            <ul className="list-group">
-              <li className="list-group-item">
-                <div className="table-responsive">
-                  <table className="table table-hover table-striped">
-                    <thead>
-                      <tr>
-                        <th>CRN</th>
-                        <th>Major Code</th>
-                        <th>Title</th>
-                        <th>Teaching Method</th>
-                        <th>Instructor</th>
-                        {/* <th>Building</th>
-                        <th>Day</th>
-                        <th>Time</th>
-                        <th>Room</th> */}
-                        <th>Capacity</th>
-                        <th>Major Restriction</th>
-                        <th>Prerequisites</th>
-                        <th>Class Restriction</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {courses?.map((course) => (
-                        <tr key={course.crn}>
-                          <th>{course.crn}</th>
-                          <td>
-                            <a target="_blank" href="{{.Catalogue}}">
-                              {course.code}
-                            </a>
-                          </td>
-                          <td>{course.title}</td>
-                          <td>{course.teaching_method}</td>
-                          <td>{course.instructor}</td>
-                          <td>
-                            {course.enrolled}/{course.capacity}
-                          </td>
-                          <td>
-                            <a href="javascript:alert('Major Restrictions: {{.MajorRestriction}}')">
-                              {course.major_restriction}
-                            </a>
-                          </td>
-                          <td>
-                            <a href="javascript:alert('Prerequisites: {{.Prerequisites}}')">{course.prerequisites}</a>
-                          </td>
-                          <td>{course.class_restriction}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </li>
-            </ul>
-          </div>
+    <div className="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
+      <div className="flex flex-wrap gap-y-10">
+        <div className="md:w-1/5">
+          <CourseFilter majors={props.majors} courseCodes={courseCodes} selectedMajor={props.selectedMajor} />
         </div>
-      </div>
-      <div className="row">
-        <div className="col-md-12">
-          <p>Latest Database Refresh: {props.selectedMajor?.refreshed_at}</p>
+
+        <div className="md:w-4/5">
+          <Table className="border border-collapse">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[120px]">CRN</TableHead>
+                <TableHead>Major Code</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Teaching</TableHead>
+                <TableHead>Instructor</TableHead>
+                {/* <TableHead>Building</TableHead>
+                <TableHead>Day</TableHead>
+                <TableHead>Time</TableHead>
+                <TableHead>Room</TableHead> */}
+                <TableHead>Capacity</TableHead>
+                <TableHead>Major Restriction</TableHead>
+                <TableHead>Prerequisites</TableHead>
+                <TableHead className="text-right">Class Restriction</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {courses?.map((course) => (
+                <TableRow key={course.crn}>
+                  <TableCell className="font-medium">{course.crn}</TableCell>
+                  <TableCell>{course.code}</TableCell>
+                  <TableCell>{course.title}</TableCell>
+                  <TableCell>{course.teaching_method}</TableCell>
+                  <TableCell>{course.instructor}</TableCell>
+                  {/* <TableCell></TableCell> */}
+                  {/* <TableCell></TableCell> */}
+                  {/* <TableCell></TableCell> */}
+                  {/* <TableCell className="text-right"></TableCell> */}
+                  <TableCell>
+                    {course.enrolled}/{course.capacity}
+                  </TableCell>
+                  <TableCell>{course.major_restriction}</TableCell>
+                  <TableCell>{course.prerequisites}</TableCell>
+                  <TableCell className="text-right">{course.class_restriction}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>

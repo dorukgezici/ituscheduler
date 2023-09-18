@@ -2,6 +2,7 @@
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import QueryDebug from "@/components/QueryDebug";
+import "@/styles/globals.css";
 import { ViewTransitions } from "astro:transitions";
 
 interface Props {
@@ -11,12 +12,13 @@ interface Props {
 const { title } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta property="og:title" content="ITU Scheduler" />
@@ -38,12 +40,7 @@ const { title } = Astro.props;
     <meta name="apple-mobile-web-app-title" content="ITUscheduler" />
     <meta name="application-name" content="ITUscheduler" />
     <meta name="msapplication-config" content="/static/icons/browser-config.xml" />
-    <meta name="theme-color" content="#ffffff" />
-    
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/static/css/bootstrap-social.css" />
-    <link rel="stylesheet" href="/static/css/style.css" />
-    <script is:inline src="/static/js/jquery-3.2.1.min.js"></script>
+    <meta name="theme-color" content="#020817" />
 
     <!-- Google Tag Manager -->
     {import.meta.env.PROD && (
@@ -68,7 +65,7 @@ const { title } = Astro.props;
     <ViewTransitions />
   </head>
 
-  <body>
+  <body class="min-h-screen bg-background font-sans antialiased">
     <!-- Google Tag Manager (noscript) -->
     <noscript>
       <iframe
@@ -79,13 +76,12 @@ const { title } = Astro.props;
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <Header />
-    <slot />
-    {import.meta.env.DEV && <QueryDebug client:only="react"/>}
-    <Footer />
-
-    <script is:inline src="/static/js/tether.min.js"></script>
-    <script is:inline src="/static/js/bootstrap.min.js"></script>
-    <script is:inline src="/static/js/main.js"></script>
+    <div class="relative flex min-h-screen flex-col">
+      <Header />
+      <div class="flex-1"><slot /></div>
+      <Footer />
+    </div>
+    
+    {import.meta.env.DEV && <QueryDebug client:only="react" />}
   </body>
 </html>

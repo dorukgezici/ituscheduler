@@ -1,9 +1,11 @@
 import { serverMiddlewareClient } from "@/lib/supabaseClient";
-import { defineMiddleware } from "astro:middleware";
+import { defineMiddleware, sequence } from "astro:middleware";
 
-export const onRequest = defineMiddleware(async (context, next) => {
-  const res = await next();
-  const supabase = serverMiddlewareClient(context.request, res);
+const authenticate = defineMiddleware(async ({ request }, next) => {
+  const response = await next();
+  const supabase = serverMiddlewareClient(request, response);
   await supabase.auth.getSession();
-  return res;
+  return response;
 });
+
+export const onRequest = sequence(authenticate);

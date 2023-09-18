@@ -14,7 +14,7 @@ if (session) return Astro.redirect("/");
   <div class="container">
     <div class="row">
       <div class="col-md-6 col-md-offset-3 card-bg">
-        <SupabaseAuth site={Astro.site} client:load />
+        <SupabaseAuth site={Astro.site} client:only="react" />
       </div>
     </div>
   </div>
