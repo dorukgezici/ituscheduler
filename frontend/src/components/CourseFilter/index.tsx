@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { dateAgo } from "@/lib/dayjs";
 import { daySlots } from "@/lib/globals";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store/courses";
 import type { Tables, Views } from "@/types/supabase";
@@ -77,10 +78,7 @@ export default function CourseFilter({ majors, courseCodes, selectedMajor: selec
 
         <CardHeader>
           <CardFooter>
-            <CardDescription>
-              <p>Last Refresh:</p>
-              <p>{selectedMajorData?.refreshed_at}</p>
-            </CardDescription>
+            <CardDescription>Last Refresh: {dateAgo(selectedMajorData?.refreshed_at)}</CardDescription>
           </CardFooter>
         </CardHeader>
       </Card>

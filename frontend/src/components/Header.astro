@@ -25,7 +25,7 @@ const {
 
     <div class="flex flex-1 items-center justify-end space-x-4">
       <nav class="flex items-center space-x-1">
-        <Menu user={user} />
+        <Menu user={user} client:only="react" />
       </nav>
     </div>
   </div>
