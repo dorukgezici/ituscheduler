@@ -5,8 +5,6 @@ import Layout from "@/layouts/Layout.astro";
 import { dateAgo } from "@/lib/dayjs";
 import { serverComponentClient } from "@/lib/supabaseClient";
 
-export const prerender = true;
-
 export function getStaticPaths() {
   return [{ params: { page: "1" } }, { params: { page: "2" } }, { params: { page: "3" } }, { params: { page: "4" } }];
 }
@@ -127,7 +125,7 @@ const { count: schedulesCount } = await supabase.from("schedules").select("*", {
         data-height="2150"
         data-theme="dark"
         data-chrome="transparent"
-        href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw"
+        href="https://twitter.com/ITUscheduler"
       >
         Tweets by ITUscheduler
       </a>
