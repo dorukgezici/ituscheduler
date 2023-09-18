@@ -1,5 +1,5 @@
 ---
-import SupabaseAuth from "@/components/SupabaseAuth";
+import AuthCard from "@/components/AuthCard";
 import Layout from "@/layouts/Layout.astro";
 import { serverComponentClient } from "@/lib/supabaseClient";
 
@@ -11,11 +11,7 @@ if (session) return Astro.redirect("/");
 ---
 
 <Layout title="Login | ITU Scheduler">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 card-bg">
-        <SupabaseAuth site={Astro.site} client:only="react" />
-      </div>
-    </div>
+  <div class="grid place-items-center h-[75vh]">
+    <AuthCard site={Astro.site} client:load />
   </div>
 </Layout>
