@@ -37,10 +37,10 @@ export default function CourseTable(props: Props) {
                 <TableHead>Title</TableHead>
                 <TableHead>Teaching</TableHead>
                 <TableHead>Instructor</TableHead>
-                {/* <TableHead>Building</TableHead>
+                <TableHead>Building</TableHead>
                 <TableHead>Day</TableHead>
                 <TableHead>Time</TableHead>
-                <TableHead>Room</TableHead> */}
+                <TableHead>Room</TableHead>
                 <TableHead>Capacity</TableHead>
                 <TableHead>Major Restriction</TableHead>
                 <TableHead>Prerequisites</TableHead>
@@ -55,10 +55,38 @@ export default function CourseTable(props: Props) {
                   <TableCell>{course.title}</TableCell>
                   <TableCell>{course.teaching_method}</TableCell>
                   <TableCell>{course.instructor}</TableCell>
-                  {/* <TableCell></TableCell> */}
-                  {/* <TableCell></TableCell> */}
-                  {/* <TableCell></TableCell> */}
-                  {/* <TableCell className="text-right"></TableCell> */}
+                  <TableCell>
+                    {course.lectures.map((lecture) => (
+                      <>
+                        {lecture.building}
+                        <br />
+                      </>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {course.lectures.map((lecture) => (
+                      <>
+                        {lecture.day}
+                        <br />
+                      </>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {course.lectures.map((lecture) => (
+                      <>
+                        {lecture.time_start}/{lecture.time_end}
+                        <br />
+                      </>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {course.lectures.map((lecture) => (
+                      <>
+                        {lecture.room}
+                        <br />
+                      </>
+                    ))}
+                  </TableCell>
                   <TableCell>
                     {course.enrolled}/{course.capacity}
                   </TableCell>

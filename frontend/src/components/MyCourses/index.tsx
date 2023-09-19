@@ -15,6 +15,7 @@ export default function MyCourses({ session }: { session: Session }) {
 
       <CardContent>
         <MultiSelect
+          placeholder="Select courses..."
           options={myCourses?.map(({ course_crn, courses: course }) => ({
             label: `${course_crn} | ${course?.code} | ${course?.title}`,
             value: course_crn,

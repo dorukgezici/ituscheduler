@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { dateAgo } from "@/lib/dayjs";
 import { daySlots } from "@/lib/globals";
@@ -35,11 +36,13 @@ export default function CourseFilter({ majors, courseCodes, selectedMajor: selec
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {majors?.map((major) => (
-                <SelectItem key={major.code} value={major.code}>
-                  {major.code}
-                </SelectItem>
-              ))}
+              <ScrollArea className="h-[400px]">
+                {majors?.map((major) => (
+                  <SelectItem key={major.code} value={major.code}>
+                    {major.code}
+                  </SelectItem>
+                ))}
+              </ScrollArea>
             </SelectContent>
           </Select>
         </CardContent>
@@ -53,12 +56,14 @@ export default function CourseFilter({ majors, courseCodes, selectedMajor: selec
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All</SelectItem>
-              {courseCodes?.map((courseCode) => (
-                <SelectItem key={courseCode.code} value={courseCode.code ?? ""}>
-                  {courseCode.code}
-                </SelectItem>
-              ))}
+              <ScrollArea className={(courseCodes?.length || 0) > 10 ? "h-[400px]" : undefined}>
+                <SelectItem value="">All</SelectItem>
+                {courseCodes?.map((courseCode) => (
+                  <SelectItem key={courseCode.code} value={courseCode.code ?? ""}>
+                    {courseCode.code}
+                  </SelectItem>
+                ))}
+              </ScrollArea>
             </SelectContent>
           </Select>
         </CardContent>

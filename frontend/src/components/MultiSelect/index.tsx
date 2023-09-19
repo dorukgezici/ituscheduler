@@ -7,10 +7,11 @@ import * as React from "react";
 type Option = Record<"value" | "label", string>;
 
 type Props = {
+  placeholder?: string;
   options?: Option[];
 };
 
-export default function MultiSelect({ options }: Props) {
+export default function MultiSelect({ placeholder, options }: Props) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<Option[]>(options ?? []);
@@ -74,7 +75,7 @@ export default function MultiSelect({ options }: Props) {
             onValueChange={setInputValue}
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
-            placeholder="Select multiple..."
+            placeholder={placeholder ?? "Select multiple..."}
             className="ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
           />
         </div>
