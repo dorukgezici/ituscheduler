@@ -33,7 +33,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
-    "daisyui": "^3.7.5",
     "dayjs": "^1.11.9",
     "lucide-react": "^0.279.0",
     "nanostores": "^0.9.3",
