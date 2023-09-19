@@ -17,22 +17,22 @@ export default function Menu({ user }: { user: User | null }) {
         <NavigationMenuItem>
           <NavigationMenuTrigger>Guides</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="menu">
-              <li>
+            <ul className="w-40">
+              <li className="text-sm hover:bg-muted/50 p-4">
                 <NavigationMenuLink asChild>
                   <a href="https://web.itu.edu.tr/durgunor/ders.htm" target="_blank">
                     Ders Seçim Rehberi
                   </a>
                 </NavigationMenuLink>
               </li>
-              <li>
+              <li className="text-sm hover:bg-muted/50 p-4">
                 <NavigationMenuLink asChild>
                   <a href="https://web.itu.edu.tr/durgunor/itusch.htm" target="_blank">
-                    ITUscheduler Nasıl Kullanılır?
+                    Nasıl Kullanılır?
                   </a>
                 </NavigationMenuLink>
               </li>
-              <li>
+              <li className="text-sm hover:bg-muted/50 p-4">
                 <NavigationMenuLink asChild>
                   <a href="https://web.itu.edu.tr/durgunor/crn.html" target="_blank">
                     Fill CRN Test
@@ -47,18 +47,18 @@ export default function Menu({ user }: { user: User | null }) {
           <NavigationMenuItem>
             <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="menu">
-                <li>
+              <ul>
+                <li className="text-sm hover:bg-muted/50 p-4">
                   <NavigationMenuLink asChild>
                     <a href="/admin/refresh-majors">Refresh Major Codes</a>
                   </NavigationMenuLink>
                 </li>
-                <li>
+                <li className="text-sm hover:bg-muted/50 p-4">
                   <NavigationMenuLink asChild>
                     <a href="/admin/refresh-courses">Refresh Courses</a>
                   </NavigationMenuLink>
                 </li>
-                <li>
+                <li className="text-sm hover:bg-muted/50 p-4">
                   <NavigationMenuLink asChild>
                     <a href="/admin/populate-db">Populate DB (Debugging)</a>
                   </NavigationMenuLink>
