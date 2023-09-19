@@ -6,7 +6,11 @@ import * as React from "react";
 
 type Option = Record<"value" | "label", string>;
 
-export default function MultiSelect({ options }: { options?: Option[] }) {
+type Props = {
+  options?: Option[];
+};
+
+export default function MultiSelect({ options }: Props) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<Option[]>(options ?? []);

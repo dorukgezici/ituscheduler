@@ -1,4 +1,5 @@
 import MultiSelect from "@/components/MultiSelect";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import useMyCourses from "@/hooks/useMyCourses";
 import type { Session } from "supabase-auth-helpers-astro";
@@ -13,23 +14,30 @@ export default function MyCourses({ session }: { session: Session }) {
       </CardHeader>
 
       <CardContent>
-        <MultiSelect options={myCourses?.map(({ course_crn }) => ({ label: course_crn, value: course_crn }))} />
+        <MultiSelect
+          options={myCourses?.map(({ course_crn, courses: course }) => ({
+            label: `${course_crn} | ${course?.code} | ${course?.title}`,
+            value: course_crn,
+          }))}
+        />
       </CardContent>
 
       <CardFooter className="flex gap-x-2">
         <div className="w-1/6">
-          <button className="btn btn-neutral" name="save">
-            New Schedule
-          </button>
+          <Button variant="outline">New Schedule</Button>
         </div>
         <div className="w-1/6">
-          <button className="btn btn-neutral" id="addToSchedule">
-            Add To Schedule
-          </button>
+          <Button id="addToSchedule" variant="outline">
+            Add to Schedule
+          </Button>
         </div>
         <div className="w-4/6">
           <small>
-            1) Add all relevant courses from the <a href="/courses">Courses page</a> and come back here.
+            1) Add all relevant courses from the{" "}
+            <a href="/courses" className="font-medium hover:underline">
+              courses page
+            </a>{" "}
+            and come back here.
           </small>
           <br />
           <small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>

@@ -12,6 +12,6 @@ if (session) return Astro.redirect("/");
 
 <Layout title="Login | ITU Scheduler">
   <div class="grid place-items-center h-[75vh]">
-    <AuthCard site={Astro.site} client:load />
+    <AuthCard site={Astro.site} client:only="react" />
   </div>
 </Layout>

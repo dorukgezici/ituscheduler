@@ -7,9 +7,13 @@ export default function useMyCourses(userId: string) {
 
   return useQuery(
     {
-      queryKey: ["course_codes", userId],
+      queryKey: ["user_courses", userId],
       queryFn: async () => {
-        let query = supabase.from("user_courses").select().eq("user_id", userId).order("course_crn");
+        let query = supabase
+          .from("user_courses")
+          .select("course_crn, courses(code,title)")
+          .eq("user_id", userId)
+          .order("course_crn");
         const { data, error } = await query;
         if (error) throw new Error("Query failed");
         return data;
