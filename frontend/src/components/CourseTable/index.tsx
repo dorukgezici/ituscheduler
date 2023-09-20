@@ -1,12 +1,18 @@
 import CourseFilter from "@/components/CourseFilter";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useCourseCodes from "@/hooks/useCourseCodes";
 import useCourses from "@/hooks/useCourses";
+import { clientComponentClient } from "@/lib/supabaseClient";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store/courses";
 import type { Tables, Views } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
+import { useState } from "react";
+import type { Session } from "supabase-auth-helpers-astro";
 
 type Props = {
+  session: Session | null;
+  myCourses: Tables<"user_courses">[] | null;
   majors: Tables<"majors">[] | { code: string }[] | null;
   courseCodes: Views<"course_codes">[] | { code: string; major_code: string }[] | null;
   courses: Tables<"courses">[] | null;
@@ -14,12 +20,34 @@ type Props = {
 };
 
 export default function CourseTable(props: Props) {
+  type Course = Exclude<typeof props.courses, null>[number];
+  const supabase = clientComponentClient();
+
   const major = useStore($selectedMajor);
   const courseCode = useStore($selectedCourseCode);
   const day = useStore($selectedDay);
 
   const { data: courseCodes } = useCourseCodes(props.courseCodes, major);
   const { data: courses } = useCourses(props.courses, major, courseCode, day);
+
+  const [myCourses, setMyCourses] = useState(props.myCourses);
+  const toggleMyCourse = async (checked: boolean | "indeterminate", course: Course) => {
+    const userId = props.session!.user.id;
+
+    if (!checked) {
+      const { error } = await supabase.from("user_courses").delete().eq("course_crn", course.crn).eq("user_id", userId);
+      if (!error) setMyCourses(myCourses!.filter((c) => c.course_crn != course.crn || c.user_id != userId));
+      else alert(error);
+    } else {
+      const { data, error } = await supabase
+        .from("user_courses")
+        .upsert({ course_crn: course.crn, user_id: userId })
+        .select()
+        .single();
+      if (!error) setMyCourses([data, ...myCourses!]);
+      else alert(error);
+    }
+  };
 
   return (
     <div className="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
@@ -32,7 +60,8 @@ export default function CourseTable(props: Props) {
           <Table className="border border-collapse">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[120px]">CRN</TableHead>
+                {props.session && <TableHead>My Courses</TableHead>}
+                <TableHead>CRN</TableHead>
                 <TableHead>Major Code</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Teaching</TableHead>
@@ -50,41 +79,49 @@ export default function CourseTable(props: Props) {
             <TableBody>
               {courses?.map((course) => (
                 <TableRow key={course.crn}>
-                  <TableCell className="font-medium">{course.crn}</TableCell>
+                  {props.session && (
+                    <TableCell>
+                      <Checkbox
+                        checked={myCourses?.some((c) => c.course_crn === course.crn)}
+                        onCheckedChange={(checked) => toggleMyCourse(checked, course)}
+                      />
+                    </TableCell>
+                  )}
+                  <TableCell className="font-bold">{course.crn}</TableCell>
                   <TableCell>{course.code}</TableCell>
                   <TableCell>{course.title}</TableCell>
                   <TableCell>{course.teaching_method}</TableCell>
                   <TableCell>{course.instructor}</TableCell>
                   <TableCell>
                     {course.lectures.map((lecture) => (
-                      <>
+                      <span key={lecture.id}>
                         {lecture.building}
                         <br />
-                      </>
+                      </span>
                     ))}
                   </TableCell>
                   <TableCell>
                     {course.lectures.map((lecture) => (
-                      <>
+                      <span key={lecture.id}>
                         {lecture.day}
                         <br />
-                      </>
+                      </span>
                     ))}
                   </TableCell>
                   <TableCell>
                     {course.lectures.map((lecture) => (
-                      <>
+                      <span key={lecture.id}>
                         {lecture.time_start}/{lecture.time_end}
                         <br />
-                      </>
+                      </span>
                     ))}
                   </TableCell>
                   <TableCell>
                     {course.lectures.map((lecture) => (
-                      <>
+                      <span key={lecture.id}>
                         {lecture.room}
                         <br />
-                      </>
+                      </span>
                     ))}
                   </TableCell>
                   <TableCell>

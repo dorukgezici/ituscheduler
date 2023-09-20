@@ -11,7 +11,7 @@ export default function useMyCourses(userId: string) {
       queryFn: async () => {
         let query = supabase
           .from("user_courses")
-          .select("course_crn, courses(code,title)")
+          .select("course_crn, courses(code,title,instructor,enrolled,capacity,lectures(*))")
           .eq("user_id", userId)
           .order("course_crn");
         const { data, error } = await query;

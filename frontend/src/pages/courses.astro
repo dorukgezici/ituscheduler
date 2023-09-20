@@ -5,6 +5,9 @@ import { serverComponentClient } from "@/lib/supabaseClient";
 import { $selectedMajor } from "@/store/courses";
 
 const supabase = serverComponentClient(Astro.cookies);
+const {
+  data: { session },
+} = await supabase.auth.getSession();
 
 const { data: majors } = await supabase.from("majors").select("code").order("code");
 const { data: courseCodes } = await supabase.from("course_codes").select().eq("major_code", $selectedMajor.get());
@@ -12,6 +15,10 @@ const { data: courses } = await supabase
   .from("courses")
   .select("*, lectures(*)")
   .eq("major_code", $selectedMajor.get());
+const { data: myCourses } = await supabase
+  .from("user_courses")
+  .select()
+  .eq("user_id", session?.user.id ?? "");
 const { data: selectedMajor } = await supabase
   .from("majors")
   .select("refreshed_at")
@@ -20,5 +27,13 @@ const { data: selectedMajor } = await supabase
 ---
 
 <Layout title="Courses | ITU Scheduler">
-  <CourseTable majors={majors} courseCodes={courseCodes} courses={courses} selectedMajor={selectedMajor} client:load />
+  <CourseTable
+    session={session}
+    myCourses={myCourses}
+    majors={majors}
+    courseCodes={courseCodes}
+    courses={courses}
+    selectedMajor={selectedMajor}
+    client:load
+  />
 </Layout>

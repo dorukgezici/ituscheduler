@@ -266,25 +266,28 @@ export interface Database {
       user_courses: {
         Row: {
           course_crn: string
-          user_id: number
+          id: string
+          user_id: string
         }
         Insert: {
           course_crn: string
-          user_id: number
+          id?: string
+          user_id: string
         }
         Update: {
           course_crn?: string
-          user_id?: number
+          id?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "fk_user_courses_course"
+            foreignKeyName: "user_courses_course_crn_fkey"
             columns: ["course_crn"]
             referencedRelation: "courses"
             referencedColumns: ["crn"]
           },
           {
-            foreignKeyName: "fk_user_courses_user"
+            foreignKeyName: "user_courses_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -346,14 +349,6 @@ export interface Database {
         Row: {
           code: string | null
           major_code: string | null
-        }
-        Insert: {
-          code?: string | null
-          major_code?: string | null
-        }
-        Update: {
-          code?: string | null
-          major_code?: string | null
         }
         Relationships: [
           {
