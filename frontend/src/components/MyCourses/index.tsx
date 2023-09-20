@@ -12,6 +12,8 @@ export default function MyCourses({ session }: { session: Session }) {
   const [selected, setSelected] = useState<Option[]>([]);
   const { data: myCourses } = useMyCourses(session.user.id);
 
+  const filterSelectedOptions = () => myCourses?.filter((c) => !selected.some((s) => s.value === c.course_crn));
+
   return (
     <Card className="text-center">
       <CardHeader>
@@ -23,7 +25,7 @@ export default function MyCourses({ session }: { session: Session }) {
           placeholder="Select courses..."
           selected={selected}
           setSelected={setSelected}
-          options={myCourses?.map(({ course_crn, courses: course }) => ({
+          options={filterSelectedOptions()?.map(({ course_crn, courses: course }) => ({
             label: `${course_crn} | ${course?.code} | ${course?.title} | ${course?.instructor} | ${course?.lectures.map(
               (l) => `${l.day} ${l.time} | `
             )}${course?.enrolled}/${course?.capacity} `,
