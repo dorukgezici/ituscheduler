@@ -361,7 +361,10 @@ export interface Database {
       }
     }
     Functions: {
-      [_ in never]: never
+      user_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

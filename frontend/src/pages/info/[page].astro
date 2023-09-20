@@ -20,7 +20,7 @@ const { data: majors } = await supabase
   .order("code")
   .range((page - 1) * 40, page * 40 - 1);
 const { data: posts } = await supabase.from("posts").select();
-const { count: usersCount } = await supabase.from("users").select("*", { count: "exact", head: true });
+const { data: userCount } = await supabase.rpc("user_count");
 const { count: coursesCount } = await supabase.from("courses").select("*", { count: "exact", head: true });
 const { count: schedulesCount } = await supabase.from("schedules").select("*", { count: "exact", head: true });
 ---
@@ -35,7 +35,7 @@ const { count: schedulesCount } = await supabase.from("schedules").select("*", {
         </CardHeader>
         <CardContent>
           <CardTitle>ITUscheduler has</CardTitle>
-          <strong>{usersCount}</strong> users
+          <strong>{userCount}</strong> users
 
           <CardTitle>Users have created</CardTitle>
           <strong>{schedulesCount}</strong> schedules
