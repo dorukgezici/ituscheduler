@@ -4,17 +4,18 @@ import { Command as CommandPrimitive } from "cmdk";
 import { X } from "lucide-react";
 import * as React from "react";
 
-type Option = Record<"value" | "label", string>;
+export type Option = Record<"value" | "label", string>;
 
 type Props = {
   placeholder?: string;
+  selected: Option[];
+  setSelected: React.Dispatch<React.SetStateAction<Option[]>>;
   options?: Option[];
 };
 
-export default function MultiSelect({ placeholder, options }: Props) {
+export default function MultiSelect({ placeholder, selected, setSelected, options }: Props) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Option[]>(options ?? []);
   const [inputValue, setInputValue] = React.useState("");
 
   const handleUnselect = React.useCallback((option: Option) => {

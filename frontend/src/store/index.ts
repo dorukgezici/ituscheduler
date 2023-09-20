@@ -1,5 +1,5 @@
 import { clientComponentClient } from "@/lib/supabaseClient";
-import { atom, onMount, onSet } from "nanostores";
+import { action, atom, onMount, onSet } from "nanostores";
 
 export const $selectedMajor = atom<string>("BLG");
 onMount($selectedMajor, () => {
@@ -10,7 +10,7 @@ onMount($selectedMajor, () => {
     } = await supabase.auth.getSession();
 
     const { data: major } = await supabase.from("user_major").select("major").eq("user_id", session?.user.id).single();
-    $selectedMajor.set(major?.major);
+    $selectedMajor.set(major?.major ?? "BLG");
   };
 
   loadSelectedMajor();
@@ -41,4 +41,9 @@ onSet($selectedSchedule, async ({ newValue }) => {
     if (oldValue) await supabase.from("schedules").update({ is_selected: false }).eq("id", oldValue);
     if (newValue) await supabase.from("schedules").update({ is_selected: true }).eq("id", newValue);
   }
+});
+export const deleteSchedule = action($selectedSchedule, "delete", async (store, id: number) => {
+  const supabase = clientComponentClient();
+  const { error } = await supabase.from("schedules").delete().eq("id", id);
+  if (!error) store.set(undefined);
 });
