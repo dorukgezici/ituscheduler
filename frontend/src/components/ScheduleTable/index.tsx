@@ -2,12 +2,22 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import useScheduleCourses from "@/hooks/useScheduleCourses";
 import { hourSlots } from "@/lib/globals";
 import { $selectedSchedule } from "@/store";
+import type { Tables } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
 
-export default function ScheduleTable() {
-  const scheduleId = useStore($selectedSchedule);
-  const { data } = useScheduleCourses(scheduleId ?? "");
+type Props = {
+  schedules: Tables<"schedules">[] | null;
+};
+
+export default function ScheduleTable({ schedules }: Props) {
+  const selectedSchedule = useStore($selectedSchedule);
+  const { data } = useScheduleCourses(selectedSchedule ?? "");
+
+  useEffect(() => {
+    const schedule = schedules?.find((s) => s.is_selected);
+    if (!selectedSchedule && schedule) $selectedSchedule.set(`${schedule.id}`);
+  }, []);
 
   useEffect(() => {
     if (!data) return;

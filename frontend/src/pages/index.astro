@@ -52,7 +52,7 @@ const { data: schedules } = await supabase
 
     <section class="w-full">
       <MySchedule schedules={schedules} client:load />
-      <ScheduleTable client:load />
+      <ScheduleTable schedules={schedules} client:load />
     </section>
   </main>
 </Layout>
