@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import useCourseCodes from "@/hooks/useCourseCodes";
 import useCourses from "@/hooks/useCourses";
 import { clientComponentClient } from "@/lib/supabaseClient";
-import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store/courses";
+import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store";
 import type { Tables, Views } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
 import { useState } from "react";

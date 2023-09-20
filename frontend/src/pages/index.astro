@@ -1,6 +1,7 @@
 ---
 import AuthCard from "@/components/AuthCard";
 import MyCourses from "@/components/MyCourses";
+import MySchedule from "@/components/MySchedule";
 import ScheduleTable from "@/components/ScheduleTable";
 import Layout from "@/layouts/Layout.astro";
 import { serverComponentClient } from "@/lib/supabaseClient";
@@ -9,6 +10,11 @@ const supabase = serverComponentClient(Astro.cookies);
 const {
   data: { session },
 } = await supabase.auth.getSession();
+
+const { data: schedules } = await supabase
+  .from("schedules")
+  .select()
+  .eq("user_id", session?.user.id ?? "");
 ---
 
 <Layout title="ITU Scheduler">
@@ -38,13 +44,14 @@ const {
             </p>
           </div>
           <div class="md:w-1/3">
-            <AuthCard client:only="react" />
+            <AuthCard client:load />
           </div>
         </section>
       )
     }
 
     <section class="w-full">
+      <MySchedule schedules={schedules} client:load />
       <ScheduleTable client:load />
     </section>
   </main>

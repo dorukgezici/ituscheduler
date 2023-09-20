@@ -205,7 +205,7 @@ export interface Database {
           id: number
           is_selected: boolean | null
           updated_at: string | null
-          user_id: number | null
+          user_id: string
         }
         Insert: {
           created_at?: string | null
@@ -213,7 +213,7 @@ export interface Database {
           id?: number
           is_selected?: boolean | null
           updated_at?: string | null
-          user_id?: number | null
+          user_id: string
         }
         Update: {
           created_at?: string | null
@@ -221,11 +221,11 @@ export interface Database {
           id?: number
           is_selected?: boolean | null
           updated_at?: string | null
-          user_id?: number | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "fk_users_schedules"
+            foreignKeyName: "schedules_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -288,6 +288,34 @@ export interface Database {
           },
           {
             foreignKeyName: "user_courses_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_courses_go: {
+        Row: {
+          course_crn: string
+          user_id: number
+        }
+        Insert: {
+          course_crn: string
+          user_id: number
+        }
+        Update: {
+          course_crn?: string
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user_courses_go_course"
+            columns: ["course_crn"]
+            referencedRelation: "courses"
+            referencedColumns: ["crn"]
+          },
+          {
+            foreignKeyName: "fk_user_courses_go_user"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]

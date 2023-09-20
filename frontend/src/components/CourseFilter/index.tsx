@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { dateAgo } from "@/lib/dayjs";
 import { daySlots } from "@/lib/globals";
-import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store/courses";
+import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store";
 import type { Tables, Views } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
 

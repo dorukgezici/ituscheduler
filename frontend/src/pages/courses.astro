@@ -2,7 +2,7 @@
 import CourseTable from "@/components/CourseTable";
 import Layout from "@/layouts/Layout.astro";
 import { serverComponentClient } from "@/lib/supabaseClient";
-import { $selectedMajor } from "@/store/courses";
+import { $selectedMajor } from "@/store";
 
 const supabase = serverComponentClient(Astro.cookies);
 const {
