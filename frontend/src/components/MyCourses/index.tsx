@@ -6,16 +6,16 @@ import useMyCourses from "@/hooks/useMyCourses";
 import { clientComponentClient } from "@/lib/supabaseClient";
 import { $selectedSchedule } from "@/store";
 import { useState } from "react";
-import type { Session } from "supabase-auth-helpers-astro";
+import type { User } from "supabase-auth-helpers-astro";
 
-export default function MyCourses({ session }: { session: Session }) {
+export default function MyCourses({ user }: { user: User }) {
   const [selected, setSelected] = useState<Option[]>([]);
-  const { data: myCourses } = useMyCourses(session.user.id);
+  const { data: myCourses } = useMyCourses(user.id);
 
   const filterSelectedOptions = () => myCourses?.filter((c) => !selected.some((s) => s.value === c.course_crn));
 
   return (
-    <Card className="text-center">
+    <Card className="w-full flex flex-col text-center">
       <CardHeader>
         <CardTitle>My Courses</CardTitle>
       </CardHeader>
@@ -34,17 +34,13 @@ export default function MyCourses({ session }: { session: Session }) {
         />
       </CardContent>
 
-      <CardFooter className="flex gap-x-2">
-        <div className="w-1/6">
+      <CardFooter className="flex flex-wrap gap-x-2">
+        <div className="md:w-1/6">
           <Button
             variant="outline"
             onClick={async () => {
               const supabase = clientComponentClient();
-              const { data, error } = await supabase
-                .from("schedules")
-                .insert({ user_id: session.user.id })
-                .select()
-                .single();
+              const { data, error } = await supabase.from("schedules").insert({ user_id: user.id }).select().single();
               if (data && !error) $selectedSchedule.set(`${data.id}`);
               // TODO: mutate
               location.reload();
@@ -53,7 +49,7 @@ export default function MyCourses({ session }: { session: Session }) {
             New Schedule
           </Button>
         </div>
-        <div className="w-1/6">
+        <div className="md:w-1/6">
           <Button
             variant="outline"
             onClick={async () => {
@@ -68,7 +64,7 @@ export default function MyCourses({ session }: { session: Session }) {
             Add to Schedule
           </Button>
         </div>
-        <div className="w-4/6">
+        <div className="hidden sm:block md:w-4/6">
           <small>
             1) Add all relevant courses from the{" "}
             <a href="/courses" className="font-medium hover:underline">

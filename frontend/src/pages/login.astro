@@ -7,7 +7,7 @@ const supabase = serverComponentClient(Astro.cookies);
 const {
   data: { session },
 } = await supabase.auth.getSession();
-if (session) return Astro.redirect("/");
+if (session?.user) return Astro.redirect("/");
 ---
 
 <Layout title="Login | ITU Scheduler">

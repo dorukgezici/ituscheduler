@@ -14,7 +14,7 @@ export default function Menu({ user }: { user: User | null }) {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        <NavigationMenuItem>
+        <NavigationMenuItem className="hidden sm:list-item">
           <NavigationMenuTrigger>Guides</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="w-40">

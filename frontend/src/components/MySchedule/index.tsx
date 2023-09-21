@@ -30,17 +30,19 @@ export default function MySchedule({ schedules }: Props) {
         </SelectContent>
       </Select>
 
-      <Button
-        variant="outline"
-        className="ml-4"
-        onClick={() => {
-          deleteSchedule(parseInt(schedule ?? "0"));
-          // TODO: mutate
-          location.reload();
-        }}
-      >
-        Delete Schedule
-      </Button>
+      {schedule && (
+        <Button
+          variant="outline"
+          className="ml-4"
+          onClick={() => {
+            deleteSchedule(parseInt(schedule ?? "0"));
+            // TODO: mutate
+            location.reload();
+          }}
+        >
+          Delete Schedule
+        </Button>
+      )}
     </div>
   );
 }

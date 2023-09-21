@@ -10,19 +10,20 @@ const supabase = serverComponentClient(Astro.cookies);
 const {
   data: { session },
 } = await supabase.auth.getSession();
+const user = session?.user;
 
 const { data: schedules } = await supabase
   .from("schedules")
   .select()
-  .eq("user_id", session?.user.id ?? "");
+  .eq("user_id", user?.id ?? "0");
 ---
 
 <Layout title="ITU Scheduler">
-  <main class="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
+  <main class="container grid place-items-center pb-8 pt-6 md:py-10 gap-6 md:gap-24">
     {
-      session ? (
-        <section class="w-full">
-          <MyCourses session={session} client:load />
+      user ? (
+        <section class="w-full min-w-none max-w-none">
+          <MyCourses user={user} client:load />
         </section>
       ) : (
         <section class="flex flex-wrap gap-y-10">
@@ -50,8 +51,8 @@ const { data: schedules } = await supabase
       )
     }
 
-    <section class="w-full">
-      {session && <MySchedule schedules={schedules} client:load />}
+    <section class="w-full overflow-auto">
+      {user && <MySchedule schedules={schedules} client:load />}
       <ScheduleTable schedules={schedules} client:load />
     </section>
   </main>
