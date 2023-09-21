@@ -1,22 +1,23 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import useCourseCodes from "@/hooks/useCourseCodes";
 import { dateAgo } from "@/lib/dayjs";
 import { daySlots } from "@/lib/globals";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store";
-import type { Tables, Views } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
 
 type Props = {
-  majors: Tables<"majors">[] | { code: string }[] | null;
-  courseCodes: Views<"course_codes">[] | undefined;
+  majors: { code: string }[] | null;
   selectedMajor: { refreshed_at: string | null } | null;
 };
 
-export default function CourseFilter({ majors, courseCodes, selectedMajor: selectedMajorData }: Props) {
+export default function CourseFilter({ majors, selectedMajor: selectedMajorData }: Props) {
   const selectedMajor = useStore($selectedMajor);
   const selectedCourseCode = useStore($selectedCourseCode);
   const selectedDay = useStore($selectedDay);
+
+  const { data: courseCodes } = useCourseCodes(selectedMajor);
 
   return (
     <div>

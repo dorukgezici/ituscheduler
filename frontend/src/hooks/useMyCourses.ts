@@ -2,13 +2,14 @@ import { queryClient } from "@/lib/queryClient";
 import { clientComponentClient } from "@/lib/supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useMyCourses(userId: string) {
+export default function useMyCourses(userId?: string) {
   const supabase = clientComponentClient();
 
   return useQuery(
     {
       queryKey: ["user_courses", userId],
       queryFn: async () => {
+        if (!userId) throw new Error("`userId` not provided");
         let query = supabase
           .from("user_courses")
           .select("course_crn, courses(code,title,instructor,enrolled,capacity,lectures(*))")
@@ -19,7 +20,6 @@ export default function useMyCourses(userId: string) {
         return data;
       },
       placeholderData: (prev) => prev,
-      // initialData,
       staleTime: 1000 * 60,
     },
     queryClient

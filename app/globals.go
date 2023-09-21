@@ -1,8 +1,9 @@
 package app
 
 import (
-	"gorm.io/gorm"
 	"os"
+
+	"gorm.io/gorm"
 )
 
 var (
@@ -11,6 +12,7 @@ var (
 	DBName     = os.Getenv("ITUSCHEDULER_POSTGRES_NAME")
 	DBUser     = os.Getenv("ITUSCHEDULER_POSTGRES_USER")
 	DBPassword = os.Getenv("ITUSCHEDULER_POSTGRES_PASSWORD")
+	DBPort     = os.Getenv("ITUSCHEDULER_POSTGRES_PORT")
 	DBSSLMode  = os.Getenv("ITUSCHEDULER_POSTGRES_SSLMODE")
 	Stage      = os.Getenv("ITUSCHEDULER_STAGE")
 	SentryDSN  = os.Getenv("ITUSCHEDULER_SENTRY_DSN")

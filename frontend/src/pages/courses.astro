@@ -1,4 +1,5 @@
 ---
+import CourseFilter from "@/components/CourseFilter";
 import CourseTable from "@/components/CourseTable";
 import Layout from "@/layouts/Layout.astro";
 import { serverComponentClient } from "@/lib/supabaseClient";
@@ -27,13 +28,23 @@ const { data: selectedMajor } = await supabase
 ---
 
 <Layout title="Courses | ITU Scheduler">
-  <CourseTable
-    session={session}
-    myCourses={myCourses}
-    majors={majors}
-    courseCodes={courseCodes}
-    courses={courses}
-    selectedMajor={selectedMajor}
-    client:load
-  />
+  <div class="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
+    <div class="flex flex-wrap justify-center gap-y-4 w-full overflow-auto">
+      <div class="md:w-2/5 lg:w-1/5">
+        <CourseFilter majors={majors} selectedMajor={selectedMajor} client:load />
+      </div>
+
+      <div class="w-full md:w-3/5 lg:4/5">
+        <CourseTable
+          session={session}
+          myCourses={myCourses}
+          majors={majors}
+          courseCodes={courseCodes}
+          courses={courses}
+          selectedMajor={selectedMajor}
+          client:load
+        />
+      </div>
+    </div>
+  </div>
 </Layout>

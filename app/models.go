@@ -1,9 +1,10 @@
 package app
 
 import (
-	"gorm.io/gorm"
 	"html/template"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -16,7 +17,7 @@ type User struct {
 	TwitterID  *string `gorm:"unique"`
 	MajorCode  *string
 	Major      Major    `gorm:"foreignKey:MajorCode"`
-	Courses    []Course `gorm:"many2many:user_courses;"`
+	Courses    []Course `gorm:"many2many:user_courses_go;"`
 	Schedules  []Schedule
 	Sessions   []Session
 }
@@ -76,6 +77,10 @@ type Schedule struct {
 	User       User `gorm:"constraint:OnDelete:CASCADE;"`
 	IsSelected bool
 	Courses    []Course `gorm:"many2many:schedule_courses;"`
+}
+
+func (Schedule) TableName() string {
+	return "schedules_go"
 }
 
 type Post struct {

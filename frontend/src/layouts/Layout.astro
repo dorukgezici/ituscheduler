@@ -76,9 +76,9 @@ const { title } = Astro.props;
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <div class="relative flex min-h-screen flex-col">
+    <div class="flex flex-col relative min-h-screen">
       <Header />
-      <div class="flex-1"><slot /></div>
+      <main class="flex-1"><slot /></main>
       <Footer />
     </div>
     

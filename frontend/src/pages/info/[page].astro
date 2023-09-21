@@ -26,7 +26,7 @@ const { count: schedulesCount } = await supabase.from("schedules").select("*", {
 ---
 
 <Layout title="Info | ITU Scheduler">
-  <main class="container flex flex-col xl:flex-row align-middle gap-8 prose dark:prose-invert max-w-none m-8">
+  <div class="flex flex-col xl:flex-row align-middle gap-8 prose dark:prose-invert max-w-none m-8">
     <section class="w-full xl:w-1/5 align-top">
       <Card className="text-center">
         <CardHeader>
@@ -131,5 +131,5 @@ const { count: schedulesCount } = await supabase.from("schedules").select("*", {
       </a>
       <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </section>
-  </main>
+  </div>
 </Layout>
