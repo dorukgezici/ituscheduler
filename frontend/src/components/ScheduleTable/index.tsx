@@ -48,10 +48,10 @@ export default function ScheduleTable({ schedules }: Props) {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[120px]">Hours</TableHead>
-          <TableHead>Monday</TableHead>
-          <TableHead>Tuesday</TableHead>
-          <TableHead>Wednesday</TableHead>
-          <TableHead>Thursday</TableHead>
+          <TableHead className="text-right">Monday</TableHead>
+          <TableHead className="text-right">Tuesday</TableHead>
+          <TableHead className="text-right">Wednesday</TableHead>
+          <TableHead className="text-right">Thursday</TableHead>
           <TableHead className="text-right">Friday</TableHead>
         </TableRow>
       </TableHeader>
@@ -63,7 +63,7 @@ export default function ScheduleTable({ schedules }: Props) {
             <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${2}`}></TableCell>
             <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${3}`}></TableCell>
             <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${4}`}></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${5}`} className="text-right"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${5}`}></TableCell>
           </TableRow>
         ))}
       </TableBody>

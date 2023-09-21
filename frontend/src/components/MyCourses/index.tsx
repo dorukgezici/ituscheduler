@@ -34,7 +34,7 @@ export default function MyCourses({ user }: { user: User }) {
         />
       </CardContent>
 
-      <CardFooter className="flex flex-wrap gap-x-2">
+      <CardFooter className="flex flex-wrap justify-center gap-x-2">
         <div className="md:w-1/6">
           <Button
             variant="outline"
@@ -64,7 +64,7 @@ export default function MyCourses({ user }: { user: User }) {
             Add to Schedule
           </Button>
         </div>
-        <div className="hidden sm:block md:w-4/6">
+        <div className="hidden sm:block md:w-3/6">
           <small>
             1) Add all relevant courses from the{" "}
             <a href="/courses" className="font-medium hover:underline">

@@ -52,11 +52,11 @@ export default function CourseTable(props: Props) {
   return (
     <div className="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
       <div className="flex flex-wrap justify-center gap-y-4 w-full overflow-auto">
-        <div className="md:w-1/5">
+        <div className="md:w-2/5 lg:w-1/5">
           <CourseFilter majors={props.majors} courseCodes={courseCodes} selectedMajor={props.selectedMajor} />
         </div>
 
-        <div className="w-full md:w-4/5">
+        <div className="w-full md:w-3/5 lg:4/5">
           <Table className="border border-collapse">
             <TableHeader>
               <TableRow>
