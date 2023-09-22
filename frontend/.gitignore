@@ -1,5 +1,6 @@
 # build output
 dist/
+.vercel
 
 # generated types
 .astro/
@@ -16,6 +17,7 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+.env.sentry-build-plugin
 
 # macOS-specific files
 .DS_Store

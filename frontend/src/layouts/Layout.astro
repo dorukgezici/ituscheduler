@@ -2,6 +2,7 @@
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import QueryDebug from "@/components/QueryDebug";
+import Sentry from "@/components/Sentry.astro";
 import "@/styles/globals.css";
 // import { ViewTransitions } from "astro:transitions";
 
@@ -62,6 +63,7 @@ const { title } = Astro.props;
     )}
     <!-- End Google Tag Manager -->
 
+    <Sentry/>
     <!-- <ViewTransitions /> -->
   </head>
 
