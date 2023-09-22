@@ -24,8 +24,8 @@ type User struct {
 
 type Session struct {
 	Token     string `gorm:"primarykey"`
-	UserID    uint
-	User      User `gorm:"constraint:OnDelete:CASCADE;"`
+	UserID    uint   `gorm:"not null"`
+	User      User   `gorm:"constraint:OnDelete:CASCADE"`
 	ExpiresAt time.Time
 	CreatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
@@ -40,8 +40,8 @@ type Major struct {
 
 type Course struct {
 	CRN              string `gorm:"primarykey"`
-	MajorCode        string
-	Major            Major `gorm:"foreignKey:MajorCode"`
+	MajorCode        string `gorm:"not null"`
+	Major            Major  `gorm:"foreignKey:MajorCode;constraint:OnDelete:CASCADE"`
 	Code             string
 	Catalogue        string
 	Title            string
@@ -61,8 +61,8 @@ type Course struct {
 
 type Lecture struct {
 	gorm.Model
-	CourseCRN string `gorm:"uniqueIndex:idx_lecture"`
-	Course    Course `gorm:"foreignKey:CourseCRN"`
+	CourseCRN string `gorm:"uniqueIndex:idx_lecture;not null"`
+	Course    Course `gorm:"foreignKey:CourseCRN;constraint:OnDelete:CASCADE"`
 	Building  string
 	Day       string `gorm:"uniqueIndex:idx_lecture"`
 	Time      string `gorm:"uniqueIndex:idx_lecture"`
@@ -73,7 +73,7 @@ type Lecture struct {
 
 type Schedule struct {
 	gorm.Model
-	UserID     uint
+	UserID     uint `gorm:"not null"`
 	User       User `gorm:"constraint:OnDelete:CASCADE;"`
 	IsSelected bool
 	Courses    []Course `gorm:"many2many:schedule_courses_go;"`

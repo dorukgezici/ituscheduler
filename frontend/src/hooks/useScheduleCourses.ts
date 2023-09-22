@@ -10,7 +10,7 @@ export default function useScheduleCourses(scheduleId?: string) {
       queryKey: ["schedule_courses", scheduleId],
       queryFn: async () => {
         if (!scheduleId) throw new Error("`scheduleId` not provided");
-        let query = supabase.from("schedule_courses").select("courses(*,lectures(*))").eq("schedule_id", scheduleId);
+        let query = supabase.from("schedule_courses").select("courses(*,lectures!fk_courses_lectures(*))").eq("schedule_id", scheduleId);
         const { data, error } = await query;
         if (error) throw new Error("Query failed");
         return data;

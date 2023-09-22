@@ -40,10 +40,17 @@ export default function MyCourses({ user }: { user: User }) {
             variant="outline"
             onClick={async () => {
               const supabase = clientComponentClient();
-              const { data, error } = await supabase.from("schedules").insert({ user_id: user.id }).select().single();
-              if (data && !error) $selectedSchedule.set(`${data.id}`);
-              // TODO: mutate
-              location.reload();
+              const { data, error } = await supabase
+                .from("schedules")
+                .insert({ user_id: user.id, is_selected: true })
+                .select()
+                .single();
+
+              if (data && !error) {
+                $selectedSchedule.set(`${data.id}`);
+                // TODO: mutate
+                location.reload();
+              }
             }}
           >
             New Schedule
