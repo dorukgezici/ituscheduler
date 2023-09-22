@@ -1,8 +1,5 @@
 import SupabaseAuth from "@/components/SupabaseAuth";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import initSentry from "@/lib/sentry";
-
-initSentry();
 
 export default function AuthCard({ site }: { site?: URL }) {
   return (

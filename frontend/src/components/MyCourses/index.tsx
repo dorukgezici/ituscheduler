@@ -3,13 +3,10 @@ import MultiSelect from "@/components/MultiSelect";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import useMyCourses from "@/hooks/useMyCourses";
-import initSentry from "@/lib/sentry";
 import { clientComponentClient } from "@/lib/supabaseClient";
 import { $selectedSchedule } from "@/store";
 import { useState } from "react";
 import type { User } from "supabase-auth-helpers-astro";
-
-initSentry();
 
 export default function MyCourses({ user }: { user: User }) {
   const [selected, setSelected] = useState<Option[]>([]);

@@ -1,15 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useCourses from "@/hooks/useCourses";
-import initSentry from "@/lib/sentry";
 import { clientComponentClient } from "@/lib/supabaseClient";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store";
 import type { Tables, Views } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
 import { useState } from "react";
 import type { Session } from "supabase-auth-helpers-astro";
-
-initSentry();
 
 type Props = {
   session: Session | null;

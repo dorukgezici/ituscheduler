@@ -7,10 +7,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import initSentry from "@/lib/sentry";
 import type { User } from "supabase-auth-helpers-astro";
-
-initSentry();
 
 export default function Menu({ user }: { user: User | null }) {
   return (

@@ -1,12 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import initSentry from "@/lib/sentry";
 import { $selectedSchedule, deleteSchedule } from "@/store";
 import type { Tables } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
-
-initSentry();
 
 type Props = {
   schedules: Tables<"schedules">[] | null;
