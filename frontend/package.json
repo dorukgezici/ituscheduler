@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "PUBLIC_SENTRY_RELEASE=$(git rev-parse HEAD) && astro build",
     "sb": "supabase",
     "sb-db": "supabase db diff --schema public -f migration",
     "sb-types": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > src/types/database.types.ts"
@@ -23,6 +23,8 @@
     "@radix-ui/react-scroll-area": "^1.0.4",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@sentry/cli": "^2.21.0",
+    "@sentry/react": "^7.70.0",
     "@supabase/auth-ui-react": "^0.4.5",
     "@supabase/auth-ui-shared": "^0.1.7",
     "@supabase/supabase-js": "^2.36.0",
@@ -34,6 +36,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "dayjs": "^1.11.10",
+    "globby": "^13.2.2",
     "lucide-react": "^0.279.0",
     "nanostores": "^0.9.3",
     "react": "^18.2.0",
@@ -48,6 +51,7 @@
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "supabase": "^1.99.5",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
   }
 }

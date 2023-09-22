@@ -1,10 +1,13 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useScheduleCourses from "@/hooks/useScheduleCourses";
 import { hourSlots } from "@/lib/globals";
+import initSentry from "@/lib/sentry";
 import { $selectedSchedule } from "@/store";
 import type { Tables } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
+
+initSentry();
 
 type Props = {
   schedules: Tables<"schedules">[] | null;

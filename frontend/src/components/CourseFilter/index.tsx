@@ -4,8 +4,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import useCourseCodes from "@/hooks/useCourseCodes";
 import { dateAgo } from "@/lib/dayjs";
 import { daySlots } from "@/lib/globals";
+import initSentry from "@/lib/sentry";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store";
 import { useStore } from "@nanostores/react";
+
+initSentry();
 
 type Props = {
   majors: { code: string }[] | null;
