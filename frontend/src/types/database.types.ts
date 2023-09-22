@@ -66,6 +66,12 @@ export interface Database {
         }
         Relationships: [
           {
+            foreignKeyName: "courses_major_code_fkey"
+            columns: ["major_code"]
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
+          },
+          {
             foreignKeyName: "fk_majors_courses"
             columns: ["major_code"]
             referencedRelation: "majors"
@@ -116,6 +122,12 @@ export interface Database {
         Relationships: [
           {
             foreignKeyName: "fk_courses_lectures"
+            columns: ["course_crn"]
+            referencedRelation: "courses"
+            referencedColumns: ["crn"]
+          },
+          {
+            foreignKeyName: "lectures_course_crn_fkey"
             columns: ["course_crn"]
             referencedRelation: "courses"
             referencedColumns: ["crn"]
@@ -185,27 +197,80 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "fk_schedule_courses_course"
+            foreignKeyName: "schedule_courses_course_crn_fkey"
             columns: ["course_crn"]
             referencedRelation: "courses"
             referencedColumns: ["crn"]
           },
           {
-            foreignKeyName: "fk_schedule_courses_schedule"
+            foreignKeyName: "schedule_courses_schedule_id_fkey"
             columns: ["schedule_id"]
             referencedRelation: "schedules"
             referencedColumns: ["id"]
           }
         ]
       }
+      schedule_courses_go: {
+        Row: {
+          course_crn: string
+          schedule_id: number
+        }
+        Insert: {
+          course_crn: string
+          schedule_id: number
+        }
+        Update: {
+          course_crn?: string
+          schedule_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_schedule_courses_go_course"
+            columns: ["course_crn"]
+            referencedRelation: "courses"
+            referencedColumns: ["crn"]
+          },
+          {
+            foreignKeyName: "fk_schedule_courses_go_schedule"
+            columns: ["schedule_id"]
+            referencedRelation: "schedules_go"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       schedules: {
+        Row: {
+          id: number
+          is_selected: boolean
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          is_selected: boolean
+          user_id: string
+        }
+        Update: {
+          id?: number
+          is_selected?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedules_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      schedules_go: {
         Row: {
           created_at: string | null
           deleted_at: string | null
           id: number
           is_selected: boolean | null
           updated_at: string | null
-          user_id: string
+          user_id: number | null
         }
         Insert: {
           created_at?: string | null
@@ -213,7 +278,7 @@ export interface Database {
           id?: number
           is_selected?: boolean | null
           updated_at?: string | null
-          user_id: string
+          user_id?: number | null
         }
         Update: {
           created_at?: string | null
@@ -221,11 +286,11 @@ export interface Database {
           id?: number
           is_selected?: boolean | null
           updated_at?: string | null
-          user_id?: string
+          user_id?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "schedules_user_id_fkey"
+            foreignKeyName: "fk_users_schedules"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -266,17 +331,14 @@ export interface Database {
       user_courses: {
         Row: {
           course_crn: string
-          id: string
           user_id: string
         }
         Insert: {
           course_crn: string
-          id?: string
           user_id: string
         }
         Update: {
           course_crn?: string
-          id?: string
           user_id?: string
         }
         Relationships: [
@@ -316,6 +378,28 @@ export interface Database {
           },
           {
             foreignKeyName: "fk_user_courses_go_user"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_major: {
+        Row: {
+          major: string
+          user_id: string
+        }
+        Insert: {
+          major?: string
+          user_id: string
+        }
+        Update: {
+          major?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_major_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -379,6 +463,12 @@ export interface Database {
           major_code: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "courses_major_code_fkey"
+            columns: ["major_code"]
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
+          },
           {
             foreignKeyName: "fk_majors_courses"
             columns: ["major_code"]

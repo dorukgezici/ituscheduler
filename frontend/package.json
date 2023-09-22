@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "supabase": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > src/types/database.types.ts"
+    "sb": "supabase",
+    "sb-db": "supabase db diff --schema public -f migration",
+    "sb-types": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > src/types/database.types.ts"
   },
   "dependencies": {
     "@astrojs/react": "^3.0.2",
