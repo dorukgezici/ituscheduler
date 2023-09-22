@@ -10,7 +10,7 @@ const { SENTRY_AUTH_TOKEN, PUBLIC_SENTRY_RELEASE } = loadEnv(process.env.NODE_EN
 
 // https://astro.build/config
 export default defineConfig({
-  site: import.meta.env.PROD ? "https://ituscheduler.com" : "http://localhost:4321",
+  site: "https://ituscheduler.com",
   output: "server",
   adapter: vercel(),
   integrations: [

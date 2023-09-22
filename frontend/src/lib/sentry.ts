@@ -12,7 +12,11 @@ export default function initSentry() {
   if (typeof window !== "undefined") {
     Sentry.init({
       dsn,
+      environment: import.meta.env.PROD ? "production" : "development",
       release: import.meta.env.PUBLIC_SENTRY_RELEASE,
+      replaysSessionSampleRate: 1.0,
+      replaysOnErrorSampleRate: 1.0,
+      integrations: [new Sentry.Replay()],
     });
   }
 }
