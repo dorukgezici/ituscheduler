@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/dorukgezici/ituscheduler-go/app"
-	"github.com/dorukgezici/ituscheduler-go/app/oauth"
+	"github.com/dorukgezici/ituscheduler/app"
+	"github.com/dorukgezici/ituscheduler/app/oauth"
 	"github.com/getsentry/sentry-go"
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi/v5"

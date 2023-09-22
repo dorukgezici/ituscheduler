@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/dorukgezici/ituscheduler-go/app"
-	"github.com/gofrs/uuid"
-	"github.com/gosimple/slug"
-	"golang.org/x/oauth2"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/dorukgezici/ituscheduler/app"
+	"github.com/gofrs/uuid"
+	"github.com/gosimple/slug"
+	"golang.org/x/oauth2"
 )
 
 var facebook = OAuth{

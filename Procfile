@@ -1,1 +1,1 @@
-web: bin/ituscheduler-go
+web: bin/ituscheduler
