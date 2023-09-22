@@ -76,7 +76,7 @@ type Schedule struct {
 	UserID     uint
 	User       User `gorm:"constraint:OnDelete:CASCADE;"`
 	IsSelected bool
-	Courses    []Course `gorm:"many2many:schedule_courses;"`
+	Courses    []Course `gorm:"many2many:schedule_courses_go;"`
 }
 
 func (Schedule) TableName() string {

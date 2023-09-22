@@ -13,10 +13,10 @@ dependencies:
     version: 3.0.0
   '@astrojs/tailwind':
     specifier: ^5.0.0
-    version: 5.0.0(astro@3.1.1)(tailwindcss@3.3.3)
+    version: 5.0.0(astro@3.1.2)(tailwindcss@3.3.3)
   '@astrojs/vercel':
     specifier: ^5.0.1
-    version: 5.0.1(astro@3.1.1)
+    version: 5.0.1(astro@3.1.2)
   '@nanostores/react':
     specifier: ^0.7.1
     version: 0.7.1(nanostores@0.9.3)(react@18.2.0)
@@ -46,13 +46,13 @@ dependencies:
     version: 1.0.2(@types/react@18.2.22)(react@18.2.0)
   '@supabase/auth-ui-react':
     specifier: ^0.4.5
-    version: 0.4.5(@supabase/supabase-js@2.34.0)
+    version: 0.4.5(@supabase/supabase-js@2.36.0)
   '@supabase/auth-ui-shared':
     specifier: ^0.1.7
-    version: 0.1.7(@supabase/supabase-js@2.34.0)
+    version: 0.1.7(@supabase/supabase-js@2.36.0)
   '@supabase/supabase-js':
-    specifier: ^2.34.0
-    version: 2.34.0
+    specifier: ^2.36.0
+    version: 2.36.0
   '@tailwindcss/typography':
     specifier: ^0.5.10
     version: 0.5.10(tailwindcss@3.3.3)
@@ -62,15 +62,9 @@ dependencies:
   '@tanstack/react-query':
     specifier: 5.0.0-beta.31
     version: 5.0.0-beta.31(react-dom@18.2.0)(react@18.2.0)
-  '@types/react':
-    specifier: ^18.2.22
-    version: 18.2.22
-  '@types/react-dom':
-    specifier: ^18.2.7
-    version: 18.2.7
   astro:
-    specifier: ^3.1.1
-    version: 3.1.1
+    specifier: ^3.1.2
+    version: 3.1.2
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -97,7 +91,7 @@ dependencies:
     version: 18.2.0(react@18.2.0)
   supabase-auth-helpers-astro:
     specifier: ^0.0.9
-    version: 0.0.9(@supabase/supabase-js@2.34.0)
+    version: 0.0.9(@supabase/supabase-js@2.36.0)
   tailwind-merge:
     specifier: ^1.14.0
     version: 1.14.0
@@ -112,6 +106,12 @@ devDependencies:
   '@tanstack/react-query-devtools':
     specifier: 5.0.0-beta.34
     version: 5.0.0-beta.34(@tanstack/react-query@5.0.0-beta.31)(react-dom@18.2.0)(react@18.2.0)
+  '@types/react':
+    specifier: ^18.2.22
+    version: 18.2.22
+  '@types/react-dom':
+    specifier: ^18.2.7
+    version: 18.2.7
   supabase:
     specifier: ^1.99.5
     version: 1.99.5
@@ -142,13 +142,13 @@ packages:
     resolution: {integrity: sha512-NQ4ppp1CM0HNkKbJNM4saVSfmUYzGlRalF6wx7F6T/MYHYSWGuojY89/oFTy4t8VlOGUCUijlsVNNeziWaUo5g==}
     dev: false
 
-  /@astrojs/markdown-remark@3.2.0(astro@3.1.1):
+  /@astrojs/markdown-remark@3.2.0(astro@3.1.2):
     resolution: {integrity: sha512-jigyLfefUZPKgVmmraCkVpdUuFH1R3SrpgQO13axsgwLDBgkggaQpNR5Ag4O9PDualeBtbdt30aYSfvnBKx9Hg==}
     peerDependencies:
       astro: ^3.1.0
     dependencies:
       '@astrojs/prism': 3.0.0
-      astro: 3.1.1
+      astro: 3.1.2
       github-slugger: 2.0.0
       import-meta-resolve: 3.0.0
       mdast-util-definitions: 6.0.0
@@ -200,14 +200,14 @@ packages:
       zod: 3.21.1
     dev: false
 
-  /@astrojs/tailwind@5.0.0(astro@3.1.1)(tailwindcss@3.3.3):
+  /@astrojs/tailwind@5.0.0(astro@3.1.2)(tailwindcss@3.3.3):
     resolution: {integrity: sha512-bMZZNNm/SW+ijUKMQDhdiuNWDdR3CubEKUHb2Ran4Arx1ikWn/kKIkFDXUV+MUnsLa7s19x9VMRlARRyKbqMkQ==}
     peerDependencies:
       astro: ^3.0.0
       tailwindcss: ^3.0.24
     dependencies:
-      astro: 3.1.1
-      autoprefixer: 10.4.15(postcss@8.4.30)
+      astro: 3.1.2
+      autoprefixer: 10.4.16(postcss@8.4.30)
       postcss: 8.4.30
       postcss-load-config: 4.0.1(postcss@8.4.30)
       tailwindcss: 3.3.3
@@ -215,8 +215,8 @@ packages:
       - ts-node
     dev: false
 
-  /@astrojs/telemetry@3.0.1:
-    resolution: {integrity: sha512-7zJMuikRDQ0LLLivteu0+y4pqdgznrChFiRrY3qmKlOEkLWD1T3u1a5M970lvpErP7Vgh4P298JBPjv8LTj+sw==}
+  /@astrojs/telemetry@3.0.2:
+    resolution: {integrity: sha512-ef+jqCkqopCzjGfsMsr+8p56Nj6F9ZzouWcWZt+dKsqbRccI3c8K3jfkLcdq4AyfFZtKBDB6N4ZuI68g33oiOg==}
     engines: {node: '>=18.14.1'}
     dependencies:
       ci-info: 3.8.0
@@ -225,13 +225,13 @@ packages:
       dset: 3.1.2
       is-docker: 3.0.0
       is-wsl: 3.0.0
-      undici: 5.24.0
+      undici: 5.25.1
       which-pm-runs: 1.1.0
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@astrojs/vercel@5.0.1(astro@3.1.1):
+  /@astrojs/vercel@5.0.1(astro@3.1.2):
     resolution: {integrity: sha512-qDXTBSRSzTRourx90QcB/uARUcABDRLfrDggNtyiyyh6WoJPK7BuhKDYh0Bd372Mrt2mm15ZSGaxHJLmbpv2wg==}
     peerDependencies:
       astro: ^3.1.1
@@ -239,7 +239,7 @@ packages:
       '@astrojs/internal-helpers': 0.2.0
       '@vercel/analytics': 1.0.2
       '@vercel/nft': 0.23.1
-      astro: 3.1.1
+      astro: 3.1.2
       esbuild: 0.19.3
       fast-glob: 3.3.1
       set-cookie-parser: 2.6.0
@@ -308,7 +308,7 @@ packages:
     dependencies:
       '@babel/compat-data': 7.22.20
       '@babel/helper-validator-option': 7.22.15
-      browserslist: 4.21.10
+      browserslist: 4.21.11
       lru-cache: 5.1.1
       semver: 6.3.1
     dev: false
@@ -1899,34 +1899,34 @@ packages:
     resolution: {integrity: sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==}
     dev: false
 
-  /@supabase/auth-helpers-shared@0.4.1(@supabase/supabase-js@2.34.0):
+  /@supabase/auth-helpers-shared@0.4.1(@supabase/supabase-js@2.36.0):
     resolution: {integrity: sha512-IEDX9JzWkIjQiLUaP4Qy5YDiG0jFQatWfS+jw8cCQs6QfbNdEPd2Y3qonwGHnM90CZom9SvjuylBv2pFVAL7Lw==}
     peerDependencies:
       '@supabase/supabase-js': ^2.19.0
     dependencies:
-      '@supabase/supabase-js': 2.34.0
+      '@supabase/supabase-js': 2.36.0
       jose: 4.14.6
     dev: false
 
-  /@supabase/auth-ui-react@0.4.5(@supabase/supabase-js@2.34.0):
+  /@supabase/auth-ui-react@0.4.5(@supabase/supabase-js@2.36.0):
     resolution: {integrity: sha512-p7mZoD/iJKP7KorQ4F/RK4NfWDpXzop+LhMuHxkO5BahD+VpGIxwtykuXfZ0g7rijaKnA1BimdCBTCrV5EWTag==}
     peerDependencies:
       '@supabase/supabase-js': ^2.21.0
     dependencies:
       '@stitches/core': 1.2.8
-      '@supabase/auth-ui-shared': 0.1.7(@supabase/supabase-js@2.34.0)
-      '@supabase/supabase-js': 2.34.0
+      '@supabase/auth-ui-shared': 0.1.7(@supabase/supabase-js@2.36.0)
+      '@supabase/supabase-js': 2.36.0
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@supabase/auth-ui-shared@0.1.7(@supabase/supabase-js@2.34.0):
+  /@supabase/auth-ui-shared@0.1.7(@supabase/supabase-js@2.36.0):
     resolution: {integrity: sha512-ueqyfCHVYX/ioehwL1ErH0+cZwiSzsIfZfhf326yJdDI0XExTKPV4lxPtWT1xx6c8A4FPPmT3kJKQaWs27pxCw==}
     peerDependencies:
       '@supabase/supabase-js': ^2.21.0
     dependencies:
-      '@supabase/supabase-js': 2.34.0
+      '@supabase/supabase-js': 2.36.0
     dev: false
 
   /@supabase/functions-js@2.1.5:
@@ -1935,8 +1935,8 @@ packages:
       '@supabase/node-fetch': 2.6.14
     dev: false
 
-  /@supabase/gotrue-js@2.53.0:
-    resolution: {integrity: sha512-GCF8meXaF6fMVciBsWTKN5neSennGgOMrUC3rjVOlSr/0yNi1YnqJyTi6ULaSrG2eyx8f5pv1zB1jD3Thw9Fag==}
+  /@supabase/gotrue-js@2.54.0:
+    resolution: {integrity: sha512-JjtbchtPbpgK0O8NIMIvKLk7HHv0kd23L3UO5a398nczCcBkI0IvmbPtbS4Xs5AUIuJ+JHtV6siOZR1ha5EzQw==}
     dependencies:
       '@supabase/node-fetch': 2.6.14
     dev: false
@@ -1970,11 +1970,11 @@ packages:
       '@supabase/node-fetch': 2.6.14
     dev: false
 
-  /@supabase/supabase-js@2.34.0:
-    resolution: {integrity: sha512-4x+Kkn1NmeA7odSCrwa0J5TN+YrldDVxcPZ/OJuEIOBY4lUM9W/pENlzCEcfS+CetDF6ufFsmjTaVWGxDdZJKQ==}
+  /@supabase/supabase-js@2.36.0:
+    resolution: {integrity: sha512-K9ze4BpQrOZsmYUvF2j9FfIkTfxR4K8GJx6F6DTOfJ8fZg4JSNjfzlGvhCVDwiV4w1NRrmEQ/F89THNt3eXXhg==}
     dependencies:
       '@supabase/functions-js': 2.1.5
-      '@supabase/gotrue-js': 2.53.0
+      '@supabase/gotrue-js': 2.54.0
       '@supabase/node-fetch': 2.6.14
       '@supabase/postgrest-js': 1.8.4
       '@supabase/realtime-js': 2.7.4
@@ -2111,8 +2111,8 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: false
 
-  /@types/node@20.6.2:
-    resolution: {integrity: sha512-Y+/1vGBHV/cYk6OI1Na/LHzwnlNCAfU3ZNGrc1LdRe/LAIbdDPTTv/HU3M7yXN448aTVDq3eKRm2cg7iKLb8gw==}
+  /@types/node@20.6.3:
+    resolution: {integrity: sha512-HksnYH4Ljr4VQgEy2lTStbCKv/P590tmPe5HqOnv9Gprffgv5WXAY+Y5Gqniu0GGqeTCUdBnzC3QSrzPkBkAMA==}
     dev: false
 
   /@types/parse5@6.0.3:
@@ -2125,13 +2125,11 @@ packages:
 
   /@types/prop-types@15.7.6:
     resolution: {integrity: sha512-RK/kBbYOQQHLYj9Z95eh7S6t7gq4Ojt/NT8HTk8bWVhA5DaF+5SMnxHKkP4gPNN3wAZkKP+VjAf0ebtYzf+fxg==}
-    dev: false
 
   /@types/react-dom@18.2.7:
     resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
     dependencies:
       '@types/react': 18.2.22
-    dev: false
 
   /@types/react@18.2.22:
     resolution: {integrity: sha512-60fLTOLqzarLED2O3UQImc/lsNRgG0jE/a1mPW9KjMemY0LMITWEsbS4VvZ4p6rorEHd5YKxxmMKSDK505GHpA==}
@@ -2139,7 +2137,6 @@ packages:
       '@types/prop-types': 15.7.6
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
-    dev: false
 
   /@types/resolve@1.20.2:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -2153,7 +2150,6 @@ packages:
 
   /@types/scheduler@0.16.3:
     resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
-    dev: false
 
   /@types/unist@2.0.8:
     resolution: {integrity: sha512-d0XxK3YTObnWVp6rZuev3c49+j4Lo8g4L1ZRm9z5L0xpoZycUPshHgczK5gsUMaZOstjVYYi09p5gYvUtfChYw==}
@@ -2166,7 +2162,7 @@ packages:
   /@types/websocket@1.0.6:
     resolution: {integrity: sha512-JXkliwz93B2cMWOI1ukElQBPN88vMg3CruvW4KVSKpflt3NyNCJImnhIuB/f97rG7kakqRJGFiwkA895Kn02Dg==}
     dependencies:
-      '@types/node': 20.6.2
+      '@types/node': 20.6.3
     dev: false
 
   /@vercel/analytics@1.0.2:
@@ -2325,15 +2321,15 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /astro@3.1.1:
-    resolution: {integrity: sha512-KLtzCcLiQEsoWHJO0vQ5QZ/9/80P3cUuBeIkl87YezRkzs3Am0kuzfeGLumb6OOcrR2W0AZGlVlS0ub+q/yiaA==}
+  /astro@3.1.2:
+    resolution: {integrity: sha512-9rlKyk6Qmw50Pc188+ey7JAEYBsJGh5an46AXGPMHIdEkH6YOc4b2z9Rr+TNF8QmM/U+C2ZQFRVQyCKU4i8/pg==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
       '@astrojs/compiler': 2.1.0
       '@astrojs/internal-helpers': 0.2.0
-      '@astrojs/markdown-remark': 3.2.0(astro@3.1.1)
-      '@astrojs/telemetry': 3.0.1
+      '@astrojs/markdown-remark': 3.2.0(astro@3.1.2)
+      '@astrojs/telemetry': 3.0.2
       '@babel/core': 7.22.20
       '@babel/generator': 7.22.15
       '@babel/parser': 7.22.16
@@ -2378,7 +2374,7 @@ packages:
       string-width: 6.1.0
       strip-ansi: 7.1.0
       tsconfig-resolver: 3.0.1
-      undici: 5.24.0
+      undici: 5.25.1
       unist-util-visit: 4.1.2
       vfile: 5.3.7
       vite: 4.4.9
@@ -2403,14 +2399,14 @@ packages:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
     dev: false
 
-  /autoprefixer@10.4.15(postcss@8.4.30):
-    resolution: {integrity: sha512-KCuPB8ZCIqFdA4HwKXsvz7j6gvSDNhDP7WnUjBleRkKjPdvCmHFuQ77ocavI8FT6NdvlBnE2UFr2H4Mycn8Vew==}
+  /autoprefixer@10.4.16(postcss@8.4.30):
+    resolution: {integrity: sha512-7vd3UC6xKp0HLfua5IjZlcXvGAGy7cBAXTg2lyQ/8WpNhd6SiZ8Be+xm3FyBSYJx5GKcpRCzBh7RH4/0dnY+uQ==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
     peerDependencies:
       postcss: ^8.1.0
     dependencies:
-      browserslist: 4.21.10
+      browserslist: 4.21.11
       caniuse-lite: 1.0.30001538
       fraction.js: 4.3.6
       normalize-range: 0.1.2
@@ -2509,15 +2505,15 @@ packages:
       fill-range: 7.0.1
     dev: false
 
-  /browserslist@4.21.10:
-    resolution: {integrity: sha512-bipEBdZfVH5/pwrvqc+Ub0kUPVfGUhlKxbvfD+z1BDnPEO/X98ruXGA1WP5ASpAFKan7Qr6j736IacbZQuAlKQ==}
+  /browserslist@4.21.11:
+    resolution: {integrity: sha512-xn1UXOKUz7DjdGlg9RrUr0GGiWzI97UQJnugHtH0OLDfJB7jMgoIkYvRIEO1l9EeEERVqeqLYOcFBW9ldjypbQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001538
-      electron-to-chromium: 1.4.525
+      electron-to-chromium: 1.4.527
       node-releases: 2.0.13
-      update-browserslist-db: 1.0.11(browserslist@4.21.10)
+      update-browserslist-db: 1.0.13(browserslist@4.21.11)
     dev: false
 
   /buffer@5.7.1:
@@ -2775,7 +2771,6 @@ packages:
 
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
-    dev: false
 
   /d@1.0.1:
     resolution: {integrity: sha512-m62ShEObQ39CfralilEQRjH6oAMtNCV1xJyEx5LpRYUVN+EviphDgUc/F3hnYbADmkiNs67Y+3ylmlG7Lnu+FA==}
@@ -2907,8 +2902,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: false
 
-  /electron-to-chromium@1.4.525:
-    resolution: {integrity: sha512-GIZ620hDK4YmIqAWkscG4W6RwY6gOx1y5J6f4JUQwctiJrqH2oxZYU4mXHi35oV32tr630UcepBzSBGJ/WYcZA==}
+  /electron-to-chromium@1.4.527:
+    resolution: {integrity: sha512-EafxEiEDzk2aLrdbtVczylHflHdHkNrpGNHIgDyA63sUQLQVS2ayj2hPw3RsVB42qkwURH+T2OxV7kGPUuYszA==}
     dev: false
 
   /emoji-regex@10.2.1:
@@ -5373,13 +5368,13 @@ packages:
       ts-interface-checker: 0.1.13
     dev: false
 
-  /supabase-auth-helpers-astro@0.0.9(@supabase/supabase-js@2.34.0):
+  /supabase-auth-helpers-astro@0.0.9(@supabase/supabase-js@2.36.0):
     resolution: {integrity: sha512-vaQU5Uoi0KW0ut3kTalzSebddPMZqEVGo5wqPby5Hd5WnyGut/zI/7hqpYLXgGcq2RRSQ51lKTedDrO8eYFc/Q==}
     peerDependencies:
       '@supabase/supabase-js': ^2.19.0
     dependencies:
-      '@supabase/auth-helpers-shared': 0.4.1(@supabase/supabase-js@2.34.0)
-      '@supabase/supabase-js': 2.34.0
+      '@supabase/auth-helpers-shared': 0.4.1(@supabase/supabase-js@2.36.0)
+      '@supabase/supabase-js': 2.36.0
       set-cookie-parser: 2.6.0
       typescript: 5.2.2
     dev: false
@@ -5604,8 +5599,8 @@ packages:
     resolution: {integrity: sha512-qh4mBffhlkiXwDAOxvSGxhL0QEQsTbnP9BozOK3OYPEGvPvdWzvAUaXNtUSMdNsKDtuyjEbyVUPFZ52SSLhLqw==}
     dev: false
 
-  /undici@5.24.0:
-    resolution: {integrity: sha512-OKlckxBjFl0oXxcj9FU6oB8fDAaiRUq+D8jrFWGmOfI/gIyjk/IeS75LMzgYKUaeHzLUcYvf9bbJGSrUwTfwwQ==}
+  /undici@5.25.1:
+    resolution: {integrity: sha512-nTw6b2G2OqP6btYPyghCgV4hSwjJlL/78FMJatVLCa3otj6PCOQSt6dVtYt82OtNqFz8XsnJ+vsXLADPXjPhqw==}
     engines: {node: '>=14.0'}
     dependencies:
       busboy: 1.6.0
@@ -5703,13 +5698,13 @@ packages:
     engines: {node: '>= 4.0.0'}
     dev: true
 
-  /update-browserslist-db@1.0.11(browserslist@4.21.10):
-    resolution: {integrity: sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==}
+  /update-browserslist-db@1.0.13(browserslist@4.21.11):
+    resolution: {integrity: sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
     dependencies:
-      browserslist: 4.21.10
+      browserslist: 4.21.11
       escalade: 3.1.1
       picocolors: 1.0.0
     dev: false
