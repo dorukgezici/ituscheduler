@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "PUBLIC_SENTRY_RELEASE=$(VERCEL_GIT_COMMIT_SHA) && astro build",
+    "build": "PUBLIC_SENTRY_RELEASE=${VERCEL_GIT_COMMIT_SHA} && astro build",
     "sb": "supabase",
     "sb-db": "supabase db diff --schema public -f migration",
     "sb-types": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > src/types/database.types.ts"
