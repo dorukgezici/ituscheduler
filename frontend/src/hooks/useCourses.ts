@@ -11,7 +11,7 @@ export default function useCourses(major?: string, courseCode?: string, day?: st
       queryKey: ["courses", major, courseCode, day],
       queryFn: async () => {
         if (!major) throw new Error("`major` not provided");
-        let query = supabase.from("courses").select("*, lectures!inner(*)").eq("major_code", major);
+        let query = supabase.from("courses").select("*, lectures!fk_courses_lectures!inner(*)").eq("major_code", major);
         if (courseCode) query = query.eq("code", courseCode);
         if (day) query = query.eq("lectures.day", daySlots[day].nameTr);
         const { data, error } = await query.order("crn");
