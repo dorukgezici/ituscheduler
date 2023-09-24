@@ -13,7 +13,7 @@ export default function MySchedule({ schedules }: Props) {
   const schedule = useStore($selectedSchedule);
 
   return (
-    <div className="flex items-center justify-start gap-2 mb-4">
+    <div className="flex items-center justify-start gap-2">
       <Label className="font-semibold">My Schedules:</Label>
       <Select value={schedule} onValueChange={(value) => $selectedSchedule.set(value)}>
         <SelectTrigger className="w-[180px]">

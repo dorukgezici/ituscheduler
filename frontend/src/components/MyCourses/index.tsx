@@ -48,6 +48,10 @@ export default function MyCourses({ user }: { user: User }) {
 
               if (data && !error) {
                 $selectedSchedule.set(`${data.id}`);
+
+                const selectedCourses = selected.map((s) => ({ schedule_id: data.id, course_crn: s.value }));
+                await supabase.from("schedule_courses").insert(selectedCourses);
+
                 // TODO: mutate
                 location.reload();
               }

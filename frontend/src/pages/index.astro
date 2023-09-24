@@ -2,6 +2,7 @@
 import AuthCard from "@/components/AuthCard";
 import MyCourses from "@/components/MyCourses";
 import MySchedule from "@/components/MySchedule";
+import ScheduleCourses from "@/components/ScheduleCourses";
 import ScheduleTable from "@/components/ScheduleTable";
 import Layout from "@/layouts/Layout.astro";
 import { serverComponentClient } from "@/lib/supabaseClient";
@@ -51,8 +52,9 @@ const { data: schedules } = await supabase
       )
     }
 
-    <section class="w-full overflow-auto">
+    <section class="flex flex-col flex-wrap gap-y-4 w-full overflow-auto">
       {user && <MySchedule schedules={schedules} client:load />}
+      {user && <ScheduleCourses client:load />}
       <ScheduleTable schedules={schedules} client:load />
     </section>
   </div>
