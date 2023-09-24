@@ -47,7 +47,7 @@ export default function CourseTable(props: Props) {
   };
 
   return (
-    <Table className="border border-collapse">
+    <Table className="border border-collapse" scrollable={false}>
       <TableHeader>
         <TableRow>
           {props.session && <TableHead>My Courses</TableHead>}

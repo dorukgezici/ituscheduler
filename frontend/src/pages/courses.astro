@@ -28,7 +28,7 @@ const { data: selectedMajor } = await supabase
 ---
 
 <Layout title="Courses | ITU Scheduler">
-  <div class="container grid place-items-center pb-8 pt-6 md:py-10 gap-24">
+  <div class="container lg:max-w-[2200px] grid place-items-center pb-8 pt-6 md:py-10 gap-24">
     <div class="flex flex-wrap justify-center gap-y-4 w-full overflow-auto">
       <div class="md:w-2/5 lg:w-1/5">
         <CourseFilter majors={majors} selectedMajor={selectedMajor} client:load />
