@@ -22,7 +22,7 @@ export default function SupabaseAuth({ site }: { site?: URL }) {
       appearance={{ theme: ThemeSupa }}
       theme="dark"
       socialLayout="horizontal"
-      providers={["facebook", "twitter"]}
+      providers={["twitter", "github"]}
       onlyThirdPartyProviders
       redirectTo={site && `${site}/login`}
     />
