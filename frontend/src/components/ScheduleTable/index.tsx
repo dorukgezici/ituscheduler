@@ -29,7 +29,7 @@ export default function ScheduleTable({ schedules }: Props) {
     for (let schedule of data!) {
       for (let lecture of schedule.courses!.lectures) {
         let ids = [];
-        let blocks = ((lecture.time_end! - lecture.time_start!) % 99) + 1;
+        let blocks = ((lecture.time_end! - lecture.time_start!) % 29) + 1;
 
         if (blocks === 1) {
           let id = lecture.time_start + "-" + lecture.time_end;
@@ -59,11 +59,11 @@ export default function ScheduleTable({ schedules }: Props) {
         {hourSlots.map((slot) => (
           <TableRow key={slot.time}>
             <TableCell className="font-medium">{slot.time}</TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${1}`}></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${2}`}></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${3}`}></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${4}`}></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${5}`}></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${1}`} className="text-right"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${2}`} className="text-right"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${3}`} className="text-right"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${4}`} className="text-right"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${5}`} className="text-right"></TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -76,9 +76,9 @@ function idGenerator(start: number, finish: number, Ids: string[]) {
   if (start > finish) {
     return ids;
   } else {
-    const id = start + "-" + (start + 99);
+    const id = start + "-" + (start + 29);
     ids.push(id);
-    return idGenerator(start + 100, finish, ids);
+    return idGenerator(start + (start % 100 === 0 ? 30 : 70), finish, ids);
   }
 }
 
