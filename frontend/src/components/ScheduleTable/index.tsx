@@ -12,12 +12,12 @@ type Props = {
 
 export default function ScheduleTable({ schedules }: Props) {
   const selectedSchedule = useStore($selectedSchedule);
-  const { data } = useScheduleCourses(selectedSchedule ?? "");
+  const { data } = useScheduleCourses(selectedSchedule);
 
   useEffect(() => {
     const schedule = schedules?.find((s) => s.is_selected);
     if (!selectedSchedule && schedule) $selectedSchedule.set(`${schedule.id}`);
-  }, []);
+  }, [schedules]);
 
   useEffect(() => {
     if (!data) return;
@@ -99,16 +99,30 @@ function fillSlots(ids: string[], day: string | null, text?: string | null) {
     }
 
     const el = document.getElementById(id);
-    if (el) el.innerHTML = text ?? "";
+    if (el && text) {
+      if (el.innerHTML) {
+        // there is already a course
+        el.classList.remove("bg-muted/50");
+        el.classList.add("bg-red-500/50");
+        el.innerHTML += ` & ${text}`;
+      } else {
+        // the slot is empty
+        el.classList.add("bg-muted/50");
+        el.innerHTML = text;
+      }
+    }
   }
 }
 
 function clearSlots() {
   for (let slot of hourSlots) {
     for (let i = 1; i < 6; i++) {
-      const id = `${slot.timeStart}-${slot.timeEnd}-${i + 1}`;
+      const id = `${slot.timeStart}-${slot.timeEnd}-${i}`;
       const el = document.getElementById(id);
-      if (el) el.innerHTML = "";
+      if (el) {
+        el.classList.remove("bg-muted/50", "bg-red-500/50");
+        el.innerHTML = "";
+      }
     }
   }
 }
