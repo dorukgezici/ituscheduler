@@ -48,21 +48,21 @@ export default function ScheduleTable({ schedules }: Props) {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[120px]">Hours</TableHead>
-          <TableHead className="text-right">Monday</TableHead>
-          <TableHead className="text-right">Tuesday</TableHead>
-          <TableHead className="text-right">Wednesday</TableHead>
-          <TableHead className="text-right">Thursday</TableHead>
+          <TableHead className="text-center">Monday</TableHead>
+          <TableHead className="text-center">Tuesday</TableHead>
+          <TableHead className="text-center">Wednesday</TableHead>
+          <TableHead className="text-center">Thursday</TableHead>
           <TableHead className="text-right">Friday</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {hourSlots.map((slot) => (
           <TableRow key={slot.time}>
-            <TableCell className="font-medium">{slot.time}</TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${1}`} className="text-right"></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${2}`} className="text-right"></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${3}`} className="text-right"></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${4}`} className="text-right"></TableCell>
+            <TableCell className="font-medium border-r">{slot.time}</TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${1}`} className="text-center border-r"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${2}`} className="text-center border-r"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${3}`} className="text-center border-r"></TableCell>
+            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${4}`} className="text-center border-r"></TableCell>
             <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${5}`} className="text-right"></TableCell>
           </TableRow>
         ))}
