@@ -95,6 +95,8 @@ func main() {
 			r.Post("/populate-db", app.PostPopulateDB)
 		})
 	})
+	// cron
+	router.Get("/cron/crawler", app.CronCrawler)
 	// static files
 	router.Get("/favicon.ico", app.GetFavicon)
 	router.Get("/ads.txt", app.GetAds)

@@ -490,6 +490,15 @@ func PostPopulateDB(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+// cron
+
+func CronCrawler(w http.ResponseWriter, r *http.Request) {
+	var majors []Major
+	DB.Find(&majors)
+	ScrapeCoursesOfMajors(majors)
+	jsonResponse(w, http.StatusOK, nil, nil)
+}
+
 // static files
 
 func GetFavicon(w http.ResponseWriter, r *http.Request) {
