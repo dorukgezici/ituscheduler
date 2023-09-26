@@ -1,4 +1,4 @@
-module github.com/dorukgezici/ituscheduler
+module ituscheduler
 
 go 1.21
 

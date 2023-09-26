@@ -2,25 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "chi",
-      "type": "go",
-      "request": "launch",
-      "mode": "debug",
-      "program": "${workspaceFolder}/main.go",
-      "envFile": "${workspaceFolder}/.env"
-    },
-    {
-      "name": "astro",
-      "type": "node-terminal",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/frontend",
-      "command": "${workspaceFolder}/frontend/node_modules/.bin/astro dev"
-    }
-  ],
-  "compounds": [
-    {
       "name": "dev",
-      "configurations": ["chi", "astro"]
+      "request": "launch",
+      "type": "node-terminal",
+      "command": "pnpm run vercel dev"
     }
   ]
 }

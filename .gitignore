@@ -1,7 +1,24 @@
-.DS_Store
-.idea/
+# build output
+dist/
+.vercel
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
 .env
+.env.production
+.env.sentry-build-plugin
 .envrc
-templates-old/
-/bin/
-__debug*
+
+# macOS-specific files
+.DS_Store
