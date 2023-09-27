@@ -2,7 +2,7 @@ module github.com/dorukgezici/ituscheduler
 
 go 1.20
 
-require github.com/dorukgezici/ituscheduler/crawler v0.0.0
+require github.com/dorukgezici/ituscheduler/crawler v0.0.0-20230927010057-ef7518c0d0e9
 
 // replace github.com/dorukgezici/ituscheduler/crawler v0.0.0 => ./crawler
 
