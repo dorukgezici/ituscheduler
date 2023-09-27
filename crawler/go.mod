@@ -1,4 +1,4 @@
-module github.com/dorukgezici/ituscheduler
+module github.com/dorukgezici/ituscheduler/crawler
 
 go 1.20
 
