@@ -6,12 +6,12 @@ import (
 	"github.com/dorukgezici/ituscheduler/crawler"
 )
 
-func RefreshCourses(w http.ResponseWriter, r *http.Request) {
+func RefreshMajors(w http.ResponseWriter, r *http.Request) {
 	crawler.InitDB()
 
 	if r.Method == "GET" {
-		crawler.GetRefreshCourses(w, r)
+		crawler.GetRefreshMajors(w, r)
 	} else if r.Method == "POST" {
-		crawler.PostRefreshCourses(w, r)
+		crawler.PostRefreshMajors(w, r)
 	}
 }

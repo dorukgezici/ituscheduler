@@ -66,7 +66,7 @@ func render(filename string, w http.ResponseWriter, r *http.Request, data map[st
 			return false
 		},
 	}
-	tpl := template.Must(template.New(filename).Funcs(fm).ParseFiles("templates/base.gohtml", "templates/"+filename))
+	tpl := template.Must(template.New(filename).Funcs(fm).ParseFS(Templates, "templates/base.gohtml", "templates/"+filename))
 
 	user, _ := r.Context().Value("user").(User)
 	initialData := map[string]interface{}{

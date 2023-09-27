@@ -2,38 +2,28 @@
 
 {{define "title"}}Refresh Courses | ITU Scheduler{{end}}
 
-{{define "head"}}
-{{end}}
-
 {{define "body"}}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1 center">
-                {{if not .IsRefreshed}}
-                    <h2>Select Majors to Refresh Courses</h2><br>
-                    <button id="selectAll" class="btn btn-primary">Select All</button>
-                    <hr>
-                    <form action="" method="POST">
-                        <div class="form-group">
-                            <label for="majors">Majors</label>
-                            <select multiple id="majors" name="majorCodes" class="form-control">
-                                {{range .Majors}}
-                                    <option value="{{.Code}}">{{.Code}}</option>
-                                {{end}}
-                            </select>
-                        </div>
-                        <input type="submit" class="btn btn-primary">
-                    </form>
-                {{else}}
-                    <h2>Majors Refreshed</h2>
-                    <hr>
-                    {{range .Majors}}
-                        <p>{{.Code}} | {{.RefreshedAt | date}}</p>
-                    {{end}}
-                {{end}}
-            </div>
-        </div>
-    </div>
+    <main class="flex flex-col items-center justify-center min-h-screen py-12 gap-4">
+        {{if not .IsRefreshed}}
+            <h2 class="text-3xl">Select Majors to Refresh Courses</h2>
+            <button id="selectAll" class="btn btn-primary">Select All</button>
+            <form method="POST">
+                <div class="form-control w-full max-w-xs">
+                    <select multiple id="majors" name="majorCodes" class="select select-bordered">
+                        {{range .Majors}}
+                            <option value="{{.Code}}">{{.Code}}</option>
+                        {{end}}
+                    </select>
+                </div>
+                <input type="submit" class="btn btn-primary mt-4">
+            </form>
+        {{else}}
+            <h2 class="text-3xl">Majors Refreshed</h2>
+            {{range .Majors}}
+                <p>{{.Code}} | {{.RefreshedAt | date}}</p>
+            {{end}}
+        {{end}}
+    </main>
 {{end}}
 
 {{define "script"}}

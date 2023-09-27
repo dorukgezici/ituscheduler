@@ -1,6 +1,7 @@
 package crawler
 
 import (
+	"embed"
 	"os"
 
 	"gorm.io/gorm"
@@ -15,4 +16,6 @@ var (
 	DBSSLMode  = os.Getenv("ITUSCHEDULER_POSTGRES_SSLMODE")
 	Stage      = os.Getenv("ITUSCHEDULER_STAGE")
 	DB         *gorm.DB
+	//go:embed templates/*
+	Templates embed.FS
 )

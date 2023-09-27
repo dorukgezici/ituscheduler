@@ -4,81 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{block "title" .}}ITU Scheduler{{end}}</title>
-    {{block "head" .}}{{end}}
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.8.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="content">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed"
-                        data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">
-                    <img src="/static/icons/bee-transparent-white.png" alt="Logo"
-                         style="display: inline-block; position: absolute; top: 8px; height: 44px">
-                    <span style="padding-left: 50px"><strong>ITUscheduler</strong></span>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li{{if eq .Path "/"}} class="active"{{end}}><a href="/">Home </a></li>
-                    <li{{if pathContains "/courses/"}} class="active"{{end}}><a href="/courses">Courses </a></li>
-                    <li{{if pathContains "/info"}} class="active"{{end}}><a href="/info">Info </a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Rehberler <span
-                                    class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="https://web.itu.edu.tr/durgunor/ders.htm" target="_blank">Ders Seçim
-                                    Rehberi</a>
-                            </li>
-                            <li><a href="https://web.itu.edu.tr/durgunor/itusch.htm" target="_blank">ITUscheduler Nasıl
-                                    Kullanılır?</a></li>
-                            <li><a href="https://web.itu.edu.tr/durgunor/crn.html" target="_blank">Fill CRN Test</a>
-                            </li>
-                        </ul>
-                    </li>
-                    {{if .User.IsAdmin}}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Admin
-                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="/admin/refresh-majors">Refresh Major Codes</a></li>
-                                <li><a href="/admin/refresh-courses">Refresh Courses</a></li>
-                                <li><a href="/admin/populate-db">Populate DB (Debugging)</a></li>
-                            </ul>
-                        </li>
-                    {{end}}
-                    {{if .User.ID}}
-                        <li><a href="">{{.User.Username}}</a></li>
-                        <li><a href="/logout">Logout </a></li>
-                    {{else}}
-                        <li{{if pathContains "/register"}} class="active"{{end}}><a href="/register">Register </a></li>
-                        <li{{if pathContains "/login"}} class="active"{{end}}><a href="/login">Login </a></li>
-                    {{end}}
-                </ul>
-            </div>
-        </div>
-    </nav>
-    {{block "body" .}}{{end}}
-</div>
-<footer class="navbar navbar-default footer">
-    <div class="container">
-        <ul class="nav navbar-nav">
-            <li><a href="https://github.com/dorukgezici/ituscheduler" target="_blank">
-                    <span class="copyleft">&copy;</span> Copyleft 2018 | ITUscheduler</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="/privacy-policy">Privacy Policy</a></li>
-        </ul>
-    </div>
-</footer>
+{{block "body" .}}{{end}}
 {{block "script" .}}{{end}}
 </body>
 </html>
