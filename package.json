@@ -1,7 +1,8 @@
 {
   "name": "ituscheduler",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "dev": "astro dev",
     "build": "SENTRY_RELEASE=${VERCEL_GIT_COMMIT_SHA:-$(git rev-parse HEAD)} && astro build",
