@@ -14,7 +14,6 @@ var (
 	DBPassword = os.Getenv("ITUSCHEDULER_POSTGRES_PASSWORD")
 	DBPort     = os.Getenv("ITUSCHEDULER_POSTGRES_PORT")
 	DBSSLMode  = os.Getenv("ITUSCHEDULER_POSTGRES_SSLMODE")
-	Stage      = os.Getenv("ITUSCHEDULER_STAGE")
 	DB         *gorm.DB
 	//go:embed templates/*
 	Templates embed.FS

@@ -52,7 +52,7 @@
     "@sentry/vite-plugin": "^2.7.1",
     "@tanstack/react-query-devtools": "5.0.0-beta.34",
     "@types/react": "^18.2.23",
-    "@types/react-dom": "^18.2.7",
+    "@types/react-dom": "^18.2.8",
     "supabase": "^1.99.5",
     "typescript": "^5.2.2",
     "vercel": "^32.3.1"
