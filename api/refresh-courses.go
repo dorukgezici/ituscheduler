@@ -3,15 +3,17 @@ package handler
 import (
 	"net/http"
 
-	"github.com/dorukgezici/ituscheduler/crawler"
+	"github.com/dorukgezici/ituscheduler/admin"
 )
 
 func RefreshCourses(w http.ResponseWriter, r *http.Request) {
-	crawler.InitDB()
-
-	if r.Method == "GET" {
-		crawler.GetRefreshCourses(w, r)
-	} else if r.Method == "POST" {
-		crawler.PostRefreshCourses(w, r)
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" {
+			admin.GetRefreshCourses(w, r)
+		} else if r.Method == "POST" {
+			admin.PostRefreshCourses(w, r)
+		}
 	}
+
+	admin.AuthHandler(http.HandlerFunc(fn)).ServeHTTP(w, r)
 }

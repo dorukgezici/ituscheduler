@@ -2,9 +2,9 @@ module github.com/dorukgezici/ituscheduler
 
 go 1.20
 
-require github.com/dorukgezici/ituscheduler/crawler v0.0.0-20230927010057-ef7518c0d0e9
+require github.com/dorukgezici/ituscheduler/admin latest
 
-// replace github.com/dorukgezici/ituscheduler/crawler v0.0.0 => ./crawler
+// replace github.com/dorukgezici/ituscheduler/admin => ./admin
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
@@ -15,6 +15,7 @@ require (
 	github.com/antchfx/xpath v1.2.4 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gocolly/colly/v2 v2.1.0 // indirect
+	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect

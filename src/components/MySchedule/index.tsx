@@ -13,7 +13,7 @@ export default function MySchedule({ schedules }: Props) {
   const schedule = useStore($selectedSchedule);
 
   return (
-    <div className="flex items-center justify-start gap-2">
+    <div className="flex items-center justify-start gap-2 py-1">
       <Label className="font-semibold">My Schedules:</Label>
       <Select value={schedule} onValueChange={(value) => $selectedSchedule.set(value)}>
         <SelectTrigger className="w-[180px]">
@@ -35,7 +35,7 @@ export default function MySchedule({ schedules }: Props) {
           variant="outline"
           className="ml-4"
           onClick={() => {
-            deleteSchedule(parseInt(schedule ?? "0"));
+            deleteSchedule(parseInt(schedule));
             // TODO: mutate
             location.reload();
           }}

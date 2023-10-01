@@ -1,4 +1,4 @@
-package crawler
+package admin
 
 import (
 	"embed"
