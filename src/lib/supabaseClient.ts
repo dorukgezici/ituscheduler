@@ -9,8 +9,8 @@ import {
 
 export const clientComponentClient = () =>
   createClientComponentClient<Database>({
-    supabaseUrl: import.meta.env.NEXT_PUBLIC_SUPABASE_URL,
-    supabaseKey: import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
+    supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
   });
 
 // can also be used on routes
@@ -20,8 +20,8 @@ export const serverComponentClient = (cookies: AstroCookies) =>
       cookies,
     },
     {
-      supabaseUrl: import.meta.env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
+      supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     },
   );
 
@@ -32,8 +32,8 @@ export const serverRouteClient = (cookies: AstroCookies) =>
       cookies,
     },
     {
-      supabaseUrl: import.meta.env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
+      supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     },
   );
 
@@ -45,7 +45,7 @@ export const serverMiddlewareClient = (req: Request, res: Response) =>
       response: res,
     },
     {
-      supabaseUrl: import.meta.env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
+      supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     },
   );
