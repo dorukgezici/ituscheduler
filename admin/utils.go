@@ -19,7 +19,7 @@ func InitDB() {
 	if err != nil {
 		panic(err)
 	} else {
-		log.Println("Successfully connected to the database at: " + DBHost)
+		log.Println("Successfully connected to the database.")
 	}
 }
 
