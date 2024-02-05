@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	DBStr      = os.Getenv("POSTGRES_STR")
 	DBHost     = os.Getenv("POSTGRES_HOST")
 	DBPort     = os.Getenv("POSTGRES_PORT")
 	DBName     = os.Getenv("POSTGRES_DATABASE")
