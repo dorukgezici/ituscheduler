@@ -2,7 +2,7 @@ module github.com/dorukgezici/ituscheduler
 
 go 1.20
 
-require github.com/dorukgezici/ituscheduler/admin v0.0.0-20240205003127-9137aad52328
+require github.com/dorukgezici/ituscheduler/admin v0.0.0-20240205010843-a7f077c3527f
 
 // replace github.com/dorukgezici/ituscheduler/admin => ./admin
 
