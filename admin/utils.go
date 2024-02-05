@@ -15,7 +15,7 @@ import (
 
 func InitDB() {
 	var err error
-	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%s sslmode=%s", DBHost, DBName, DBUser, DBPassword, DBPort, DBSSLMode)
+	dsn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=%s sslmode=%s", DBHost, DBName, DBUser, DBPassword, DBPort, "disable")
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{CreateBatchSize: 100})
 	if err != nil {
 		panic(err)
