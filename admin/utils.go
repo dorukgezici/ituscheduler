@@ -15,7 +15,10 @@ import (
 
 func InitDB() {
 	var err error
-	DB, err = gorm.Open(postgres.Open(DBStr), &gorm.Config{CreateBatchSize: 100})
+	DB, err = gorm.Open(postgres.New(postgres.Config{
+		DSN:                  DBStr,
+		PreferSimpleProtocol: true, // disables implicit prepared statement usage
+	}), &gorm.Config{CreateBatchSize: 100})
 	if err != nil {
 		panic(err)
 	} else {
