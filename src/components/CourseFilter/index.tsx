@@ -52,13 +52,13 @@ export default function CourseFilter({ majors, selectedMajor: selectedMajorData 
           <CardTitle>Course Code</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select value={selectedCourseCode ?? ""} onValueChange={(value) => $selectedCourseCode.set(value)}>
+          <Select value={selectedCourseCode ?? "null"} onValueChange={(value) => $selectedCourseCode.set(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <ScrollArea className={(courseCodes?.length || 0) > 10 ? "h-[400px]" : undefined}>
-                <SelectItem value="">All</SelectItem>
+                <SelectItem value="null">All</SelectItem>
                 {courseCodes?.map((courseCode) => (
                   <SelectItem key={courseCode.code} value={courseCode.code ?? ""}>
                     {courseCode.code}
@@ -73,12 +73,12 @@ export default function CourseFilter({ majors, selectedMajor: selectedMajorData 
           <CardTitle>Day</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select value={selectedDay ?? ""} onValueChange={(value) => $selectedDay.set(value)}>
+          <Select value={selectedDay ?? "null"} onValueChange={(value) => $selectedDay.set(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All</SelectItem>
+              <SelectItem value="null">All</SelectItem>
               {Object.keys(daySlots).map((key) => (
                 <SelectItem key={key} value={key}>
                   {daySlots[key].nameEn}
