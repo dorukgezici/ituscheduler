@@ -2,6 +2,8 @@ package admin
 
 import (
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // auth
@@ -27,8 +29,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check password
-	if password != ADMIN_PASSWORD {
-		// if err := bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(password)); err != nil {
 		render("login.gohtml", w, r, map[string]interface{}{
 			"Error": "Authentication failed, please check your username and password.",
 		})
