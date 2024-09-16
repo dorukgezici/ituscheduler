@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -161,6 +162,12 @@ func scrapeCoursesOfMajor(major Major, channel chan Result) {
 
 func initializeCollector() *colly.Collector {
 	c := colly.NewCollector()
+	// don't follow redirects
+	c.SetClient(&http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	})
 	c.OnRequest(func(r *colly.Request) {
 		r.ResponseCharacterEncoding = "windows-1254"
 	})
