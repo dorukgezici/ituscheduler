@@ -4,515 +4,426 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
   public: {
     Tables: {
       courses: {
         Row: {
-          capacity: number | null;
-          catalogue: string | null;
-          class_restriction: string | null;
-          code: string | null;
-          created_at: string | null;
-          crn: string;
-          deleted_at: string | null;
-          enrolled: number | null;
-          instructor: string | null;
-          major_code: string;
-          major_restriction: string | null;
-          prerequisites: string | null;
-          reservation: string | null;
-          teaching_method: string | null;
-          title: string | null;
-          updated_at: string | null;
-        };
+          capacity: number | null
+          catalogue: string | null
+          class_restriction: string | null
+          code: string | null
+          created_at: string | null
+          crn: string
+          deleted_at: string | null
+          enrolled: number | null
+          instructor: string | null
+          major_code: string
+          major_restriction: string | null
+          prerequisites: string | null
+          reservation: string | null
+          teaching_method: string | null
+          title: string | null
+          updated_at: string | null
+        }
         Insert: {
-          capacity?: number | null;
-          catalogue?: string | null;
-          class_restriction?: string | null;
-          code?: string | null;
-          created_at?: string | null;
-          crn: string;
-          deleted_at?: string | null;
-          enrolled?: number | null;
-          instructor?: string | null;
-          major_code: string;
-          major_restriction?: string | null;
-          prerequisites?: string | null;
-          reservation?: string | null;
-          teaching_method?: string | null;
-          title?: string | null;
-          updated_at?: string | null;
-        };
+          capacity?: number | null
+          catalogue?: string | null
+          class_restriction?: string | null
+          code?: string | null
+          created_at?: string | null
+          crn: string
+          deleted_at?: string | null
+          enrolled?: number | null
+          instructor?: string | null
+          major_code: string
+          major_restriction?: string | null
+          prerequisites?: string | null
+          reservation?: string | null
+          teaching_method?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
         Update: {
-          capacity?: number | null;
-          catalogue?: string | null;
-          class_restriction?: string | null;
-          code?: string | null;
-          created_at?: string | null;
-          crn?: string;
-          deleted_at?: string | null;
-          enrolled?: number | null;
-          instructor?: string | null;
-          major_code?: string;
-          major_restriction?: string | null;
-          prerequisites?: string | null;
-          reservation?: string | null;
-          teaching_method?: string | null;
-          title?: string | null;
-          updated_at?: string | null;
-        };
+          capacity?: number | null
+          catalogue?: string | null
+          class_restriction?: string | null
+          code?: string | null
+          created_at?: string | null
+          crn?: string
+          deleted_at?: string | null
+          enrolled?: number | null
+          instructor?: string | null
+          major_code?: string
+          major_restriction?: string | null
+          prerequisites?: string | null
+          reservation?: string | null
+          teaching_method?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "courses_major_code_fkey";
-            columns: ["major_code"];
-            isOneToOne: false;
-            referencedRelation: "majors";
-            referencedColumns: ["code"];
+            foreignKeyName: "courses_major_code_fkey"
+            columns: ["major_code"]
+            isOneToOne: false
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
           },
           {
-            foreignKeyName: "fk_majors_courses";
-            columns: ["major_code"];
-            isOneToOne: false;
-            referencedRelation: "majors";
-            referencedColumns: ["code"];
+            foreignKeyName: "fk_majors_courses"
+            columns: ["major_code"]
+            isOneToOne: false
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
           },
-        ];
-      };
+        ]
+      }
       lectures: {
         Row: {
-          building: string | null;
-          course_crn: string;
-          created_at: string | null;
-          day: string | null;
-          deleted_at: string | null;
-          id: number;
-          room: string | null;
-          time: string | null;
-          time_end: number | null;
-          time_start: number | null;
-          updated_at: string | null;
-        };
+          building: string | null
+          course_crn: string
+          created_at: string | null
+          day: string | null
+          deleted_at: string | null
+          id: number
+          key: string
+          room: string | null
+          time: string | null
+          time_end: number | null
+          time_start: number | null
+          updated_at: string | null
+        }
         Insert: {
-          building?: string | null;
-          course_crn: string;
-          created_at?: string | null;
-          day?: string | null;
-          deleted_at?: string | null;
-          id?: number;
-          room?: string | null;
-          time?: string | null;
-          time_end?: number | null;
-          time_start?: number | null;
-          updated_at?: string | null;
-        };
+          building?: string | null
+          course_crn: string
+          created_at?: string | null
+          day?: string | null
+          deleted_at?: string | null
+          id?: number
+          key: string
+          room?: string | null
+          time?: string | null
+          time_end?: number | null
+          time_start?: number | null
+          updated_at?: string | null
+        }
         Update: {
-          building?: string | null;
-          course_crn?: string;
-          created_at?: string | null;
-          day?: string | null;
-          deleted_at?: string | null;
-          id?: number;
-          room?: string | null;
-          time?: string | null;
-          time_end?: number | null;
-          time_start?: number | null;
-          updated_at?: string | null;
-        };
+          building?: string | null
+          course_crn?: string
+          created_at?: string | null
+          day?: string | null
+          deleted_at?: string | null
+          id?: number
+          key?: string
+          room?: string | null
+          time?: string | null
+          time_end?: number | null
+          time_start?: number | null
+          updated_at?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "fk_courses_lectures";
-            columns: ["course_crn"];
-            isOneToOne: false;
-            referencedRelation: "courses";
-            referencedColumns: ["crn"];
+            foreignKeyName: "fk_courses_lectures"
+            columns: ["course_crn"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["crn"]
           },
           {
-            foreignKeyName: "lectures_course_crn_fkey";
-            columns: ["course_crn"];
-            isOneToOne: false;
-            referencedRelation: "courses";
-            referencedColumns: ["crn"];
+            foreignKeyName: "lectures_course_crn_fkey"
+            columns: ["course_crn"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["crn"]
           },
-        ];
-      };
+        ]
+      }
       majors: {
         Row: {
-          code: string;
-          created_at: string | null;
-          refreshed_at: string | null;
-        };
+          code: string
+          created_at: string | null
+          id: number | null
+          refreshed_at: string | null
+        }
         Insert: {
-          code: string;
-          created_at?: string | null;
-          refreshed_at?: string | null;
-        };
+          code: string
+          created_at?: string | null
+          id?: number | null
+          refreshed_at?: string | null
+        }
         Update: {
-          code?: string;
-          created_at?: string | null;
-          refreshed_at?: string | null;
-        };
-        Relationships: [];
-      };
+          code?: string
+          created_at?: string | null
+          id?: number | null
+          refreshed_at?: string | null
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
-          author: string | null;
-          content: string | null;
-          created_at: string | null;
-          date: string | null;
-          deleted_at: string | null;
-          id: number;
-          updated_at: string | null;
-        };
+          author: string | null
+          content: string | null
+          created_at: string | null
+          date: string | null
+          deleted_at: string | null
+          id: number
+          updated_at: string | null
+        }
         Insert: {
-          author?: string | null;
-          content?: string | null;
-          created_at?: string | null;
-          date?: string | null;
-          deleted_at?: string | null;
-          id?: number;
-          updated_at?: string | null;
-        };
+          author?: string | null
+          content?: string | null
+          created_at?: string | null
+          date?: string | null
+          deleted_at?: string | null
+          id?: number
+          updated_at?: string | null
+        }
         Update: {
-          author?: string | null;
-          content?: string | null;
-          created_at?: string | null;
-          date?: string | null;
-          deleted_at?: string | null;
-          id?: number;
-          updated_at?: string | null;
-        };
-        Relationships: [];
-      };
+          author?: string | null
+          content?: string | null
+          created_at?: string | null
+          date?: string | null
+          deleted_at?: string | null
+          id?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       schedule_courses: {
         Row: {
-          course_crn: string;
-          schedule_id: number;
-        };
+          course_crn: string
+          schedule_id: number
+        }
         Insert: {
-          course_crn: string;
-          schedule_id: number;
-        };
+          course_crn: string
+          schedule_id: number
+        }
         Update: {
-          course_crn?: string;
-          schedule_id?: number;
-        };
+          course_crn?: string
+          schedule_id?: number
+        }
         Relationships: [
           {
-            foreignKeyName: "schedule_courses_course_crn_fkey";
-            columns: ["course_crn"];
-            isOneToOne: false;
-            referencedRelation: "courses";
-            referencedColumns: ["crn"];
+            foreignKeyName: "schedule_courses_course_crn_fkey"
+            columns: ["course_crn"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["crn"]
           },
           {
-            foreignKeyName: "schedule_courses_schedule_id_fkey";
-            columns: ["schedule_id"];
-            isOneToOne: false;
-            referencedRelation: "schedules";
-            referencedColumns: ["id"];
+            foreignKeyName: "schedule_courses_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "schedules"
+            referencedColumns: ["id"]
           },
-        ];
-      };
-      schedule_courses_go: {
-        Row: {
-          course_crn: string;
-          schedule_id: number;
-        };
-        Insert: {
-          course_crn: string;
-          schedule_id: number;
-        };
-        Update: {
-          course_crn?: string;
-          schedule_id?: number;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_courses_go_course";
-            columns: ["course_crn"];
-            isOneToOne: false;
-            referencedRelation: "courses";
-            referencedColumns: ["crn"];
-          },
-          {
-            foreignKeyName: "fk_schedule_courses_go_schedule";
-            columns: ["schedule_id"];
-            isOneToOne: false;
-            referencedRelation: "schedules_go";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
+        ]
+      }
       schedules: {
         Row: {
-          id: number;
-          is_selected: boolean;
-          user_id: string;
-        };
+          id: number
+          is_selected: boolean
+          user_id: string
+        }
         Insert: {
-          id?: number;
-          is_selected: boolean;
-          user_id: string;
-        };
+          id?: number
+          is_selected: boolean
+          user_id: string
+        }
         Update: {
-          id?: number;
-          is_selected?: boolean;
-          user_id?: string;
-        };
+          id?: number
+          is_selected?: boolean
+          user_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "schedules_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            foreignKeyName: "schedules_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
-        ];
-      };
-      schedules_go: {
-        Row: {
-          created_at: string | null;
-          deleted_at: string | null;
-          id: number;
-          is_selected: boolean | null;
-          updated_at: string | null;
-          user_id: number;
-        };
-        Insert: {
-          created_at?: string | null;
-          deleted_at?: string | null;
-          id?: number;
-          is_selected?: boolean | null;
-          updated_at?: string | null;
-          user_id: number;
-        };
-        Update: {
-          created_at?: string | null;
-          deleted_at?: string | null;
-          id?: number;
-          is_selected?: boolean | null;
-          updated_at?: string | null;
-          user_id?: number;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "fk_users_schedules";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
+        ]
+      }
       sessions: {
         Row: {
-          created_at: string | null;
-          deleted_at: string | null;
-          expires_at: string | null;
-          token: string;
-          user_id: number;
-        };
+          created_at: string | null
+          deleted_at: string | null
+          expires_at: string | null
+          token: string
+          user_id: number
+        }
         Insert: {
-          created_at?: string | null;
-          deleted_at?: string | null;
-          expires_at?: string | null;
-          token: string;
-          user_id: number;
-        };
+          created_at?: string | null
+          deleted_at?: string | null
+          expires_at?: string | null
+          token: string
+          user_id: number
+        }
         Update: {
-          created_at?: string | null;
-          deleted_at?: string | null;
-          expires_at?: string | null;
-          token?: string;
-          user_id?: number;
-        };
+          created_at?: string | null
+          deleted_at?: string | null
+          expires_at?: string | null
+          token?: string
+          user_id?: number
+        }
         Relationships: [
           {
-            foreignKeyName: "fk_users_sessions";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            foreignKeyName: "fk_users_sessions"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       user_courses: {
         Row: {
-          course_crn: string;
-          user_id: string;
-        };
+          course_crn: string
+          user_id: string
+        }
         Insert: {
-          course_crn: string;
-          user_id: string;
-        };
+          course_crn: string
+          user_id: string
+        }
         Update: {
-          course_crn?: string;
-          user_id?: string;
-        };
+          course_crn?: string
+          user_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "user_courses_course_crn_fkey";
-            columns: ["course_crn"];
-            isOneToOne: false;
-            referencedRelation: "courses";
-            referencedColumns: ["crn"];
+            foreignKeyName: "user_courses_course_crn_fkey"
+            columns: ["course_crn"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["crn"]
           },
           {
-            foreignKeyName: "user_courses_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            foreignKeyName: "user_courses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
-        ];
-      };
-      user_courses_go: {
-        Row: {
-          course_crn: string;
-          user_id: number;
-        };
-        Insert: {
-          course_crn: string;
-          user_id: number;
-        };
-        Update: {
-          course_crn?: string;
-          user_id?: number;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "fk_user_courses_go_course";
-            columns: ["course_crn"];
-            isOneToOne: false;
-            referencedRelation: "courses";
-            referencedColumns: ["crn"];
-          },
-          {
-            foreignKeyName: "fk_user_courses_go_user";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
+        ]
+      }
       user_major: {
         Row: {
-          major: string;
-          user_id: string;
-        };
+          major: string
+          user_id: string
+        }
         Insert: {
-          major?: string;
-          user_id: string;
-        };
+          major?: string
+          user_id: string
+        }
         Update: {
-          major?: string;
-          user_id?: string;
-        };
+          major?: string
+          user_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "user_major_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: true;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            foreignKeyName: "user_major_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       users: {
         Row: {
-          created_at: string | null;
-          deleted_at: string | null;
-          email: string | null;
-          facebook_id: string | null;
-          id: number;
-          is_admin: boolean | null;
-          major_code: string | null;
-          password: string | null;
-          twitter_id: string | null;
-          updated_at: string | null;
-          username: string | null;
-        };
+          created_at: string | null
+          deleted_at: string | null
+          email: string | null
+          facebook_id: string | null
+          id: number
+          is_admin: boolean | null
+          major_code: string | null
+          password: string | null
+          twitter_id: string | null
+          updated_at: string | null
+          username: string | null
+        }
         Insert: {
-          created_at?: string | null;
-          deleted_at?: string | null;
-          email?: string | null;
-          facebook_id?: string | null;
-          id?: number;
-          is_admin?: boolean | null;
-          major_code?: string | null;
-          password?: string | null;
-          twitter_id?: string | null;
-          updated_at?: string | null;
-          username?: string | null;
-        };
+          created_at?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          facebook_id?: string | null
+          id?: number
+          is_admin?: boolean | null
+          major_code?: string | null
+          password?: string | null
+          twitter_id?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
         Update: {
-          created_at?: string | null;
-          deleted_at?: string | null;
-          email?: string | null;
-          facebook_id?: string | null;
-          id?: number;
-          is_admin?: boolean | null;
-          major_code?: string | null;
-          password?: string | null;
-          twitter_id?: string | null;
-          updated_at?: string | null;
-          username?: string | null;
-        };
+          created_at?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          facebook_id?: string | null
+          id?: number
+          is_admin?: boolean | null
+          major_code?: string | null
+          password?: string | null
+          twitter_id?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "fk_users_major";
-            columns: ["major_code"];
-            isOneToOne: false;
-            referencedRelation: "majors";
-            referencedColumns: ["code"];
+            foreignKeyName: "fk_users_major"
+            columns: ["major_code"]
+            isOneToOne: false
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
           },
-        ];
-      };
-    };
+        ]
+      }
+    }
     Views: {
       course_codes: {
         Row: {
-          code: string | null;
-          major_code: string | null;
-        };
+          code: string | null
+          major_code: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "courses_major_code_fkey";
-            columns: ["major_code"];
-            isOneToOne: false;
-            referencedRelation: "majors";
-            referencedColumns: ["code"];
+            foreignKeyName: "courses_major_code_fkey"
+            columns: ["major_code"]
+            isOneToOne: false
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
           },
           {
-            foreignKeyName: "fk_majors_courses";
-            columns: ["major_code"];
-            isOneToOne: false;
-            referencedRelation: "majors";
-            referencedColumns: ["code"];
+            foreignKeyName: "fk_majors_courses"
+            columns: ["major_code"]
+            isOneToOne: false
+            referencedRelation: "majors"
+            referencedColumns: ["code"]
           },
-        ];
-      };
-    };
+        ]
+      }
+    }
     Functions: {
       user_count: {
-        Args: Record<PropertyKey, never>;
-        Returns: number;
-      };
-    };
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type PublicSchema = Database[Extract<keyof Database, "public">];
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -525,19 +436,19 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
   : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-      PublicSchema["Views"])
-  ? (PublicSchema["Tables"] &
-      PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R;
-    }
-    ? R
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
     : never
-  : never;
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -548,17 +459,17 @@ export type TablesInsert<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I;
-    }
-    ? I
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
-  : never;
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -569,17 +480,17 @@ export type TablesUpdate<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U;
-    }
-    ? U
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
     : never
-  : never;
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -591,5 +502,5 @@ export type Enums<
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-  : never;
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never

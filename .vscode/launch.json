@@ -6,6 +6,12 @@
       "request": "launch",
       "type": "node-terminal",
       "command": "pnpm run vercel dev"
+    },
+    {
+      "name": "trigger",
+      "request": "launch",
+      "type": "node-terminal",
+      "command": "pnpm run trigger dev"
     }
   ]
 }
