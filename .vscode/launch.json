@@ -11,7 +11,7 @@
       "name": "trigger",
       "request": "launch",
       "type": "node-terminal",
-      "command": "pnpm run trigger dev"
+      "command": "pnpm run trigger dev --skip-update-check"
     }
   ]
 }

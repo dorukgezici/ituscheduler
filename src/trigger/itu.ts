@@ -164,6 +164,12 @@ export const fetchMajorCourses = task({
         })
         .select();
 
+      // Refreshed at
+      await supabase
+        .from("majors")
+        .update({ refreshed_at: new Date().toISOString() })
+        .eq("code", payload.majorCode);
+
       logger.log("Completed fetching data", {
         coursesError,
         lecturesError,
