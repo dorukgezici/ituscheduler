@@ -1,7 +1,7 @@
 ---
-import { serverRouteClient } from "@/lib/supabaseClient";
+import { serverClient } from "@/lib/supabase";
 
-const supabase = serverRouteClient(Astro.cookies);
+const supabase = serverClient(Astro);
 const { error } = await supabase.auth.signOut();
 if (!error) return Astro.redirect("/");
 ---

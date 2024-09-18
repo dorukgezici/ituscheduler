@@ -1,9 +1,9 @@
 ---
 import Menu from "@/components/Menu";
-import { serverComponentClient } from "@/lib/supabaseClient";
+import { serverClient } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
-const supabase = serverComponentClient(Astro.cookies);
+const supabase = serverClient(Astro);
 const {
   data: { user },
 } = await supabase.auth.getUser();

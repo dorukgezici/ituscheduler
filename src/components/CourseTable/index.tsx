@@ -1,25 +1,42 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import useCourses from "@/hooks/useCourses";
-import { clientComponentClient } from "@/lib/supabaseClient";
+import { browserClient } from "@/lib/supabase";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store";
 import type { Tables, Views } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
+import type { Session } from "@supabase/supabase-js";
 import { useState } from "react";
-import type { Session } from "supabase-auth-helpers-astro";
 
 type Props = {
   session: Session | null;
   myCourses: Tables<"user_courses">[] | null;
   majors: Tables<"majors">[] | { code: string }[] | null;
-  courseCodes: Views<"course_codes">[] | { code: string; major_code: string }[] | null;
+  courseCodes:
+    | Views<"course_codes">[]
+    | { code: string; major_code: string }[]
+    | null;
   courses: Tables<"courses">[] | null;
   selectedMajor: { refreshed_at: string | null } | null;
 };
 
 export default function CourseTable(props: Props) {
   type Course = Exclude<typeof props.courses, null>[number];
-  const supabase = clientComponentClient();
+  const supabase = browserClient();
 
   const major = useStore($selectedMajor);
   const courseCode = useStore($selectedCourseCode);
@@ -28,12 +45,24 @@ export default function CourseTable(props: Props) {
   const { data: courses } = useCourses(major, courseCode, day);
 
   const [myCourses, setMyCourses] = useState(props.myCourses);
-  const toggleMyCourse = async (checked: boolean | "indeterminate", course: Course) => {
+  const toggleMyCourse = async (
+    checked: boolean | "indeterminate",
+    course: Course,
+  ) => {
     const userId = props.session!.user.id;
 
     if (!checked) {
-      const { error } = await supabase.from("user_courses").delete().eq("course_crn", course.crn).eq("user_id", userId);
-      if (!error) setMyCourses(myCourses!.filter((c) => c.course_crn != course.crn || c.user_id != userId));
+      const { error } = await supabase
+        .from("user_courses")
+        .delete()
+        .eq("course_crn", course.crn)
+        .eq("user_id", userId);
+      if (!error)
+        setMyCourses(
+          myCourses!.filter(
+            (c) => c.course_crn != course.crn || c.user_id != userId,
+          ),
+        );
       else alert(error);
     } else {
       const { data, error } = await supabase
@@ -83,7 +112,7 @@ export default function CourseTable(props: Props) {
             <TableCell>{course.teaching_method}</TableCell>
             <TableCell>{course.instructor}</TableCell>
             <TableCell>
-              {course.lectures.map((lecture) => (
+              {course.lectures.map((lecture: any) => (
                 <span key={lecture.id}>
                   {lecture.building}
                   <br />
@@ -91,7 +120,7 @@ export default function CourseTable(props: Props) {
               ))}
             </TableCell>
             <TableCell>
-              {course.lectures.map((lecture) => (
+              {course.lectures.map((lecture: any) => (
                 <span key={lecture.id}>
                   {lecture.day}
                   <br />
@@ -99,7 +128,7 @@ export default function CourseTable(props: Props) {
               ))}
             </TableCell>
             <TableCell>
-              {course.lectures.map((lecture) => (
+              {course.lectures.map((lecture: any) => (
                 <span key={lecture.id}>
                   {lecture.time_start}/{lecture.time_end}
                   <br />
@@ -107,7 +136,7 @@ export default function CourseTable(props: Props) {
               ))}
             </TableCell>
             <TableCell>
-              {course.lectures.map((lecture) => (
+              {course.lectures.map((lecture: any) => (
                 <span key={lecture.id}>
                   {lecture.room}
                   <br />
@@ -117,9 +146,22 @@ export default function CourseTable(props: Props) {
             <TableCell>
               {course.enrolled}/{course.capacity}
             </TableCell>
-            <TableCell>{course.major_restriction}</TableCell>
+            <TableCell>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="line-clamp-5">
+                    {course.major_restriction}
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-screen-sm">
+                    {course.major_restriction}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </TableCell>
             <TableCell>{course.prerequisites}</TableCell>
-            <TableCell className="text-right">{course.class_restriction}</TableCell>
+            <TableCell className="text-right">
+              {course.class_restriction}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

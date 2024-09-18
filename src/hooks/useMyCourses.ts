@@ -1,9 +1,9 @@
-import { queryClient } from "@/lib/queryClient";
-import { clientComponentClient } from "@/lib/supabaseClient";
+import { queryClient } from "@/lib/reactQuery";
+import { browserClient } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useMyCourses(userId?: string) {
-  const supabase = clientComponentClient();
+  const supabase = browserClient();
 
   return useQuery(
     {
@@ -12,7 +12,9 @@ export default function useMyCourses(userId?: string) {
         if (!userId) throw new Error("`userId` not provided");
         let query = supabase
           .from("user_courses")
-          .select("course_crn, courses(code,title,instructor,enrolled,capacity,lectures!fk_courses_lectures(*))")
+          .select(
+            "course_crn, courses(code,title,instructor,enrolled,capacity,lectures!fk_courses_lectures(*))",
+          )
           .eq("user_id", userId)
           .order("course_crn");
         const { data, error } = await query;
@@ -22,6 +24,6 @@ export default function useMyCourses(userId?: string) {
       placeholderData: (prev) => prev,
       staleTime: 1000 * 60,
     },
-    queryClient
+    queryClient,
   );
 }

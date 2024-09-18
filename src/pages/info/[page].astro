@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Layout from "@/layouts/Layout.astro";
 import { dateAgo } from "@/lib/dayjs";
-import { serverComponentClient } from "@/lib/supabaseClient";
+import { serverClient } from "@/lib/supabase";
 
 export function getStaticPaths() {
   return [{ params: { page: "1" } }, { params: { page: "2" } }, { params: { page: "3" } }, { params: { page: "4" } }];
@@ -12,7 +12,7 @@ export function getStaticPaths() {
 const { page: pageStr } = Astro.params;
 const page = Math.max(1, parseInt(pageStr ?? "1"));
 
-const supabase = serverComponentClient(Astro.cookies);
+const supabase = serverClient(Astro);
 
 const { data: majors } = await supabase
   .from("majors")

@@ -1,7 +1,7 @@
 <div align="center">
     <h1 align="center">ITU Scheduler</h1>
 	<p align="center">Create your ITU course schedules in fashion with up-to-date & detailed information.</p>
-	<p align="center"><b>Tech Stack:</b> Astro, React, Supabase, Go &emsp; <b>UI:</b> Tailwind CSS, shadcn/ui</p>
+	<p align="center"><b>Tech Stack:</b> Astro, React, Supabase &emsp; <b>UI:</b> Tailwind CSS, shadcn/ui</p>
 </div>
 
 <p align="center">
@@ -21,13 +21,6 @@ Inside of your Astro project, you'll see the following folders and files:
 /
 ├── public/
 │   └── favicon.ico
-├── admin/  # Go admin package (to be used by Vercel Go runtime functions)
-│   ├── templates/
-│   ├── go.mod  # Go module for the admin package
-│   ├── handlers.go
-│   └── scrapers.go  # Scrapers to get ITU course data
-├── api/  # Vercel Go runtime serverless functions
-│   └── index.go
 ├── src/
 │   ├── components/
 │   │   └── Card.astro
@@ -38,7 +31,6 @@ Inside of your Astro project, you'll see the following folders and files:
 ├── supabase/
 │   └── migrations/  # Supabase migrations
 ├── components.json  # shadcn config
-├── go.mod  # Go module for `./api`
 └── package.json
 ```
 

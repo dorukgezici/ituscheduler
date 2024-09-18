@@ -1,9 +1,9 @@
-import { queryClient } from "@/lib/queryClient";
-import { clientComponentClient } from "@/lib/supabaseClient";
+import { queryClient } from "@/lib/reactQuery";
+import { browserClient } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useScheduleCourses(scheduleId?: string) {
-  const supabase = clientComponentClient();
+  const supabase = browserClient();
 
   return useQuery(
     {
@@ -21,6 +21,6 @@ export default function useScheduleCourses(scheduleId?: string) {
       placeholderData: (prev) => prev,
       staleTime: 1000 * 60,
     },
-    queryClient
+    queryClient,
   );
 }

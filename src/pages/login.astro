@@ -1,9 +1,9 @@
 ---
 import AuthCard from "@/components/AuthCard";
 import Layout from "@/layouts/Layout.astro";
-import { serverComponentClient } from "@/lib/supabaseClient";
+import { serverClient } from "@/lib/supabase";
 
-const supabase = serverComponentClient(Astro.cookies);
+const supabase = serverClient(Astro);
 const {
   data: { session },
 } = await supabase.auth.getSession();

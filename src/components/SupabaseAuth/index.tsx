@@ -1,10 +1,10 @@
-import { clientComponentClient } from "@/lib/supabaseClient";
+import { browserClient } from "@/lib/supabase";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useEffect } from "react";
 
 export default function SupabaseAuth({ site }: { site?: URL }) {
-  const supabase = clientComponentClient();
+  const supabase = browserClient();
 
   useEffect(() => {
     const {

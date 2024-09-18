@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import useScheduleCourses from "@/hooks/useScheduleCourses";
-import { clientComponentClient } from "@/lib/supabaseClient";
+import { browserClient } from "@/lib/supabase";
 import { $selectedSchedule } from "@/store";
 import { useStore } from "@nanostores/react";
 import { ChevronsUpDown, X } from "lucide-react";
@@ -19,7 +23,9 @@ export default function ScheduleCourses() {
       <div className="flex flex-wrap items-center justify-between space-x-4 px-4">
         <CollapsibleTrigger asChild>
           <Button variant="ghost">
-            <h4 className="text-sm font-semibold">Courses of the selected schedule</h4>
+            <h4 className="text-sm font-semibold">
+              Courses of the selected schedule
+            </h4>
             <ChevronsUpDown className="h-4 w-4 ml-2" />
             <span className="sr-only">Toggle</span>
           </Button>
@@ -28,12 +34,12 @@ export default function ScheduleCourses() {
           {data?.map(({ courses: course }) => (
             <li key={course?.crn} className="list-group-item">
               {`${course?.crn} | ${course?.code} | ${course?.title} | ${course?.instructor} | ${course?.lectures.map(
-                (l) => `${l.day} ${l.time} | `
+                (l) => `${l.day} ${l.time} | `,
               )}${course?.enrolled}/${course?.capacity} `}
               <Button
                 variant="ghost"
                 onClick={async () => {
-                  const supabase = clientComponentClient();
+                  const supabase = browserClient();
 
                   if (!selectedSchedule || !course?.crn) return;
                   const { error } = await supabase

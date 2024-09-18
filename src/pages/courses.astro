@@ -2,10 +2,10 @@
 import CourseFilter from "@/components/CourseFilter";
 import CourseTable from "@/components/CourseTable";
 import Layout from "@/layouts/Layout.astro";
-import { serverComponentClient } from "@/lib/supabaseClient";
+import { serverClient } from "@/lib/supabase";
 import { $selectedMajor } from "@/store";
 
-const supabase = serverComponentClient(Astro.cookies);
+const supabase = serverClient(Astro);
 const {
   data: { session },
 } = await supabase.auth.getSession();
