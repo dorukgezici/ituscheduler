@@ -1,11 +1,12 @@
 name: Deploy to Trigger.dev (prod)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - "trigger/**"
+      - "src/trigger/**"
 
 jobs:
   deploy:
