@@ -6,18 +6,16 @@ import type {
 } from "@/types/supabase";
 import { createClient } from "@supabase/supabase-js";
 import { logger, schedules, task } from "@trigger.dev/sdk/v3";
+import { SIS_TOKEN, SUPABASE_ANON_KEY, SUPABASE_URL } from "./config";
 import { splitTimeStr } from "./utils";
 
 const createSupabaseClient = () =>
-  createClient<Database>(
-    process.env.PUBLIC_SUPABASE_URL ?? "TEST",
-    process.env.PUBLIC_SUPABASE_ANON_KEY ?? "TEST",
-  );
+  createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export const fetchMajors = schedules.task({
   id: "fetch-majors",
-  // every hour
-  cron: "0 * * * *",
+  // every day at 6:00 AM
+  cron: "0 6 * * *",
   run: async (payload, { ctx }) => {
     const supabase = createSupabaseClient();
 
@@ -65,6 +63,59 @@ export const fetchMajors = schedules.task({
   },
 });
 
+export const fetchAllCourses = schedules.task({
+  id: "fetch-all-courses",
+  // At minute 30 past every 3rd hour from 7 through 19
+  // https://crontab.guru/#30_7-19/3_*_*_*
+  cron: "30 7-19/3 * * *",
+  run: async (payload) => {
+    const supabase = createSupabaseClient();
+
+    // Format the timestamp using the timezone from the payload
+    const formatted = payload.timestamp.toLocaleString("en-US", {
+      timeZone: payload.timezone,
+    });
+    logger.log("Starting to fetch data...", { payload, formatted });
+
+    const majors = (await supabase.from("majors").select()).data;
+    if (!majors) {
+      logger.error("No majors found");
+      return;
+    }
+
+    const majors1 = majors.slice(0, 50);
+    const majors2 = majors.slice(50, 100);
+    const majors3 = majors.slice(100);
+
+    await fetchMajorCourses.batchTriggerAndWait(
+      majors1.map((major) => ({
+        payload: {
+          majorId: `${major.id || ""}`,
+          majorCode: major.code,
+        },
+      })),
+    );
+
+    await fetchMajorCourses.batchTriggerAndWait(
+      majors2.map((major) => ({
+        payload: {
+          majorId: `${major.id || ""}`,
+          majorCode: major.code,
+        },
+      })),
+    );
+
+    await fetchMajorCourses.batchTriggerAndWait(
+      majors3.map((major) => ({
+        payload: {
+          majorId: `${major.id || ""}`,
+          majorCode: major.code,
+        },
+      })),
+    );
+  },
+});
+
 export const fetchMajorCourses = task({
   id: "fetch-major-courses",
   run: async (payload: { majorId: string; majorCode: string }) => {
@@ -74,8 +125,7 @@ export const fetchMajorCourses = task({
     const query = new URLSearchParams({
       programSeviyeTipiAnahtari: "LS",
       dersBransKoduId: payload.majorId,
-      __RequestVerificationToken:
-        "CfDJ8AdSyj6QpTlAlSo6HeePPNmpKx6G2Ai0X_XaBBYSwz_xTBP7tjSOnObEEA0CDmqL-WQ_GYAxME017AxSMPVLd6WhlVgnDeq7qUeOF-fkEMDtx-LiK33PAcWza3KRkDo2mjqQZLwDbjeSUK1nVLORZeM",
+      __RequestVerificationToken: SIS_TOKEN,
     }).toString();
 
     try {
@@ -86,33 +136,6 @@ export const fetchMajorCourses = task({
 
       if (!response.ok)
         throw new Error(`${response.status} ${response.statusText}`);
-
-      //   {
-      //     "dersTanimiId": 25122,
-      //     "akademikDonemKodu": "202510",
-      //     "crn": "13547",
-      //     "dersKodu": "BLG 210E",
-      //     "dersBransKoduId": 3,
-      //     "dilKodu": "en-us",
-      //     "programSeviyeTipi": "lisans",
-      //     "dersAdi": "Engineering Mathematics",
-      //     "ogretimYontemi": "Fiziksel (Yüz yüze)",
-      //     "adSoyad": "Mehmet Akif Yazıcı",
-      //     "mekanAdi": "-- --",
-      //     "gunAdiTR": "Perşembe Cuma",
-      //     "gunAdiEN": "Thursday Friday",
-      //     "baslangicSaati": "15:30/17:29 15:30/17:29",
-      //     "bitisSaati": "",
-      //     "webdeGoster": true,
-      //     "binaKodu": "BBB BBB",
-      //     "kontenjan": 60,
-      //     "ogrenciSayisi": 0,
-      //     "programSeviyeTipiId": 2,
-      //     "rezervasyon": "-",
-      //     "sinifProgram": "BLG_LS, BLGE_LS",
-      //     "onSart": "Var",
-      //     "sinifOnsart": "-"
-      // }
 
       // Parse the response JSON
       const data: any[] = (await response.json()).dersProgramList;
@@ -184,57 +207,5 @@ export const fetchMajorCourses = task({
       logger.error("Error fetching data", { error });
       throw error;
     }
-  },
-});
-
-export const fetchAllCourses = schedules.task({
-  id: "fetch-all-courses",
-  // every hour
-  cron: "0 * * * *",
-  run: async (payload, { ctx }) => {
-    const supabase = createSupabaseClient();
-
-    // Format the timestamp using the timezone from the payload
-    const formatted = payload.timestamp.toLocaleString("en-US", {
-      timeZone: payload.timezone,
-    });
-    logger.log("Starting to fetch data...", { payload, formatted });
-
-    const majors = (await supabase.from("majors").select()).data;
-    if (!majors) {
-      logger.error("No majors found");
-      return;
-    }
-
-    const majors1 = majors.slice(0, 50);
-    const majors2 = majors.slice(50, 100);
-    const majors3 = majors.slice(100);
-
-    await fetchMajorCourses.batchTriggerAndWait(
-      majors1.map((major) => ({
-        payload: {
-          majorId: `${major.id || ""}`,
-          majorCode: major.code,
-        },
-      })),
-    );
-
-    await fetchMajorCourses.batchTriggerAndWait(
-      majors2.map((major) => ({
-        payload: {
-          majorId: `${major.id || ""}`,
-          majorCode: major.code,
-        },
-      })),
-    );
-
-    await fetchMajorCourses.batchTriggerAndWait(
-      majors3.map((major) => ({
-        payload: {
-          majorId: `${major.id || ""}`,
-          majorCode: major.code,
-        },
-      })),
-    );
   },
 });
