@@ -66,7 +66,7 @@ export const fetchMajors = schedules.task({
 });
 
 export const fetchMajorCourses = task({
-  id: "fetch-course",
+  id: "fetch-major-courses",
   run: async (payload: { majorId: string; majorCode: string }) => {
     const supabase = createSupabaseClient();
 
@@ -187,8 +187,8 @@ export const fetchMajorCourses = task({
   },
 });
 
-export const fetchCourses = schedules.task({
-  id: "fetch-courses",
+export const fetchAllCourses = schedules.task({
+  id: "fetch-all-courses",
   // every hour
   cron: "0 * * * *",
   run: async (payload, { ctx }) => {
