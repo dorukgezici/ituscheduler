@@ -1,4 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import useScheduleCourses from "@/hooks/useScheduleCourses";
 import { hourSlots } from "@/lib/globals";
 import { $selectedSchedule } from "@/store";
@@ -59,11 +66,26 @@ export default function ScheduleTable({ schedules }: Props) {
         {hourSlots.map((slot) => (
           <TableRow key={slot.time}>
             <TableCell className="font-medium border-r">{slot.time}</TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${1}`} className="text-center border-r"></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${2}`} className="text-center border-r"></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${3}`} className="text-center border-r"></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${4}`} className="text-center border-r"></TableCell>
-            <TableCell id={`${slot.timeStart}-${slot.timeEnd}-${5}`} className="text-right"></TableCell>
+            <TableCell
+              id={`${slot.timeStart}-${slot.timeEnd}-${1}`}
+              className="text-center border-r"
+            ></TableCell>
+            <TableCell
+              id={`${slot.timeStart}-${slot.timeEnd}-${2}`}
+              className="text-center border-r"
+            ></TableCell>
+            <TableCell
+              id={`${slot.timeStart}-${slot.timeEnd}-${3}`}
+              className="text-center border-r"
+            ></TableCell>
+            <TableCell
+              id={`${slot.timeStart}-${slot.timeEnd}-${4}`}
+              className="text-center border-r"
+            ></TableCell>
+            <TableCell
+              id={`${slot.timeStart}-${slot.timeEnd}-${5}`}
+              className="text-right"
+            ></TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -86,15 +108,15 @@ function fillSlots(ids: string[], day: string | null, text?: string | null) {
   for (let Id in ids) {
     let id = ids[Id];
 
-    if (day === "Pazartesi") {
+    if (day === "Monday") {
       id += "-" + "1";
-    } else if (day === "Salı") {
+    } else if (day === "Tuesday") {
       id += "-" + "2";
-    } else if (day === "Çarşamba") {
+    } else if (day === "Wednesday") {
       id += "-" + "3";
-    } else if (day === "Perşembe") {
+    } else if (day === "Thursday") {
       id += "-" + "4";
-    } else if (day === "Cuma") {
+    } else if (day === "Friday") {
       id += "-" + "5";
     }
 

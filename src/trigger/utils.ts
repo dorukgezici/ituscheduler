@@ -2,7 +2,7 @@ export function splitTimeStr(timeStr: string): [number, number] {
   let timeStart = 0;
   let timeEnd = 0;
 
-  const timeStrs = timeStr.split("/");
+  const timeStrs = timeStr.replaceAll(":", "").split("/");
 
   if (timeStrs.length > 0) {
     const timeInt = parseInt(timeStrs[0], 10);

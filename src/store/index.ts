@@ -1,5 +1,5 @@
 import { browserClient } from "@/lib/supabase";
-import { atom, onMount, onSet, task } from "nanostores";
+import { atom, onMount, onSet } from "nanostores";
 
 // courses
 export const $selectedMajor = atom<string>("BLG");
@@ -63,11 +63,11 @@ onSet($selectedSchedule, async ({ newValue }) => {
   }
 });
 
-export const deleteSchedule = task(async () => {
+export const deleteSchedule = async (scheduleId: number) => {
   const supabase = browserClient();
   const { error } = await supabase
     .from("schedules")
     .delete()
-    .eq("id", $selectedSchedule.get());
+    .eq("id", scheduleId);
   if (!error) $selectedSchedule.set(undefined);
-});
+};

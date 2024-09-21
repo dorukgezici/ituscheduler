@@ -24,7 +24,7 @@ export default function SupabaseAuth({ site }: { site?: URL }) {
       socialLayout="horizontal"
       providers={["twitter", "github"]}
       onlyThirdPartyProviders
-      redirectTo={site && `${site}/login`}
+      redirectTo={site && `${site.href}/login`}
     />
   );
 }

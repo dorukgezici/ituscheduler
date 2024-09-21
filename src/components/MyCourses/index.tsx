@@ -1,5 +1,4 @@
-import type { Option } from "@/components/MultiSelect";
-import MultiSelect from "@/components/MultiSelect";
+import { MultiSelect } from "@/components/multi-select";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,11 +14,8 @@ import type { User } from "@supabase/supabase-js";
 import { useState } from "react";
 
 export default function MyCourses({ user }: { user: User }) {
-  const [selected, setSelected] = useState<Option[]>([]);
+  const [selectedCRNs, setSelectedCRNs] = useState<string[]>([]);
   const { data: myCourses } = useMyCourses(user.id);
-
-  const filterSelectedOptions = () =>
-    myCourses?.filter((c) => !selected.some((s) => s.value === c.course_crn));
 
   return (
     <Card className="w-full flex flex-col text-center">
@@ -30,16 +26,16 @@ export default function MyCourses({ user }: { user: User }) {
       <CardContent>
         <MultiSelect
           placeholder="Select courses..."
-          selected={selected}
-          setSelected={setSelected}
-          options={filterSelectedOptions()?.map(
-            ({ course_crn, courses: course }) => ({
-              label: `${course_crn} | ${course?.code} | ${course?.title} | ${course?.instructor} | ${course?.lectures.map(
+          defaultValue={selectedCRNs}
+          onValueChange={setSelectedCRNs}
+          options={
+            myCourses?.map(({ course_crn, courses: course }) => ({
+              value: course_crn as string,
+              label: `${course_crn} | ${course?.code} | ${course?.title} | ${course?.instructor} | ${course?.lectures?.map(
                 (l) => `${l.day} ${l.time} | `,
-              )}${course?.enrolled}/${course?.capacity} `,
-              value: course_crn,
-            }),
-          )}
+              )}${course?.enrolled}/${course?.capacity}`,
+            })) ?? []
+          }
         />
       </CardContent>
 
@@ -58,9 +54,9 @@ export default function MyCourses({ user }: { user: User }) {
               if (data && !error) {
                 $selectedSchedule.set(`${data.id}`);
 
-                const selectedCourses = selected.map((s) => ({
+                const selectedCourses = selectedCRNs.map((crn) => ({
                   schedule_id: data.id,
-                  course_crn: s.value,
+                  course_crn: crn,
                 }));
                 await supabase.from("schedule_courses").insert(selectedCourses);
 
@@ -80,9 +76,9 @@ export default function MyCourses({ user }: { user: User }) {
               const selectedScheduleId = parseInt(
                 $selectedSchedule.get() ?? "0",
               );
-              const selectedCourses = selected.map((s) => ({
+              const selectedCourses = selectedCRNs.map((crn) => ({
                 schedule_id: selectedScheduleId,
-                course_crn: s.value,
+                course_crn: crn,
               }));
               const { error } = await supabase
                 .from("schedule_courses")

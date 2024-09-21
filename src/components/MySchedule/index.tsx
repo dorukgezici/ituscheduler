@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { $selectedSchedule, deleteSchedule } from "@/store";
 import type { Tables } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
@@ -15,7 +22,10 @@ export default function MySchedule({ schedules }: Props) {
   return (
     <div className="flex items-center justify-start gap-2 py-1">
       <Label className="font-semibold">My Schedules:</Label>
-      <Select value={schedule} onValueChange={(value) => $selectedSchedule.set(value)}>
+      <Select
+        value={schedule}
+        onValueChange={(value) => $selectedSchedule.set(value)}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue />
         </SelectTrigger>
@@ -34,8 +44,8 @@ export default function MySchedule({ schedules }: Props) {
         <Button
           variant="outline"
           className="ml-4"
-          onClick={() => {
-            deleteSchedule(parseInt(schedule));
+          onClick={async () => {
+            await deleteSchedule(parseInt(schedule));
             // TODO: mutate
             location.reload();
           }}
