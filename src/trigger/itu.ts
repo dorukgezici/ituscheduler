@@ -8,16 +8,19 @@ import { createClient } from "@supabase/supabase-js";
 import { logger, schedules, task } from "@trigger.dev/sdk/v3";
 import { splitTimeStr } from "./utils";
 
-const supabase = createClient<Database>(
-  process.env.PUBLIC_SUPABASE_URL!,
-  process.env.PUBLIC_SUPABASE_ANON_KEY!,
-);
+const createSupabaseClient = () =>
+  createClient<Database>(
+    process.env.PUBLIC_SUPABASE_URL ?? "TEST",
+    process.env.PUBLIC_SUPABASE_ANON_KEY ?? "TEST",
+  );
 
 export const fetchMajors = schedules.task({
   id: "fetch-majors",
   // every hour
   cron: "0 * * * *",
   run: async (payload, { ctx }) => {
+    const supabase = createSupabaseClient();
+
     // Format the timestamp using the timezone from the payload
     const formatted = payload.timestamp.toLocaleString("en-US", {
       timeZone: payload.timezone,
@@ -65,6 +68,8 @@ export const fetchMajors = schedules.task({
 export const fetchMajorCourses = task({
   id: "fetch-course",
   run: async (payload: { majorId: string; majorCode: string }) => {
+    const supabase = createSupabaseClient();
+
     const url = "https://obs.itu.edu.tr/public/DersProgram/DersProgramSearch";
     const query = new URLSearchParams({
       programSeviyeTipiAnahtari: "LS",
@@ -187,6 +192,8 @@ export const fetchCourses = schedules.task({
   // every hour
   cron: "0 * * * *",
   run: async (payload, { ctx }) => {
+    const supabase = createSupabaseClient();
+
     // Format the timestamp using the timezone from the payload
     const formatted = payload.timestamp.toLocaleString("en-US", {
       timeZone: payload.timezone,
