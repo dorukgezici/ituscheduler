@@ -55,16 +55,16 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@sentry/vite-plugin": "^2.22.6",
-    "@tanstack/react-query-devtools": "5.61.3",
-    "@trigger.dev/build": "^3.2.1",
+    "@sentry/vite-plugin": "^2.22.7",
+    "@tanstack/react-query-devtools": "5.62.15",
+    "@trigger.dev/build": "^3.3.7",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.2",
     "prettier-plugin-go-template": "^0.0.15",
-    "supabase": "^1.223.10",
+    "supabase": "^2.2.1",
     "typescript": "^5.7.2",
-    "vercel": "^39.1.1",
-    "vite": "^5.4.11"
+    "vercel": "^39.2.5",
+    "vite": "^6.0.7"
   }
 }
