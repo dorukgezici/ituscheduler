@@ -1,7 +1,7 @@
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel/serverless";
+import tailwindcss from "@tailwindcss/vite";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from "astro/config";
 import { loadEnv } from "vite";
@@ -13,9 +13,9 @@ export default defineConfig({
   site: env.PUBLIC_SITE_URL,
   output: "server",
   adapter: vercel(),
-  integrations: [tailwind({ applyBaseStyles: false }), react(), sitemap()],
+  integrations: [react(), sitemap()],
   vite: {
     build: { sourcemap: true },
-    plugins: [sentryVitePlugin({ org: "dgtech" })],
+    plugins: [tailwindcss(), sentryVitePlugin({ org: "dgtech" })],
   },
 });

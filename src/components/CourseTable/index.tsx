@@ -152,7 +152,7 @@ export default function CourseTable(props: Props) {
                   <TooltipTrigger className="line-clamp-5">
                     {course.major_restriction}
                   </TooltipTrigger>
-                  <TooltipContent className="max-w-screen-sm">
+                  <TooltipContent className="max-w-(--breakpoint-sm)">
                     {course.major_restriction}
                   </TooltipContent>
                 </Tooltip>
