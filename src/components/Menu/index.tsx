@@ -7,7 +7,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import type { User } from "supabase-auth-helpers-astro";
+import type { User } from "@supabase/supabase-js";
 
 export default function Menu({ user }: { user: User | null }) {
   return (
@@ -19,21 +19,30 @@ export default function Menu({ user }: { user: User | null }) {
             <ul className="w-40">
               <li className="text-sm hover:bg-muted/50 p-4">
                 <NavigationMenuLink asChild>
-                  <a href="https://web.itu.edu.tr/durgunor/ders.htm" target="_blank">
+                  <a
+                    href="https://web.itu.edu.tr/durgunor/ders.htm"
+                    target="_blank"
+                  >
                     Ders Seçim Rehberi
                   </a>
                 </NavigationMenuLink>
               </li>
               <li className="text-sm hover:bg-muted/50 p-4">
                 <NavigationMenuLink asChild>
-                  <a href="https://web.itu.edu.tr/durgunor/itusch.htm" target="_blank">
+                  <a
+                    href="https://web.itu.edu.tr/durgunor/itusch.htm"
+                    target="_blank"
+                  >
                     Nasıl Kullanılır?
                   </a>
                 </NavigationMenuLink>
               </li>
               <li className="text-sm hover:bg-muted/50 p-4">
                 <NavigationMenuLink asChild>
-                  <a href="https://web.itu.edu.tr/durgunor/crn.html" target="_blank">
+                  <a
+                    href="https://web.itu.edu.tr/durgunor/crn.html"
+                    target="_blank"
+                  >
                     Fill CRN Test
                   </a>
                 </NavigationMenuLink>
@@ -69,11 +78,17 @@ export default function Menu({ user }: { user: User | null }) {
 
         <NavigationMenuItem>
           {user ? (
-            <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+            <NavigationMenuLink
+              className={navigationMenuTriggerStyle()}
+              asChild
+            >
               <a href="/logout">Logout</a>
             </NavigationMenuLink>
           ) : (
-            <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+            <NavigationMenuLink
+              className={navigationMenuTriggerStyle()}
+              asChild
+            >
               <a href="/login">Login</a>
             </NavigationMenuLink>
           )}

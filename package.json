@@ -3,9 +3,13 @@
   "type": "module",
   "version": "3.1.1",
   "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "SENTRY_RELEASE=${VERCEL_GIT_COMMIT_SHA:-$(git rev-parse HEAD)} && astro build",
+    "check": "astro check",
     "sb": "supabase",
     "sb-db": "supabase db diff --schema public -f migration",
     "sb-types": "supabase gen types typescript --project-id bhaehrqidxxgforajbtn > src/types/database.types.ts",
@@ -13,6 +17,7 @@
     "trigger": "pnpm dlx trigger.dev@latest"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.1.6",
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/vercel": "^8.0.4",
@@ -63,7 +68,6 @@
     "@types/react-dom": "^19.0.3",
     "postcss": "^8.5.1",
     "prettier": "^3.4.2",
-    "prettier-plugin-go-template": "^0.0.15",
     "supabase": "^2.6.8",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.3",
