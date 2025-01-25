@@ -19,7 +19,7 @@ importers:
         version: 3.2.1
       '@astrojs/vercel':
         specifier: ^8.0.4
-        version: 8.0.4(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))(encoding@0.1.13)(react@19.0.0)(rollup@4.32.0)
+        version: 8.0.4(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))(react@19.0.0)(rollup@4.32.0)
       '@nanostores/react':
         specifier: ^0.8.4
         version: 0.8.4(nanostores@0.11.3)(react@19.0.0)
@@ -61,22 +61,22 @@ importers:
         version: 1.1.7(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@sentry/astro':
         specifier: ^8.51.0
-        version: 8.51.0(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))(encoding@0.1.13)
+        version: 8.51.0(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))
       '@sentry/browser':
         specifier: ^8.51.0
         version: 8.51.0
       '@supabase/auth-ui-react':
         specifier: ^0.4.7
-        version: 0.4.7(@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+        version: 0.4.7(@supabase/supabase-js@2.48.1)
       '@supabase/auth-ui-shared':
         specifier: ^0.1.8
-        version: 0.1.8(@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+        version: 0.1.8(@supabase/supabase-js@2.48.1)
       '@supabase/ssr':
         specifier: ^0.5.2
-        version: 0.5.2(@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+        version: 0.5.2(@supabase/supabase-js@2.48.1)
       '@supabase/supabase-js':
         specifier: ^2.48.1
-        version: 2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        version: 2.48.1
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.16(tailwindcss@4.0.0)
@@ -91,10 +91,10 @@ importers:
         version: 5.64.2(react@19.0.0)
       '@trigger.dev/sdk':
         specifier: 3.3.12
-        version: 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)(zod@3.24.1)
+        version: 3.3.12(zod@3.24.1)
       '@trigger.dev/supabase':
         specifier: 3.3.12
-        version: 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        version: 3.3.12
       astro:
         specifier: ^5.1.9
         version: 5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0)
@@ -140,7 +140,7 @@ importers:
         version: 5.64.2(@tanstack/react-query@5.64.2(react@19.0.0))(react@19.0.0)
       '@trigger.dev/build':
         specifier: 3.3.12
-        version: 3.3.12(bufferutil@4.0.8)(typescript@5.7.3)(utf-8-validate@6.0.4)
+        version: 3.3.12(typescript@5.7.3)
       '@types/node':
         specifier: ^22.10.10
         version: 22.10.10
@@ -167,7 +167,7 @@ importers:
         version: 5.7.3
       vercel:
         specifier: ^39.3.0
-        version: 39.3.0(encoding@0.1.13)(rollup@4.32.0)
+        version: 39.3.0(rollup@4.32.0)
       vite:
         specifier: ^6.0.11
         version: 6.0.11(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.7.0)
@@ -2286,10 +2286,6 @@ packages:
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
 
-  bufferutil@4.0.8:
-    resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
-    engines: {node: '>=6.14.2'}
-
   bytes@3.1.0:
     resolution: {integrity: sha512-zauLjrfCG+xvoyaqLoV8bLVXXNGC4JqlxFCutSDWA6fJrTo2ZuvLYTqZ7aHBLZSMOopbzwv8f+wZcVzfVTI2Dg==}
     engines: {node: '>= 0.8'}
@@ -2565,9 +2561,6 @@ packages:
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
-
-  encoding@0.1.13:
-    resolution: {integrity: sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==}
 
   end-of-stream@1.1.0:
     resolution: {integrity: sha512-EoulkdKF/1xa92q25PbjuDcgJ9RDHYU2Rs3SCIvs2/dSQ3BpmxneNHmA/M7fe60M3PrV7nNGTTNbkK62l6vXiQ==}
@@ -3000,10 +2993,6 @@ packages:
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
-    engines: {node: '>=0.10.0'}
-
-  iconv-lite@0.6.3:
-    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
   ignore@5.3.2:
@@ -4490,10 +4479,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  utf-8-validate@6.0.4:
-    resolution: {integrity: sha512-xu9GQDeFp+eZ6LnCywXN/zBancWvOpUMzgjLPSjy4BRHSmTelvn2E0DG0o1sTiw5hkCKBHo8rwSKncfRfv2EEQ==}
-    engines: {node: '>=6.14.2'}
-
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -4995,12 +4980,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/vercel@8.0.4(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))(encoding@0.1.13)(react@19.0.0)(rollup@4.32.0)':
+  '@astrojs/vercel@8.0.4(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))(react@19.0.0)(rollup@4.32.0)':
     dependencies:
       '@astrojs/internal-helpers': 0.4.2
       '@vercel/analytics': 1.4.1(react@19.0.0)
       '@vercel/edge': 1.2.1
-      '@vercel/nft': 0.29.0(encoding@0.1.13)(rollup@4.32.0)
+      '@vercel/nft': 0.29.0(rollup@4.32.0)
       astro: 5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0)
       esbuild: 0.24.2
       fast-glob: 3.3.3
@@ -5400,12 +5385,12 @@ snapshots:
 
   '@jsonhero/path@1.0.21': {}
 
-  '@mapbox/node-pre-gyp@2.0.0-rc.0(encoding@0.1.13)':
+  '@mapbox/node-pre-gyp@2.0.0-rc.0':
     dependencies:
       consola: 3.4.0
       detect-libc: 2.0.3
       https-proxy-agent: 7.0.6
-      node-fetch: 2.7.0(encoding@0.1.13)
+      node-fetch: 2.7.0
       nopt: 8.1.0
       semver: 7.6.3
       tar: 7.4.3
@@ -6424,12 +6409,12 @@ snapshots:
       '@sentry-internal/browser-utils': 8.51.0
       '@sentry/core': 8.51.0
 
-  '@sentry/astro@8.51.0(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))(encoding@0.1.13)':
+  '@sentry/astro@8.51.0(astro@5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))':
     dependencies:
       '@sentry/browser': 8.51.0
       '@sentry/core': 8.51.0
       '@sentry/node': 8.51.0
-      '@sentry/vite-plugin': 2.23.0(encoding@0.1.13)
+      '@sentry/vite-plugin': 2.23.0
       astro: 5.1.9(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.29.1)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0)
     transitivePeerDependencies:
       - encoding
@@ -6445,11 +6430,11 @@ snapshots:
       '@sentry-internal/replay-canvas': 8.51.0
       '@sentry/core': 8.51.0
 
-  '@sentry/bundler-plugin-core@2.23.0(encoding@0.1.13)':
+  '@sentry/bundler-plugin-core@2.23.0':
     dependencies:
       '@babel/core': 7.26.7
       '@sentry/babel-plugin-component-annotate': 2.23.0
-      '@sentry/cli': 2.39.1(encoding@0.1.13)
+      '@sentry/cli': 2.39.1
       dotenv: 16.4.7
       find-up: 5.0.0
       glob: 9.3.5
@@ -6480,10 +6465,10 @@ snapshots:
   '@sentry/cli-win32-x64@2.39.1':
     optional: true
 
-  '@sentry/cli@2.39.1(encoding@0.1.13)':
+  '@sentry/cli@2.39.1':
     dependencies:
       https-proxy-agent: 5.0.1
-      node-fetch: 2.7.0(encoding@0.1.13)
+      node-fetch: 2.7.0
       progress: 2.0.3
       proxy-from-env: 1.1.0
       which: 2.0.2
@@ -6550,9 +6535,9 @@ snapshots:
       '@opentelemetry/semantic-conventions': 1.28.0
       '@sentry/core': 8.51.0
 
-  '@sentry/vite-plugin@2.23.0(encoding@0.1.13)':
+  '@sentry/vite-plugin@2.23.0':
     dependencies:
-      '@sentry/bundler-plugin-core': 2.23.0(encoding@0.1.13)
+      '@sentry/bundler-plugin-core': 2.23.0
       unplugin: 1.0.1
     transitivePeerDependencies:
       - encoding
@@ -6605,18 +6590,18 @@ snapshots:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  '@supabase/auth-ui-react@0.4.7(@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))':
+  '@supabase/auth-ui-react@0.4.7(@supabase/supabase-js@2.48.1)':
     dependencies:
       '@stitches/core': 1.2.8
-      '@supabase/auth-ui-shared': 0.1.8(@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))
-      '@supabase/supabase-js': 2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@supabase/auth-ui-shared': 0.1.8(@supabase/supabase-js@2.48.1)
+      '@supabase/supabase-js': 2.48.1
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@supabase/auth-ui-shared@0.1.8(@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))':
+  '@supabase/auth-ui-shared@0.1.8(@supabase/supabase-js@2.48.1)':
     dependencies:
-      '@supabase/supabase-js': 2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@supabase/supabase-js': 2.48.1
 
   '@supabase/functions-js@2.4.4':
     dependencies:
@@ -6630,19 +6615,19 @@ snapshots:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  '@supabase/realtime-js@2.11.2(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@supabase/realtime-js@2.11.2':
     dependencies:
       '@supabase/node-fetch': 2.6.15
       '@types/phoenix': 1.6.6
       '@types/ws': 8.5.14
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@supabase/ssr@0.5.2(@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))':
+  '@supabase/ssr@0.5.2(@supabase/supabase-js@2.48.1)':
     dependencies:
-      '@supabase/supabase-js': 2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@supabase/supabase-js': 2.48.1
       '@types/cookie': 0.6.0
       cookie: 0.7.2
 
@@ -6650,13 +6635,13 @@ snapshots:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  '@supabase/supabase-js@2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@supabase/supabase-js@2.48.1':
     dependencies:
       '@supabase/auth-js': 2.67.3
       '@supabase/functions-js': 2.4.4
       '@supabase/node-fetch': 2.6.15
       '@supabase/postgrest-js': 1.18.1
-      '@supabase/realtime-js': 2.11.2(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@supabase/realtime-js': 2.11.2
       '@supabase/storage-js': 2.7.1
     transitivePeerDependencies:
       - bufferutil
@@ -6757,9 +6742,9 @@ snapshots:
 
   '@tootallnate/once@2.0.0': {}
 
-  '@trigger.dev/build@3.3.12(bufferutil@4.0.8)(typescript@5.7.3)(utf-8-validate@6.0.4)':
+  '@trigger.dev/build@3.3.12(typescript@5.7.3)':
     dependencies:
-      '@trigger.dev/core': 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@trigger.dev/core': 3.3.12
       pkg-types: 1.3.1
       tinyglobby: 0.2.10
       tsconfck: 3.1.3(typescript@5.7.3)
@@ -6769,7 +6754,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@trigger.dev/core@3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@trigger.dev/core@3.3.12':
     dependencies:
       '@electric-sql/client': 1.0.0-beta.1
       '@google-cloud/precise-date': 4.0.0
@@ -6791,7 +6776,7 @@ snapshots:
       humanize-duration: 3.32.1
       jose: 5.9.6
       nanoid: 3.3.8
-      socket.io-client: 4.7.5(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      socket.io-client: 4.7.5
       superjson: 2.2.2
       zod: 3.23.8
       zod-error: 1.5.0
@@ -6801,21 +6786,21 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/integration-kit@3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@trigger.dev/integration-kit@3.3.12':
     dependencies:
-      '@trigger.dev/core': 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@trigger.dev/core': 3.3.12
       uuid: 9.0.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/sdk@3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)(zod@3.22.3)':
+  '@trigger.dev/sdk@3.3.12(zod@3.22.3)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.52.1
       '@opentelemetry/semantic-conventions': 1.25.1
-      '@trigger.dev/core': 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@trigger.dev/core': 3.3.12
       chalk: 5.4.1
       cronstrue: 2.53.0
       debug: 4.4.0
@@ -6824,19 +6809,19 @@ snapshots:
       terminal-link: 3.0.0
       ulid: 2.3.0
       uuid: 9.0.1
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      ws: 8.18.0
       zod: 3.22.3
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/sdk@3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)(zod@3.24.1)':
+  '@trigger.dev/sdk@3.3.12(zod@3.24.1)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.52.1
       '@opentelemetry/semantic-conventions': 1.25.1
-      '@trigger.dev/core': 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@trigger.dev/core': 3.3.12
       chalk: 5.4.1
       cronstrue: 2.53.0
       debug: 4.4.0
@@ -6845,18 +6830,18 @@ snapshots:
       terminal-link: 3.0.0
       ulid: 2.3.0
       uuid: 9.0.1
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      ws: 8.18.0
       zod: 3.24.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/supabase@3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@trigger.dev/supabase@3.3.12':
     dependencies:
-      '@supabase/supabase-js': 2.48.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
-      '@trigger.dev/integration-kit': 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)
-      '@trigger.dev/sdk': 3.3.12(bufferutil@4.0.8)(utf-8-validate@6.0.4)(zod@3.22.3)
+      '@supabase/supabase-js': 2.48.1
+      '@trigger.dev/integration-kit': 3.3.12
+      '@trigger.dev/sdk': 3.3.12(zod@3.22.3)
       supabase-management-js: 1.0.0
       zod: 3.22.3
     transitivePeerDependencies:
@@ -6988,7 +6973,7 @@ snapshots:
 
   '@vercel/error-utils@2.0.3': {}
 
-  '@vercel/fun@1.1.2(encoding@0.1.13)':
+  '@vercel/fun@1.1.2':
     dependencies:
       '@tootallnate/once': 2.0.0
       async-listen: 1.2.0
@@ -6998,7 +6983,7 @@ snapshots:
       generic-pool: 3.4.2
       micro: 9.3.5-canary.3
       ms: 2.1.1
-      node-fetch: 2.6.7(encoding@0.1.13)
+      node-fetch: 2.6.7
       path-match: 1.2.4
       promisepipe: 3.0.0
       semver: 7.5.4
@@ -7034,17 +7019,17 @@ snapshots:
       '@vercel/static-config': 3.0.0
       ts-morph: 12.0.0
 
-  '@vercel/next@4.4.2(encoding@0.1.13)(rollup@4.32.0)':
+  '@vercel/next@4.4.2(rollup@4.32.0)':
     dependencies:
-      '@vercel/nft': 0.27.10(encoding@0.1.13)(rollup@4.32.0)
+      '@vercel/nft': 0.27.10(rollup@4.32.0)
     transitivePeerDependencies:
       - encoding
       - rollup
       - supports-color
 
-  '@vercel/nft@0.27.10(encoding@0.1.13)(rollup@4.32.0)':
+  '@vercel/nft@0.27.10(rollup@4.32.0)':
     dependencies:
-      '@mapbox/node-pre-gyp': 2.0.0-rc.0(encoding@0.1.13)
+      '@mapbox/node-pre-gyp': 2.0.0-rc.0
       '@rollup/pluginutils': 5.1.4(rollup@4.32.0)
       acorn: 8.14.0
       acorn-import-attributes: 1.9.5(acorn@8.14.0)
@@ -7061,9 +7046,9 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vercel/nft@0.29.0(encoding@0.1.13)(rollup@4.32.0)':
+  '@vercel/nft@0.29.0(rollup@4.32.0)':
     dependencies:
-      '@mapbox/node-pre-gyp': 2.0.0-rc.0(encoding@0.1.13)
+      '@mapbox/node-pre-gyp': 2.0.0-rc.0
       '@rollup/pluginutils': 5.1.4(rollup@4.32.0)
       acorn: 8.14.0
       acorn-import-attributes: 1.9.5(acorn@8.14.0)
@@ -7080,7 +7065,7 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vercel/node@5.0.2(encoding@0.1.13)(rollup@4.32.0)':
+  '@vercel/node@5.0.2(rollup@4.32.0)':
     dependencies:
       '@edge-runtime/node-utils': 2.3.0
       '@edge-runtime/primitives': 4.1.0
@@ -7088,7 +7073,7 @@ snapshots:
       '@types/node': 16.18.11
       '@vercel/build-utils': 9.0.1
       '@vercel/error-utils': 2.0.3
-      '@vercel/nft': 0.27.10(encoding@0.1.13)(rollup@4.32.0)
+      '@vercel/nft': 0.27.10(rollup@4.32.0)
       '@vercel/static-config': 3.0.0
       async-listen: 3.0.0
       cjs-module-lexer: 1.2.3
@@ -7096,7 +7081,7 @@ snapshots:
       es-module-lexer: 1.4.1
       esbuild: 0.14.47
       etag: 1.8.1
-      node-fetch: 2.6.9(encoding@0.1.13)
+      node-fetch: 2.6.9
       path-to-regexp: 6.2.1
       ts-morph: 12.0.0
       ts-node: 10.9.1(@types/node@16.18.11)(typescript@4.9.5)
@@ -7111,9 +7096,9 @@ snapshots:
 
   '@vercel/python@4.7.0': {}
 
-  '@vercel/redwood@2.1.12(encoding@0.1.13)(rollup@4.32.0)':
+  '@vercel/redwood@2.1.12(rollup@4.32.0)':
     dependencies:
-      '@vercel/nft': 0.27.10(encoding@0.1.13)(rollup@4.32.0)
+      '@vercel/nft': 0.27.10(rollup@4.32.0)
       '@vercel/routing-utils': 5.0.0
       '@vercel/static-config': 3.0.0
       semver: 6.3.1
@@ -7123,10 +7108,10 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vercel/remix-builder@5.0.2(encoding@0.1.13)(rollup@4.32.0)':
+  '@vercel/remix-builder@5.0.2(rollup@4.32.0)':
     dependencies:
       '@vercel/error-utils': 2.0.3
-      '@vercel/nft': 0.27.10(encoding@0.1.13)(rollup@4.32.0)
+      '@vercel/nft': 0.27.10(rollup@4.32.0)
       '@vercel/static-config': 3.0.0
       ts-morph: 12.0.0
     transitivePeerDependencies:
@@ -7463,11 +7448,6 @@ snapshots:
 
   buffer-crc32@0.2.13: {}
 
-  bufferutil@4.0.8:
-    dependencies:
-      node-gyp-build: 4.8.4
-    optional: true
-
   bytes@3.1.0: {}
 
   camelcase@8.0.0: {}
@@ -7687,11 +7667,6 @@ snapshots:
 
   emoji-regex@9.2.2: {}
 
-  encoding@0.1.13:
-    dependencies:
-      iconv-lite: 0.6.3
-    optional: true
-
   end-of-stream@1.1.0:
     dependencies:
       once: 1.3.3
@@ -7700,12 +7675,12 @@ snapshots:
     dependencies:
       once: 1.4.0
 
-  engine.io-client@6.5.4(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+  engine.io-client@6.5.4:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.3.7
       engine.io-parser: 5.2.3
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      ws: 8.17.1
       xmlhttprequest-ssl: 2.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -8188,11 +8163,6 @@ snapshots:
   iconv-lite@0.4.24:
     dependencies:
       safer-buffer: 2.1.2
-
-  iconv-lite@0.6.3:
-    dependencies:
-      safer-buffer: 2.1.2
-    optional: true
 
   ignore@5.3.2: {}
 
@@ -8833,23 +8803,17 @@ snapshots:
 
   node-fetch-native@1.6.6: {}
 
-  node-fetch@2.6.7(encoding@0.1.13):
+  node-fetch@2.6.7:
     dependencies:
       whatwg-url: 5.0.0
-    optionalDependencies:
-      encoding: 0.1.13
 
-  node-fetch@2.6.9(encoding@0.1.13):
+  node-fetch@2.6.9:
     dependencies:
       whatwg-url: 5.0.0
-    optionalDependencies:
-      encoding: 0.1.13
 
-  node-fetch@2.7.0(encoding@0.1.13):
+  node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
-    optionalDependencies:
-      encoding: 0.1.13
 
   node-fetch@3.3.2:
     dependencies:
@@ -9436,11 +9400,11 @@ snapshots:
 
   slug@6.1.0: {}
 
-  socket.io-client@4.7.5(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+  socket.io-client@4.7.5:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.3.7
-      engine.io-client: 6.5.4(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      engine.io-client: 6.5.4
       socket.io-parser: 4.2.4
     transitivePeerDependencies:
       - bufferutil
@@ -9782,11 +9746,6 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  utf-8-validate@6.0.4:
-    dependencies:
-      node-gyp-build: 4.8.4
-    optional: true
-
   util-deprecate@1.0.2: {}
 
   uuid@3.3.2: {}
@@ -9795,17 +9754,17 @@ snapshots:
 
   v8-compile-cache-lib@3.0.1: {}
 
-  vercel@39.3.0(encoding@0.1.13)(rollup@4.32.0):
+  vercel@39.3.0(rollup@4.32.0):
     dependencies:
       '@vercel/build-utils': 9.0.1
-      '@vercel/fun': 1.1.2(encoding@0.1.13)
+      '@vercel/fun': 1.1.2
       '@vercel/go': 3.2.1
       '@vercel/hydrogen': 1.0.11
-      '@vercel/next': 4.4.2(encoding@0.1.13)(rollup@4.32.0)
-      '@vercel/node': 5.0.2(encoding@0.1.13)(rollup@4.32.0)
+      '@vercel/next': 4.4.2(rollup@4.32.0)
+      '@vercel/node': 5.0.2(rollup@4.32.0)
       '@vercel/python': 4.7.0
-      '@vercel/redwood': 2.1.12(encoding@0.1.13)(rollup@4.32.0)
-      '@vercel/remix-builder': 5.0.2(encoding@0.1.13)(rollup@4.32.0)
+      '@vercel/redwood': 2.1.12(rollup@4.32.0)
+      '@vercel/remix-builder': 5.0.2(rollup@4.32.0)
       '@vercel/ruby': 2.1.0
       '@vercel/static-build': 2.5.41
       chokidar: 4.0.0
@@ -10013,15 +9972,9 @@ snapshots:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
 
-  ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@6.0.4):
-    optionalDependencies:
-      bufferutil: 4.0.8
-      utf-8-validate: 6.0.4
+  ws@8.17.1: {}
 
-  ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
-    optionalDependencies:
-      bufferutil: 4.0.8
-      utf-8-validate: 6.0.4
+  ws@8.18.0: {}
 
   xdg-app-paths@5.1.0:
     dependencies:
