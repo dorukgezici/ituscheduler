@@ -10,7 +10,7 @@ const env = loadEnv(process.env.NODE_ENV, process.cwd(), "PUBLIC_");
 
 // https://astro.build/config
 export default defineConfig({
-  site: env.PUBLIC_SITE_URL,
+  site: env.PUBLIC_SITE_URL || "https://ituscheduler.com",
   output: "server",
   adapter: vercel(),
   integrations: [
