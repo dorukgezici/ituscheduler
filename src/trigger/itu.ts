@@ -16,7 +16,7 @@ export const fetchMajors = schedules.task({
   id: "fetch-majors",
   // every day at 6:00 AM
   cron: "0 6 * * *",
-  run: async (payload, { ctx }) => {
+  run: async (payload) => {
     const supabase = createSupabaseClient();
 
     // Format the timestamp using the timezone from the payload

@@ -1,16 +1,13 @@
+import vercel from "@astrojs/vercel";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import vercel from "@astrojs/vercel";
-import tailwindcss from "@tailwindcss/vite";
 import sentry from "@sentry/astro";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
-import { loadEnv } from "vite";
-
-const env = loadEnv(process.env.NODE_ENV, process.cwd(), "PUBLIC_");
 
 // https://astro.build/config
 export default defineConfig({
-  site: env.PUBLIC_SITE_URL || "https://ituscheduler.com",
+  site: "https://ituscheduler.com",
   output: "server",
   adapter: vercel(),
   integrations: [
