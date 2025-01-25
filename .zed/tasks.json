@@ -1,0 +1,17 @@
+[
+  {
+    "label": "dev",
+    "command": "pnpm run vercel dev",
+    "reveal": "always"
+  },
+  {
+    "label": "trigger",
+    "command": "pnpm run trigger dev --skip-update-check",
+    "reveal": "always"
+  },
+  {
+    "label": "supabase",
+    "command": "pnpm run sb start",
+    "reveal": "always"
+  }
+]
