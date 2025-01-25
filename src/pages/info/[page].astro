@@ -5,10 +5,6 @@ import Layout from "@/layouts/Layout.astro";
 import { dateAgo } from "@/lib/dayjs";
 import { serverClient } from "@/lib/supabase";
 
-export function getStaticPaths() {
-  return [{ params: { page: "1" } }, { params: { page: "2" } }, { params: { page: "3" } }, { params: { page: "4" } }];
-}
-
 const { page: pageStr } = Astro.params;
 const page = Math.max(1, parseInt(pageStr ?? "1"));
 
