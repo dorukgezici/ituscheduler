@@ -1,6 +1,6 @@
 import { daySlots } from "@/lib/globals";
 import { queryClient } from "@/lib/reactQuery";
-import { browserClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useCourses(
@@ -8,8 +8,6 @@ export default function useCourses(
   courseCode?: string,
   day?: string,
 ) {
-  const supabase = browserClient();
-
   return useQuery(
     {
       queryKey: ["courses", major, courseCode, day],

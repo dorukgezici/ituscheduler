@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import useMyCourses from "@/hooks/useMyCourses";
-import { browserClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { $selectedSchedule } from "@/store";
 import type { User } from "@supabase/supabase-js";
 import { useState } from "react";
@@ -44,7 +44,6 @@ export default function MyCourses({ user }: { user: User }) {
           <Button
             variant="outline"
             onClick={async () => {
-              const supabase = browserClient();
               const { data, error } = await supabase
                 .from("schedules")
                 .insert({ user_id: user.id, is_selected: true })
@@ -72,7 +71,6 @@ export default function MyCourses({ user }: { user: User }) {
           <Button
             variant="outline"
             onClick={async () => {
-              const supabase = browserClient();
               const selectedScheduleId = parseInt(
                 $selectedSchedule.get() ?? "0",
               );

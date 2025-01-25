@@ -1,4 +1,4 @@
-import { browserClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { atom, onMount, onSet } from "nanostores";
 
 // courses
@@ -6,7 +6,6 @@ export const $selectedMajor = atom<string>("BLG");
 
 onMount($selectedMajor, () => {
   const loadSelectedMajor = async () => {
-    const supabase = browserClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -26,7 +25,6 @@ onMount($selectedMajor, () => {
 
 onSet($selectedMajor, async ({ newValue }) => {
   if (newValue && newValue !== $selectedMajor.get()) {
-    const supabase = browserClient();
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -49,7 +47,6 @@ export const $selectedSchedule = atom<string | undefined>();
 onSet($selectedSchedule, async ({ newValue }) => {
   const oldValue = $selectedSchedule.get();
   if (newValue !== oldValue) {
-    const supabase = browserClient();
     if (oldValue)
       await supabase
         .from("schedules")
@@ -64,7 +61,6 @@ onSet($selectedSchedule, async ({ newValue }) => {
 });
 
 export const deleteSchedule = async (scheduleId: number) => {
-  const supabase = browserClient();
   const { error } = await supabase
     .from("schedules")
     .delete()

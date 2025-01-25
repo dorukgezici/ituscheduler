@@ -1,11 +1,9 @@
-import { browserClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useEffect } from "react";
 
 export default function SupabaseAuth({ site }: { site?: URL }) {
-  const supabase = browserClient();
-
   useEffect(() => {
     const {
       data: { subscription },

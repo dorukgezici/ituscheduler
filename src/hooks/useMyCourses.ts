@@ -1,10 +1,8 @@
 import { queryClient } from "@/lib/reactQuery";
-import { browserClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useMyCourses(userId?: string) {
-  const supabase = browserClient();
-
   return useQuery(
     {
       queryKey: ["user_courses", userId],

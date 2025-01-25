@@ -5,11 +5,10 @@ import {
 } from "@supabase/ssr";
 import type { AstroCookies, AstroGlobal } from "astro";
 
-export const browserClient = () =>
-  createBrowserClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-  );
+export const supabase = createBrowserClient(
+  import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+);
 
 export const serverClient = (Astro: AstroGlobal) =>
   createServerClient(

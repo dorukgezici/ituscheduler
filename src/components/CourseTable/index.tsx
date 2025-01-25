@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import useCourses from "@/hooks/useCourses";
-import { browserClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { $selectedCourseCode, $selectedDay, $selectedMajor } from "@/store";
 import type { Tables, Views } from "@/types/supabase";
 import { useStore } from "@nanostores/react";
@@ -36,7 +36,6 @@ type Props = {
 
 export default function CourseTable(props: Props) {
   type Course = Exclude<typeof props.courses, null>[number];
-  const supabase = browserClient();
 
   const major = useStore($selectedMajor);
   const courseCode = useStore($selectedCourseCode);

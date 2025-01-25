@@ -5,7 +5,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import useScheduleCourses from "@/hooks/useScheduleCourses";
-import { browserClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { $selectedSchedule } from "@/store";
 import { useStore } from "@nanostores/react";
 import { ChevronsUpDown, X } from "lucide-react";
@@ -39,8 +39,6 @@ export default function ScheduleCourses() {
               <Button
                 variant="ghost"
                 onClick={async () => {
-                  const supabase = browserClient();
-
                   if (!selectedSchedule || !course?.crn) return;
                   const { error } = await supabase
                     .from("schedule_courses")
