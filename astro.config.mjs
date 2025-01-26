@@ -1,5 +1,5 @@
-import { defineConfig, passthroughImageService } from "astro/config";
-import deno from "@deno/astro-adapter";
+import { defineConfig } from "astro/config";
+import vercel from "@astrojs/vercel";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import sentry from "@sentry/astro";
@@ -9,15 +9,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   site: "https://ituscheduler.com",
   output: "server",
-  adapter: deno({
-    esbuild: {
-      platform: "node",
-      external: ["fsevents", "@babel/preset-typescript/package.json"],
-    },
-  }),
-  image: {
-    service: passthroughImageService(),
-  },
+  adapter: vercel(),
   integrations: [
     react(),
     sitemap(),
