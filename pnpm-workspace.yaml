@@ -1,0 +1,12 @@
+allowBuilds:
+  '@sentry/cli': true
+  esbuild: true
+  protobufjs: true
+minimumReleaseAgeExclude:
+  - vercel@54.20.1
+onlyBuiltDependencies:
+  - "@sentry/cli"
+  - esbuild
+  - protobufjs
+  - sharp
+  - supabase

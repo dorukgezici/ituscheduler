@@ -13,6 +13,9 @@ export type Views<T extends keyof Database["public"]["Views"]> =
 export type Major = Tables<"majors">;
 export type MajorInsert = TablesInsert<"majors">;
 
+export type Semester = Tables<"semesters">;
+export type SemesterInsert = TablesInsert<"semesters">;
+
 export type Course = Tables<"courses">;
 export type CourseInsert = TablesInsert<"courses">;
 export type CourseUpdate = TablesUpdate<"courses">;
