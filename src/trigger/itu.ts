@@ -6,7 +6,7 @@ import type {
   SemesterInsert,
 } from "@/types/supabase";
 import { createClient } from "@supabase/supabase-js";
-import { logger, schedules, task } from "@trigger.dev/sdk/v3";
+import { logger, schedules, task } from "@trigger.dev/sdk";
 import { parse, type HTMLElement } from "node-html-parser";
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from "./config";
 import { splitTimeStr } from "./utils";
