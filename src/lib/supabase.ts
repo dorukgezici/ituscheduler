@@ -17,7 +17,9 @@ export const serverClient = (Astro: AstroGlobal) =>
     {
       cookies: {
         getAll() {
-          return parseCookieHeader(Astro.request.headers.get("Cookie") ?? "");
+          return parseCookieHeader(
+            Astro.request.headers.get("Cookie") ?? "",
+          ).map((cookie) => ({ ...cookie, value: cookie.value ?? "" }));
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
@@ -38,7 +40,9 @@ export const serverMiddlewareClient = (
     {
       cookies: {
         getAll() {
-          return parseCookieHeader(request.headers.get("Cookie") ?? "");
+          return parseCookieHeader(request.headers.get("Cookie") ?? "").map(
+            (cookie) => ({ ...cookie, value: cookie.value ?? "" }),
+          );
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>

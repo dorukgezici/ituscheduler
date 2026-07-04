@@ -1,0 +1,192 @@
+---
+// POPJAM promotional banner.
+// The outbound link is intentionally *dofollow*: it carries no
+// rel="nofollow"/"sponsored"/"ugc". `noopener` is a security hint only and
+// does not affect link-following / SEO. The banner is server-rendered so the
+// link is always present in the served HTML (visible to crawlers); it is only
+// hidden client-side for visitors who dismiss it.
+const HREF = "https://popjam.io";
+---
+
+<aside id="popjam-banner" class="popjam-banner" aria-label="Advertisement">
+  <a class="popjam-banner__link" href={HREF} target="_blank" rel="noopener">
+    <span class="popjam-banner__brand">POPJAM<span class="popjam-banner__tld">.IO</span></span>
+    <span class="popjam-banner__copy">
+      <strong class="popjam-banner__headline">Agentic Marketing Lab</strong>
+      <span class="popjam-banner__sub">
+        Paste your website — POPJAM generates on-brand ad creatives and pressure-tests them on
+        synthetic buyers <em>before you spend a cent</em>.
+      </span>
+    </span>
+  </a>
+  <button
+    type="button"
+    id="popjam-banner-close"
+    class="popjam-banner__close"
+    aria-label="Dismiss banner">&times;</button>
+</aside>
+
+<script is:inline>
+  (function () {
+    var KEY = "popjam-banner-dismissed";
+    var el = document.getElementById("popjam-banner");
+    if (!el) return;
+    try {
+      if (localStorage.getItem(KEY) === "1") {
+        el.remove();
+        return;
+      }
+    } catch (e) {
+      /* localStorage unavailable — keep the banner visible */
+    }
+    var close = document.getElementById("popjam-banner-close");
+    if (close) {
+      close.addEventListener("click", function () {
+        el.remove();
+        try {
+          localStorage.setItem(KEY, "1");
+        } catch (e) {
+          /* ignore */
+        }
+      });
+    }
+  })();
+</script>
+
+<style>
+  .popjam-banner {
+    position: relative;
+    width: 100%;
+    color: #fff;
+    background: linear-gradient(90deg, #6d28d9 0%, #db2777 50%, #f59e0b 100%);
+    background-size: 200% 100%;
+    animation: popjam-shift 12s ease infinite;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  }
+
+  @keyframes popjam-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .popjam-banner__link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 0.85rem;
+    max-width: 1400px;
+    margin-inline: auto;
+    padding: 0.6rem 3rem;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1.25;
+  }
+
+  .popjam-banner__brand {
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(2px);
+    white-space: nowrap;
+  }
+
+  .popjam-banner__tld {
+    opacity: 0.75;
+    font-weight: 700;
+  }
+
+  .popjam-banner__copy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.5rem;
+    text-align: center;
+  }
+
+  .popjam-banner__headline {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .popjam-banner__sub {
+    font-size: 0.85rem;
+    opacity: 0.92;
+  }
+
+  .popjam-banner__cta {
+    font-weight: 700;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    padding: 0.3rem 0.85rem;
+    border-radius: 9999px;
+    background: #fff;
+    color: #1a1035;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  }
+
+  .popjam-banner__link:hover .popjam-banner__cta {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+  }
+
+  .popjam-banner__close {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 0;
+    border-radius: 9999px;
+    background: transparent;
+    color: #fff;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+    transition:
+      opacity 0.15s ease,
+      background 0.15s ease;
+  }
+
+  .popjam-banner__close:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  /* On small screens keep the headline + CTA, drop the longer description. */
+  @media (max-width: 640px) {
+    .popjam-banner__link {
+      padding-inline: 2.5rem;
+    }
+    .popjam-banner__sub {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .popjam-banner {
+      animation: none;
+    }
+    .popjam-banner__cta {
+      transition: none;
+    }
+  }
+</style>
