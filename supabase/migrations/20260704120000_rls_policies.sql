@@ -165,12 +165,12 @@ drop policy if exists "Users can update their own major" on public.user_major;
 create policy "Users can update their own major"
   on public.user_major for update to authenticated
   using (user_id = auth.uid())
-  with check (user_id = auth.uid())
+  with check (user_id = auth.uid());
 
 drop policy if exists "Users can delete their own major" on public.user_major;
 create policy "Users can delete their own major"
   on public.user_major for delete to authenticated
-  using (user_id = auth.uid);
+  using (user_id = auth.uid());
 
 -- ===========================================================================
 -- posts: public announcements (author/date/content) — readable by everyone,
