@@ -8,11 +8,23 @@ import type {
 import { createClient } from "@supabase/supabase-js";
 import { logger, schedules, task } from "@trigger.dev/sdk";
 import { parse, type HTMLElement } from "node-html-parser";
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from "./config";
+import { SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL } from "./config";
 import { splitTimeStr } from "./utils";
 
-const createSupabaseClient = () =>
-  createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Ingestion writes to catalog tables (courses/lectures/majors/semesters) which
+// are read-only under RLS for the anon/authenticated roles. The service_role
+// key bypasses RLS, so the cron jobs can keep upserting. If the key is missing
+// we fall back loudly rather than silently failing every write.
+const createSupabaseClient = () => {
+  if (!SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error(
+      "SUPABASE_SERVICE_ROLE_KEY is not set; ingestion cannot write catalog data under RLS.",
+    );
+  }
+  return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+};
 
 const OBS_BASE = "https://obs.itu.edu.tr";
 
